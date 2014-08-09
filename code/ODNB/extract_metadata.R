@@ -157,9 +157,13 @@ ls()
 ## Store html in datafile
 odnb_data$html = list()
 for(i in 1:99999) {
-  if (is.nobio(ODNB_raw[[i]])) {
+  if (is.nobio(ODNB_rawHTML[[i]])) {
+#|             ************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
   } else {
-    odnb_data$html[[i]] = dnb.grab.main(ODNB_raw[[i]])
+    odnb_data$html[[i]] = dnb.grab.main(ODNB_rawHTML[[i]])
+#|                                      ************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
   }
   if (i %% 100 == 0) {print(i)}
 }
@@ -182,14 +186,20 @@ ODNB.nums.inv[ODNB.nums] = 1:length(ODNB.nums)
 head(ODNB.nums.inv)
 tail(ODNB.nums.inv)
 
-ODNB_raw[[j]]
+ODNB_rawHTML[[j]]
+#|************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
 
 for(j in setdiff(1:99999, cosub_list[[88]])) {
   print(j)
-  ODNB_extract_name_segment(dnb_grab_main(ODNB_raw[[j]]))$text
+  ODNB_extract_name_segment(dnb_grab_main(ODNB_rawHTML[[j]]))$text
+#|                                        ************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
 }
 
-sapply(ODNB_raw, function(x) {ODNB_extract_name_segment(x)$text})
+sapply(ODNB_rawHTML, function(x) {ODNB_extract_name_segment(x)$text})
+#|     ************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
 
 odnb_temp_name = t(sapply(ODNB_data,
   function(x) {ODNB_extract_name_segment(x$html)}))

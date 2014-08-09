@@ -76,7 +76,9 @@ process_cosubject = function(ids) {
   text_list = list()
   id_list = list()
   ## base document: 
-  doc = dnb_grab_main(ODNB_raw[[ids[1]]])
+  doc = dnb_grab_main(ODNB_rawHTML[[ids[1]]])
+#|                    ************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
   id_vec = rep(ids[1], times = length(ids))
 
   group_cosub = FALSE

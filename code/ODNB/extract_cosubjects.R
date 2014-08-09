@@ -7,21 +7,28 @@ print("----- Loading helper functions and data")
 source("text_mining/ODNB/helper_functions.R")
 
 ## Load data
-load("private_data/odnb_data_proc/ODNB_raw.Rdata")
+load("data/ODNB_raw/ODNB_rawHTML_20131107.Rdata")
+
 
 ## Step 1: Process cosubject biographies, split these into separate bios.
 # Assumption: If this is an article about a person, with other entities added, then take the new article as only until the end of that paragraph. If this is a group biography, then split on each new person. Of course this won't be perfect...
 
 ## figures out which documents have cosubjects
-ind_cosub = sapply(ODNB_raw, exists_cosubject)
+ind_cosub = sapply(ODNB_rawHTML, exists_cosubject)
+#|                 ************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
 
 ## creates a list, each entry is a vector of character lengths of segments. This will be used to compare documents to identify identical documents. 
 print("----- Counting character lengths of documents")
 nchar_list = list()
 
 for(j in 1:99999) {
-  if (!is_nobio(ODNB_raw[[j]])) {
-    nchar_list[[j]] = nchar(dnb_grab_main(ODNB_raw[[j]]))
+  if (!is_nobio(ODNB_rawHTML[[j]])) {
+#|              ************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
+    nchar_list[[j]] = nchar(dnb_grab_main(ODNB_rawHTML[[j]]))
+#|                                        ************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
   } else {
     nchar_list[[j]] = 0
   }
@@ -76,7 +83,9 @@ for(j in 1:length(cosub_list)) {
     }
     
   } else {
-    temp = dnb_grab_main(ODNB_raw[[cosub_list[[j]][1]]])
+    temp = dnb_grab_main(ODNB_rawHTML[[cosub_list[[j]][1]]])
+#|                       ************
+#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
     ODNB_text[[j]] = temp[-length(temp)]
   }
 }
