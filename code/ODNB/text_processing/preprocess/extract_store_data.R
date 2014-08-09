@@ -7,4 +7,4 @@ for(i in 1:99999) {
   filename = paste("private_data/odnb_data_text/HTML/file_",i,".txt", sep = "")
   ODNB_raw[[i]] = readLines(filename)
 }
-save(ODNB_raw, file = "data/ODNB_raw/ODNB_rawHTML.Rdata")
+save(ODNB_raw, file = "data/ODNB_raw/ODNB_rawHTML_20131107.Rdata")
