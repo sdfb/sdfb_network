@@ -8,3 +8,5 @@ Step 5: Combine data extracted from NER tools.
                                  ## This results in a list of tokenized text vectors, a set for each document: The raw text, lingpipe tagged, stanford tagged texts, and they are all normalized to the raw text. 
 
 -- Code combine_ner_results.R    ## This file contains code to compile the results, and this will result in a data frame for each document: tokenized text, named-entity tagging, approximate date estimate. 
+
+-- Code improve_ner_results.R    ## This file contains code that compares the NER results to each other, as well as does minor adjustments that improves the recall/precision. 
