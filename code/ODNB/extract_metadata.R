@@ -87,7 +87,9 @@ full_result = data.frame(
   occupation = occs,
   bio_length = bio_len[good_names], stringsAsFactors = FALSE)
 
-save(full_result, file = "private_data/odnb_data_proc/ODNB_metadata.Rdata")
+save(full_result, file = "data/ODNB_raw/ODNB_metadata20140404.Rdata")
+#|                        *****************************************
+#|----##Fix old directory structure --Sun Aug 10 11:48:41 2014--
 
 res
 

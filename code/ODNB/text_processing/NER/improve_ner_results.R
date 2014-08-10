@@ -5,7 +5,9 @@ source("code/ODNB/text_processing/helper/NER_improve.R")
 load("data/ODNB_intermediate/NER/ODNB_combtags20140404.Rdata")
 #|          ******************************************************
 #|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
-load("../../private_data/odnb_data_proc/ODNB_metadata.Rdata")
+load("data/ODNB_raw/ODNB_metadata20140404.Rdata")
+#|    *****************************************
+#|----##Fix old directory structure --Sun Aug 10 11:48:41 2014--
 
 ODNB_improvedpred = list()
 
