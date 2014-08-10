@@ -1,4 +1,5 @@
 ##@S This file contains code that combines the compiled tagged tokenized versions of the documents.
+source("code/ODNB/text_processing/helper/NER_processing.R")
 
 ## parameters
 PARAM_START = 2

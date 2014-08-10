@@ -18,7 +18,7 @@ format_text_and_split = function(text) {
   
   
   ## Add spaces before/after punctuation if needed.
-  puncts = c("[.]", ",", ":", ";", "!", "[?]", "`")
+#   puncts = c("[.]", ",", ":", ";", "!", "[?]", "`")
   
   ## add spaces before/after; will remove extra ones later
   puncts = c(".", ",", ":", "!", "?", "`", ";", "(", ")", "{", "}", "[", "]")
