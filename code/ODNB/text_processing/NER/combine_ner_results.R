@@ -53,7 +53,9 @@ if (PARAM_START < 2) {
     print(j)
   }
 
-  save(ODNB_combtags, file = "private_data/odnb_data_proc/ODNB_combtags.Rdata")
+  save(ODNB_combtags, file = "data/ODNB_intermediate/NER/ODNB_combtags20140404.Rdata")
+#|                            ******************************************************
+#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
 } 
 
 
@@ -62,7 +64,9 @@ if (PARAM_START < 3) {
   rm(ODNB_tokenized1)
 
   if (PARAM_START > 1) {
-    load("private_data/odnb_data_proc/ODNB_combtags.Rdata")
+    load("data/ODNB_intermediate/NER/ODNB_combtags20140404.Rdata")
+#|        ******************************************************
+#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
   }
   load("data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_2.Rdata")
   ids = which(sapply(ODNB_tokenized2, function(x) {!is.null(x)}))
@@ -87,14 +91,18 @@ if (PARAM_START < 3) {
     print(j)
   }
   
-  save(ODNB_combtags, file = "private_data/odnb_data_proc/ODNB_combtags.Rdata")
+  save(ODNB_combtags, file = "data/ODNB_intermediate/NER/ODNB_combtags20140404.Rdata")
+#|                            ******************************************************
+#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
 }
 
 if (PARAM_START < 4) {
   ##Section 3
   
   if (PARAM_START > 2) {
-    load("private_data/odnb_data_proc/ODNB_combtags.Rdata")
+    load("data/ODNB_intermediate/NER/ODNB_combtags20140404.Rdata")
+#|        ******************************************************
+#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
   }
   
   rm(ODNB_tokenized2)
@@ -120,5 +128,7 @@ if (PARAM_START < 4) {
                    )
     print(j)
   }
-  save(ODNB_combtags, file = "private_data/odnb_data_proc/ODNB_combtags.Rdata")
+  save(ODNB_combtags, file = "data/ODNB_intermediate/NER/ODNB_combtags20140404.Rdata")
+#|                            ******************************************************
+#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
 }
