@@ -5,7 +5,9 @@
 source("text_mining/ODNB/helper_functions.R")
 
 ## Load Data
-load("private_data/odnb_data_proc/ODNB_splitcosub.Rdata")
+load("data/ODNB_intermediate/preNER/ODNB_splitcosub20140228.Rdata")
+#|    ***********************************************************
+#|----##Fix old directory structure --Sat Aug  9 20:09:28 2014--
 
 ## Extract names
 ext_names = lapply(ODNB_text, ODNB_extract_name_segment)

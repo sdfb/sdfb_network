@@ -8,7 +8,9 @@ RUN_TEXT_CHECK = FALSE ## This only needs to be true for the first time; this ch
 
 ## Load raw text data file
 if (!any(ls() == "ODNB_cleantext")) {
-  load("private_data/odnb_data_proc/ODNB_splitcosub.Rdata")
+  load("data/ODNB_intermediate/preNER/ODNB_splitcosub20140228.Rdata")
+#|      ***********************************************************
+#|----##Fix old directory structure --Sat Aug  9 20:09:28 2014--
   load("private_data/odnb_data_proc/ODNB_nerproc.Rdata")
 }
 

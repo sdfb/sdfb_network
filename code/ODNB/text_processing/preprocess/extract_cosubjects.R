@@ -4,7 +4,7 @@
 
 ## Load helper functions
 print("----- Loading helper functions and data")
-source("text_mining/ODNB/helper_functions.R")
+source("code/ODNB/text_processing/helper/clean_HTML_functions.R")
 
 ## Load data
 load("data/ODNB_raw/ODNB_rawHTML_20131107.Rdata")
@@ -91,8 +91,6 @@ for(j in 1:length(cosub_list)) {
 }
 
 
-save(ODNB_text, ODNB_groupcosub, file = "private_data/odnb_data_proc/ODNB_splitcosub.Rdata")
-
 ## Strange text problems:
 ODNB_text[[44722]] = c(paste(ODNB_text[[44722]][1:4], collapse = " "), ODNB_text[[44722]][-1:-4])
 ODNB_text[[48216]] = c(paste(ODNB_text[[48216]][1:4], collapse = " "), ODNB_text[[48216]][-1:-3])
@@ -127,7 +125,7 @@ count = 1
 for(j in 1:199999) {
   if (count %% 100 == 1) {
     cat(count, " ")
-    cur_file = paste("private_data/odnb_data_text/COMPILED/comp", round(count/100) + 1, ".txt", sep = "")
+    cur_file = paste("data/ODNB_intermediate/compiled_raw/", round(count/100) + 1, ".txt", sep = "")
   } 
   if (!is.null(ODNB_cleantext[[j]])) {
     cat(c("@@@@@",
@@ -138,4 +136,4 @@ for(j in 1:199999) {
   }
 }
 
-save(ODNB_text, ODNB_cleantext, ODNB_groupcosub, file = "private_data/odnb_data_proc/ODNB_splitcosub.Rdata")
+save(ODNB_text, ODNB_cleantext, ODNB_groupcosub, file = "data/ODNB_intermediate/preNER/ODNB_splitcosub20140228.Rdata")
