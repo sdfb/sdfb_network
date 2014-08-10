@@ -28,7 +28,7 @@ comb_order = c("ST:PERSON", "LP:PERSON", "ST:ORGANIZATION", "LP:ORGANIZATION")
 if (PARAM_START < 2) {
   ODNB_combtags = list()
   
-  load("data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_.Rdata1.Rdata")
+  load("data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_1.Rdata")
 #|      ***********************************************************
 #|----##Fix old directory structure --Sat Aug  9 20:41:24 2014--
 
@@ -65,7 +65,7 @@ if (PARAM_START < 3) {
   if (PARAM_START > 1) {
     load("private_data/odnb_data_proc/ODNB_combtags.Rdata")
   }
-  load("data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_.Rdata2.Rdata")
+  load("data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_2.Rdata")
 #|      ***********************************************************
 #|----##Fix old directory structure --Sat Aug  9 20:41:24 2014--
   ids = which(sapply(ODNB_tokenized2, function(x) {!is.null(x)}))
@@ -101,7 +101,7 @@ if (PARAM_START < 4) {
   }
   
   rm(ODNB_tokenized2)
-  load("data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_.Rdata3.Rdata")
+  load("data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_3.Rdata")
 #|      ***********************************************************
 #|----##Fix old directory structure --Sat Aug  9 20:41:24 2014--
   ids = which(sapply(ODNB_tokenized3, function(x) {!is.null(x)}))
