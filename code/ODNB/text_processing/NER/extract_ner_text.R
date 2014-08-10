@@ -4,7 +4,7 @@ Ncomp = 529
 ## Rawtext
 txt_R = list()
 for(j in 1:Ncomp) {
-  filename = paste("private_data/odnb_data_text/COMPILED/", "comp", j, ".txt", sep = "")
+  filename = paste("data/ODNB_intermediate/NER/compiled_raw/", "comp", j, ".txt", sep = "")
   txt_R[[j]] = readLines(filename)
   print(j)
 }
@@ -12,7 +12,7 @@ for(j in 1:Ncomp) {
 ## Lingpipe
 txt_L = list()
 for(j in 1:Ncomp) {
-  filename = paste("private_data/odnb_data_text/proc_LING/", "comp", j, ".txt", sep = "")
+  filename = paste("data/ODNB_intermediate/NER/proc_LING/", "comp", j, ".txt", sep = "")
   tmp = readLines(filename)
   tmp = gsub("&amp;", "&", tmp)
   tmp = gsub("&quot;", "\"", tmp)
@@ -23,7 +23,7 @@ for(j in 1:Ncomp) {
 ## Stanford
 txt_S = list()
 for(j in 1:Ncomp) {
-  filename = paste("private_data/odnb_data_text/proc_STAN/", "ST_", j, ".txt", sep = "")
+  filename = paste("data/ODNB_intermediate/NER/proc_STAN/", "ST_", j, ".txt", sep = "")
   txt_S[[j]] = readLines(filename)
   print(j)
 }
@@ -42,4 +42,6 @@ for(j in 1:Ncomp) {
 }
 
 
-save(txt_R, txt_L, txt_S, file = "private_data/odnb_data_proc/ODNB_nerproc.Rdata")
+save(txt_R, txt_L, txt_S, file = "data/ODNB_intermediate/NER/ODNB_NERproc20140202.Rdata")
+#|                                *****************************************************
+#|----##Fix old directory structure --Sat Aug  9 20:31:47 2014--
