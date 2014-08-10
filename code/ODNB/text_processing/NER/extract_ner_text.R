@@ -43,5 +43,3 @@ for(j in 1:Ncomp) {
 
 
 save(txt_R, txt_L, txt_S, file = "data/ODNB_intermediate/NER/ODNB_NERproc20140202.Rdata")
-#|                                *****************************************************
-#|----##Fix old directory structure --Sat Aug  9 20:31:47 2014--
