@@ -117,7 +117,7 @@ count = 1
 for(j in 1:199999) {
   if (count %% 100 == 1) {
     cat(count, " ")
-    cur_file = paste("data/ODNB_intermediate/compiled_raw/", round(count/100) + 1, ".txt", sep = "")
+    cur_file = paste("data/ODNB_intermediate/NER/compiled_raw/", round(count/100) + 1, ".txt", sep = "")
   } 
   if (!is.null(ODNB_cleantext[[j]])) {
     cat(c("@@@@@",

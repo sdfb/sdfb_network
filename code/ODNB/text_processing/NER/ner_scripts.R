@@ -8,11 +8,12 @@ script[2] = "scriptdir=`dirname $0`"
 script[3] = ""
 
 for(i in 1:N) {
-  temp = paste("sh ../../software/stanNER/ner.sh ../../private_data/odnb_data_text/COMPILED/comp",i,".txt > ../../private_data/odnb_data_text/proc_STAN/ST_",i,".txt", sep = "")
+  temp = paste("sh ../../../../software/stanNER/ner.sh ../../../../data/ODNB_intermediate/NER/compiled_raw/",i,".txt > ../../../../data/ODNB_intermediate/NER/proc_STAN/ST_",i,".txt", sep = "")
+  
   script[i+3] = temp
 }
 
-writeLines(script, con = "text_mining/ODNB/stanSCRIPT.sh")
+writeLines(script, con = "code/ODNB/text_processing/NER/stanSCRIPT.sh")
 
 ## Create folders 'proc' and 'unproc' in lingpipe/demos/generic/bin/.
 ## Run the following script to copy files over: 
@@ -21,8 +22,8 @@ writeLines(script, con = "text_mining/ODNB/stanSCRIPT.sh")
 script = rep("", times = 3)
 script[1] = "#!/bin/sh"
 script[2] = ""
-script[3] = "cp ../../private_data/odnb_data_text/COMPILED/* ../../software/lingpipe/demos/generic/bin/unproc"
-writeLines(script, con = "text_mining/ODNB/lingprecopySCRIPT.sh")
+script[3] = "cp ../../../../data/ODNB_intermediate/NER/compiled_raw/* ../../../../software/lingpipe/demos/generic/bin/unproc"
+writeLines(script, con = "code/ODNB/text_processing/NER/lingprecopySCRIPT.sh")
 
 
 ## Then, run the following line
@@ -36,11 +37,11 @@ writeLines(script, con = "text_mining/ODNB/lingprecopySCRIPT.sh")
 script = rep("", times = 5)
 script[1] = "#!/bin/sh"
 script[2] = ""
-script[3] = "cp ../../software/lingpipe/demos/generic/bin/proc/* ../../private_data/odnb_data_text/proc_LING/"
+script[3] = "cp ../../software/lingpipe/demos/generic/bin/proc/* ../../../../data/ODNB_intermediate/NER/proc_LING/"
 script[4] = "rm ../../software/lingpipe/demos/generic/bin/proc/*"
 script[5] = "rm ../../software/lingpipe/demos/generic/bin/unproc/*"
 
-writeLines(script, con = "text_mining/ODNB/lingpostcopySCRIPT.sh")
+writeLines(script, con = "code/ODNB/text_processing/NER/lingpostcopySCRIPT.sh")
 
 
 
