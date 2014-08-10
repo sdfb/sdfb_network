@@ -6,8 +6,6 @@ source("text_mining/ODNB/helper_functions.R")
 
 ## Load Data
 load("data/ODNB_intermediate/preNER/ODNB_splitcosub20140228.Rdata")
-#|    ***********************************************************
-#|----##Fix old directory structure --Sat Aug  9 20:09:28 2014--
 
 ## Extract names
 ext_names = lapply(ODNB_text, ODNB_extract_name_segment)
@@ -160,12 +158,8 @@ ls()
 odnb_data$html = list()
 for(i in 1:99999) {
   if (is.nobio(ODNB_rawHTML[[i]])) {
-#|             ************
-#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
   } else {
     odnb_data$html[[i]] = dnb.grab.main(ODNB_rawHTML[[i]])
-#|                                      ************
-#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
   }
   if (i %% 100 == 0) {print(i)}
 }
@@ -189,19 +183,13 @@ head(ODNB.nums.inv)
 tail(ODNB.nums.inv)
 
 ODNB_rawHTML[[j]]
-#|************
-#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
 
 for(j in setdiff(1:99999, cosub_list[[88]])) {
   print(j)
   ODNB_extract_name_segment(dnb_grab_main(ODNB_rawHTML[[j]]))$text
-#|                                        ************
-#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
 }
 
 sapply(ODNB_rawHTML, function(x) {ODNB_extract_name_segment(x)$text})
-#|     ************
-#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
 
 odnb_temp_name = t(sapply(ODNB_data,
   function(x) {ODNB_extract_name_segment(x$html)}))

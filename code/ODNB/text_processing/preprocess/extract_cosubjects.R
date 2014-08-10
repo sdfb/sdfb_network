@@ -15,8 +15,6 @@ load("data/ODNB_raw/ODNB_rawHTML_20131107.Rdata")
 
 ## figures out which documents have cosubjects
 ind_cosub = sapply(ODNB_rawHTML, exists_cosubject)
-#|                 ************
-#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
 
 ## creates a list, each entry is a vector of character lengths of segments. This will be used to compare documents to identify identical documents. 
 print("----- Counting character lengths of documents")
@@ -24,11 +22,7 @@ nchar_list = list()
 
 for(j in 1:99999) {
   if (!is_nobio(ODNB_rawHTML[[j]])) {
-#|              ************
-#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
     nchar_list[[j]] = nchar(dnb_grab_main(ODNB_rawHTML[[j]]))
-#|                                        ************
-#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
   } else {
     nchar_list[[j]] = 0
   }
@@ -84,8 +78,6 @@ for(j in 1:length(cosub_list)) {
     
   } else {
     temp = dnb_grab_main(ODNB_rawHTML[[cosub_list[[j]][1]]])
-#|                       ************
-#|----##Rename ODNB_raw --Sat Aug  9 19:46:39 2014--
     ODNB_text[[j]] = temp[-length(temp)]
   }
 }
