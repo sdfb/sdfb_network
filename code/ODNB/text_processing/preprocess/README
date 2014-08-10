@@ -1,0 +1,10 @@
+Step 1: Download Data
+-- Run download_data.sh
+---- This creates a compressed file with the documents
+-- 'decompress_data.sh' decompresses all the files
+
+Step 2: Extract Data -> Store in .Rdata file
+-- Code: extract_store_data.R
+
+Step 3: Split Data along co-subjects
+-- Code: extract_cosubjects.R
