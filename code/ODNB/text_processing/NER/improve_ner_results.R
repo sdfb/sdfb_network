@@ -1,4 +1,5 @@
 ## Code to improve NER results.
+## TODO: [Cleanup] This file needs code cleanup. 
 
 source("code/ODNB/text_processing/helper/NER_improve.R")
 

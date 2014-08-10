@@ -1,4 +1,7 @@
 ##@S This file contains code to extract the locations of NER text. 
+
+## TODO: [Rewrite] three iterations of this might not be necessary? 
+
 source("code/ODNB/text_processing/helper/NER_processing.R")
 
 ## Treat the title person differently (use extract names function from the pure HTML, and ignore NER results here.

@@ -1,5 +1,6 @@
 ##@S This file contains code that combines the compiled tagged tokenized versions of the documents.
 source("code/ODNB/text_processing/helper/NER_processing.R")
+## TODO: [Rewrite] This script probably needs to be made 'less hacky'. 
 
 ## parameters
 PARAM_START = 2
