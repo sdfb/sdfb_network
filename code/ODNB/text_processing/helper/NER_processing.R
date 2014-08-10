@@ -60,6 +60,7 @@ paste_two <- function(vec,ind.start) {
 
 normalize_tagtext <- function(text, true.text, type) { 
   ## This vectorizes, normalizes tagged text
+  ##   by standardizing the tags to the same format between the two taggers. 
   ## type = "ST" or "LP"
   
   #   text = gsub("£", "?", text) ## pound symbol... convert to ?
@@ -279,7 +280,7 @@ combine_two <- function(a,b) {
   ## Input      a,b = char vec ("P", "PS", etc.)
   ## Output     char vec ("P",etc.)
   ## 
-  ## Takes two predictors and outputs a combined predictor vector, giving priority to list a. 
+  ## Takes two predictors and outputs a combined predictor vector, giving priority to vector a. 
   
   if (length(a) != length(b)) { error("ERROR: mismatching vector lengths") }
   
