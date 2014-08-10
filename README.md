@@ -11,3 +11,4 @@ The shell scripts, on the other hand, should be run from the directory that they
 Progress: 
 For text_processing: moved all from old text_mining except the toproc ones. 
 network_processing: nothing to do here; readme file written. 
+network_estimation: added in all code here; obtained from old PGL folder. 
