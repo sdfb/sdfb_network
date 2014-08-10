@@ -81,7 +81,9 @@ for(j in 1:200) {
   }
 }
 
-save(ODNB_tokenized1, file = "private_data/odnb_data_proc/ODNB_ner_tokenized1.Rdata")
+save(ODNB_tokenized1, file = "data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_.Rdata1.Rdata")
+#|                            ***********************************************************
+#|----##Fix old directory structure --Sat Aug  9 20:41:24 2014--
 rm(ODNB_tokenized1)
 
 ODNB_tokenized2 = list()
@@ -117,7 +119,9 @@ for(j in 201:400) {
   }
 }
 
-save(ODNB_tokenized2, file = "private_data/odnb_data_proc/ODNB_ner_tokenized2.Rdata")
+save(ODNB_tokenized2, file = "data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_.Rdata2.Rdata")
+#|                            ***********************************************************
+#|----##Fix old directory structure --Sat Aug  9 20:41:24 2014--
 rm(ODNB_tokenized2)
 
 ODNB_tokenized3 = list()
@@ -153,7 +157,9 @@ for(j in 401:Ncomp) {
   }
 }
 
-save(ODNB_tokenized3, file = "private_data/odnb_data_proc/ODNB_ner_tokenized3.Rdata")
+save(ODNB_tokenized3, file = "data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_.Rdata3.Rdata")
+#|                            ***********************************************************
+#|----##Fix old directory structure --Sat Aug  9 20:41:24 2014--
 rm(ODNB_tokenized3)
 
 
