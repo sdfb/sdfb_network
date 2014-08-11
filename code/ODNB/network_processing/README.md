@@ -1,0 +1,3 @@
+Lawrence: I haven't done any work regarding conversion of end results into web format. You're free to do whatever you wish here; it wouldn't be too hard to convert the R-format of confidence estimates into a .csv. (I've done it at various times, but the format may not be the one that the web-interface needs, so this folder will stay empty. I may drag in some old code that just does that... )
+
+There is some old code that corresponds to extracting/storing different incarnations of the data for other people. Probably not useful, but will add them here anyway. 
