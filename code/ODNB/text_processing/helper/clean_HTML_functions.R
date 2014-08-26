@@ -1,32 +1,46 @@
 ##@S Ths file contains all helper functions.
+
+
+
+#' Removes all entries which only have spaces
+#' 
+#' @param text character vector corresponding to lines in a document
+#' 
+#' @return Returns the document without empty lines
+#' 
+#' @export
+#' 
 rm_emptylines = function(text) {   
-  ## Input:     text = char vector (elements as lines of a document)
-  ## Output:    char vector
-  ## 
-  ## This removes all entries which only have spaces. 
-  
   a = grep(pattern = "^[[:space:]]*$", text)
   return(text[-a])
 }
 
+
+#' This extracts the pertinent part of the html code and outputs that.
+#' 
+#' @param artic char vector (format = read from ODNB html file)
+#' 
+#' @return biography portion of document
+#' 
+#' @export
+#' 
 dnb_grab_main = function(artic) {
-  ## Input:     artic = char vector (format = read from ODNB html file)
-  ## Output:    char vector
-  ##
-  ## This extracts the pertinent part of the html code and outputs that.
-  
   base_article = rm_emptylines(artic)
   sta = min(grep(pattern = "<div class=\"para\">" , base_article))
   end = grep(pattern = "<div id=\"references\">" , base_article)
   return(base_article[(sta+1):(end-2)])
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (is_nobio)
+#' Checks if the HTML file is a biography
+#' 
+#' @param text read in ODNB file
+#' 
+#' @return TRUE if file is not a biography
+#' 
+#' @export
+#' 
 is_nobio = function(text) {
-  ## Input:     text = char vector (format = read from ODNB html file)
-  ## Output:    boolean
-  ##
-  ## Returns TRUE if html file does not contain a biography
-  
   if (length(grep(pattern = "Server Error", text[6])) > 0) {
     return(TRUE)
   } else { 
@@ -35,12 +49,16 @@ is_nobio = function(text) {
 }
 
 
+
+#' Returns all cosubjects listed in this biography
+#' 
+#' @param text char vector (format = processed through dnb.grab.main)
+#' 
+#' @return vector of cosubjects in biography
+#' 
+#' @export
+#' 
 check_cosubject = function(text) {
-  ## Input:     text = char vector (format = processed through dnb.grab.main)
-  ## Output:    num vector
-  ##
-  ## Returns all cosubjects listed in this biography
-  
   co = grep(pattern = "cosubject_", x = text)
   if (length(co) == 0) { return(0) }
   else {
@@ -53,6 +71,15 @@ check_cosubject = function(text) {
   }
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (exists_cosubject)
+#' <<BasicInfo>> 
+#' 
+#' @param text temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 exists_cosubject = function(text) {
   ## Input:Text
   ## Output: T/f: True if 'cosubject' appears in document'
@@ -65,6 +92,15 @@ exists_cosubject = function(text) {
 }
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (process_cosubject)
+#' <<BasicInfo>> 
+#' 
+#' @param ids temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 process_cosubject = function(ids) {
   ## This function determines the type of cosubject biography, and consequently splits it (and returns a list of texts and id numbers for the texts)
   ## Input should be the base document (and we can call dnb_grab_main on it)
@@ -124,6 +160,15 @@ process_cosubject = function(ids) {
 }
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (ODNB_extract_name_segment)
+#' <<BasicInfo>> 
+#' 
+#' @param text temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 ODNB_extract_name_segment = function(text) {
 ## This function returns a list of two elements: the substring in the text that matches the name segment (including html), and the character number that signifies the end of the string.
   
@@ -168,6 +213,15 @@ ODNB_extract_name_segment = function(text) {
   
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (ODNB_fix_accent_html)
+#' <<BasicInfo>> 
+#' 
+#' @param text temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 ODNB_fix_accent_html =  function(text) {
   ## Input      text = char vec (ODNB)
   ## Output     char vec

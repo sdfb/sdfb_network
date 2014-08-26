@@ -1,5 +1,8 @@
 
+
+
 ##### Copied Over 3/24/2014
+
 improve.pred = function(comb.tag, main.person = NULL,
                          exact.words = NULL, regex.words = NULL) {
   # basically, adjustd version of analyze.text
@@ -381,6 +384,17 @@ good_docs_dates = t(sapply(good_docs, function(k) {
 
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (find_closest_date)
+#' <<BasicInfo>> 
+#' 
+#' @param matches temp
+#' @param tag_df temp
+#' @param doc_split temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 find_closest_date = function(matches, tag_df, doc_split = 500) {
   ## doc split = how to split document; this is the minimum split length.
   ##  - take wordcount, divide by doc_split (roudn down) to get number of splits. then split accordingly...
@@ -410,6 +424,15 @@ find_closest_date = function(matches, tag_df, doc_split = 500) {
 
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (check_entity_in_fullset)
+#' <<BasicInfo>> 
+#' 
+#' @param entity temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 check_entity_in_fullset = function(entity) {
   names = strsplit(entity, split = " ")[[1]]
   matching_fns = NULL

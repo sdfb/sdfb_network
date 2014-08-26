@@ -3,6 +3,15 @@
 
 ## Split truedocs into words
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (format_text_and_split)
+#' <<BasicInfo>> 
+#' 
+#' @param text temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 format_text_and_split = function(text) {
   ## This function does the following:
   ## 1. add spaces before punctuation
@@ -50,6 +59,16 @@ format_text_and_split = function(text) {
   return(text_split)
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (paste_two)
+#' <<BasicInfo>> 
+#' 
+#' @param vec temp
+#' @param ind.start temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 paste_two = function(vec,ind.start) {
   # this pastes together two consecutive entries in a vector
   #  starting with ind.start and then ind.start+1
@@ -58,6 +77,17 @@ paste_two = function(vec,ind.start) {
   return(vec[-(ind.start+1)])
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (normalize_tagtext)
+#' <<BasicInfo>> 
+#' 
+#' @param text temp
+#' @param true.text temp
+#' @param type temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 normalize_tagtext = function(text, true.text, type) { 
   ## This vectorizes, normalizes tagged text
   ##   by standardizing the tags to the same format between the two taggers. 
@@ -107,6 +137,17 @@ normalize_tagtext = function(text, true.text, type) {
 }
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (proc_tagtext)
+#' <<BasicInfo>> 
+#' 
+#' @param tagged.text temp
+#' @param type temp
+#' @param tag.types temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 proc_tagtext = function(tagged.text, type,
                          tag.types = c("PERSON", "ORGANIZATION", "LOCATION")) {
   ## returns vectors of tags matching tag. PERSON, ORGANIZATION, LOCATION
@@ -245,6 +286,15 @@ proc_tagtext = function(tagged.text, type,
   return(toreturn)
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (tag_dates)
+#' <<BasicInfo>> 
+#' 
+#' @param vec temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 tag_dates = function(vec) {
   ## This function looks for 4-number dates between 1500-1900.
   numbs = as.numeric(vec)
@@ -254,6 +304,15 @@ tag_dates = function(vec) {
   return(res)
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (compute_parenthesis)
+#' <<BasicInfo>> 
+#' 
+#' @param vec temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 compute_parenthesis = function(vec) {
   ## This function computes the level of parenthesis embedding
   starts = grep("[{([]", vec)
@@ -276,6 +335,16 @@ compute_parenthesis = function(vec) {
 }
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (combine_two)
+#' <<BasicInfo>> 
+#' 
+#' @param a temp
+#' @param b temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 combine_two = function(a,b) {
   ## Input      a,b = char vec ("P", "PS", etc.)
   ## Output     char vec ("P",etc.)
