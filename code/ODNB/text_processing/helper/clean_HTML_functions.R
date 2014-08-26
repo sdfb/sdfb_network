@@ -1,5 +1,5 @@
 ##@S Ths file contains all helper functions.
-rm_emptylines <- function(text) {   
+rm_emptylines = function(text) {   
   ## Input:     text = char vector (elements as lines of a document)
   ## Output:    char vector
   ## 
@@ -9,7 +9,7 @@ rm_emptylines <- function(text) {
   return(text[-a])
 }
 
-dnb_grab_main <- function(artic) {
+dnb_grab_main = function(artic) {
   ## Input:     artic = char vector (format = read from ODNB html file)
   ## Output:    char vector
   ##
@@ -21,7 +21,7 @@ dnb_grab_main <- function(artic) {
   return(base_article[(sta+1):(end-2)])
 }
 
-is_nobio <- function(text) {
+is_nobio = function(text) {
   ## Input:     text = char vector (format = read from ODNB html file)
   ## Output:    boolean
   ##
@@ -35,7 +35,7 @@ is_nobio <- function(text) {
 }
 
 
-check_cosubject <- function(text) {
+check_cosubject = function(text) {
   ## Input:     text = char vector (format = processed through dnb.grab.main)
   ## Output:    num vector
   ##
@@ -53,7 +53,7 @@ check_cosubject <- function(text) {
   }
 }
 
-exists_cosubject <- function(text) {
+exists_cosubject = function(text) {
   ## Input:Text
   ## Output: T/f: True if 'cosubject' appears in document'
   

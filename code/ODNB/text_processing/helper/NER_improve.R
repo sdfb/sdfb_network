@@ -1,6 +1,6 @@
 
 ##### Copied Over 3/24/2014
-improve.pred <- function(comb.tag, main.person = NULL,
+improve.pred = function(comb.tag, main.person = NULL,
                          exact.words = NULL, regex.words = NULL) {
   # basically, adjustd version of analyze.text
   # input combined tags, etc.; output is cleaned up version with new matches etc. 
@@ -237,7 +237,7 @@ improve.pred <- function(comb.tag, main.person = NULL,
 }
 
 
-find.tagpositions <- function(mat) { ## formerly find.names
+find.tagpositions = function(mat) { ## formerly find.names
   ## Input      mat = two column matrix of predictions (1st col = text, 2nd = "PS", etc
   ## Output     matrix, 1st col = names identified; 2nd col = location
   ## 
@@ -278,7 +278,7 @@ find.tagpositions <- function(mat) { ## formerly find.names
 }
 
 
-text.remove.punct <- function(vec) {
+text.remove.punct = function(vec) {
   # Always run TWICE...
   # Removes punctuation from every entry in vec, to go from text entry to "entity name"
   vec = gsub("[,;!?:()|`]", "", vec) #remove `,;!?| (),[]'s
@@ -312,7 +312,7 @@ text.remove.punct <- function(vec) {
   return(vec)
 }
 
-remove.badentities <- function(comb.tag.mat, position.df) {
+remove.badentities = function(comb.tag.mat, position.df) {
   # Anything with \\, /, $, +, *, =, # is not going to be an entity. 
   # Anything with numbers is not going to be an entity
   # Anything length 2 or shorter in total is not an entity
@@ -340,7 +340,7 @@ remove.badentities <- function(comb.tag.mat, position.df) {
   }
 }
 
-remove.entries <- function(tags, entries) {
+remove.entries = function(tags, entries) {
   toreturn = tags
   for (j in entries) {
     if (toreturn[j] == "P") {
@@ -354,7 +354,7 @@ remove.entries <- function(tags, entries) {
   return(toreturn)
 }
 
-insert.tag <- function(start, len, tags) { # Check for null return. 
+insert.tag = function(start, len, tags) { # Check for null return. 
   if (all(tags[start:(start+len-1)] == "")) {
     if (len == 1) {
       tags[start] = "P"

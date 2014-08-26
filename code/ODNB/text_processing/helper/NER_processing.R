@@ -50,7 +50,7 @@ format_text_and_split = function(text) {
   return(text_split)
 }
 
-paste_two <- function(vec,ind.start) {
+paste_two = function(vec,ind.start) {
   # this pastes together two consecutive entries in a vector
   #  starting with ind.start and then ind.start+1
   #  and edits the vector to remove the extra cell
@@ -58,7 +58,7 @@ paste_two <- function(vec,ind.start) {
   return(vec[-(ind.start+1)])
 }
 
-normalize_tagtext <- function(text, true.text, type) { 
+normalize_tagtext = function(text, true.text, type) { 
   ## This vectorizes, normalizes tagged text
   ##   by standardizing the tags to the same format between the two taggers. 
   ## type = "ST" or "LP"
@@ -107,7 +107,7 @@ normalize_tagtext <- function(text, true.text, type) {
 }
 
 
-proc_tagtext <- function(tagged.text, type,
+proc_tagtext = function(tagged.text, type,
                          tag.types = c("PERSON", "ORGANIZATION", "LOCATION")) {
   ## returns vectors of tags matching tag. PERSON, ORGANIZATION, LOCATION
   #type = ST or LP
@@ -276,7 +276,7 @@ compute_parenthesis = function(vec) {
 }
 
 
-combine_two <- function(a,b) {
+combine_two = function(a,b) {
   ## Input      a,b = char vec ("P", "PS", etc.)
   ## Output     char vec ("P",etc.)
   ## 
