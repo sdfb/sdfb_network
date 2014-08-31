@@ -5,7 +5,9 @@
 source("text_mining/ODNB/helper_functions.R")
 
 ## Load Data
-load("data/ODNB_intermediate/preNER/ODNB_splitcosub20140228.Rdata")
+load(zzfile_textproc_preproc_splitcosub)
+#|   **********************************
+#|----##Use variable instead of filename --Sat Aug 30 22:08:59 2014--
 
 ## Extract names
 ext_names = lapply(ODNB_text, ODNB_extract_name_segment)

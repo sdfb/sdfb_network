@@ -11,7 +11,9 @@ source("code/ODNB/ODNB_setup.R")
 
 
 
-load("data/ODNB_intermediate/NER/ODNB_combtags20140404.Rdata")
+load(zzfile_textproc_ner_combtags)
+#|   ****************************
+#|----##Use variable instead of filename --Sat Aug 30 22:12:36 2014--
 #|          ******************************************************
 #|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
 load("data/ODNB_raw/ODNB_metadata20140404.Rdata")

@@ -44,4 +44,6 @@ for(j in 1:Ncomp) {
 }
 
 
-save(txt_R, txt_L, txt_S, file = "data/ODNB_intermediate/NER/ODNB_NERproc20140202.Rdata")
+save(txt_R, txt_L, txt_S, file = zzfile_textproc_ner_results)
+#|                               ***************************
+#|----##Use variable instead of filename --Sat Aug 30 22:10:36 2014--
