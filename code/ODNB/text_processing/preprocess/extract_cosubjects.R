@@ -7,7 +7,7 @@ print("----- Loading helper functions and data")
 source("code/ODNB/text_processing/helper/clean_HTML_functions.R")
 
 ## Load data
-load("data/ODNB_raw/ODNB_rawHTML_20131107.Rdata")
+load(zzfile_textproc_preproc_rawHTML)
 
 
 ## Step 1: Process cosubject biographies, split these into separate bios.
