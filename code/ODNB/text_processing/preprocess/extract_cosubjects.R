@@ -1,13 +1,9 @@
 ##@S This file contains code that extracts all the cosubjects and splits all cosubject documents according to a simple rule. 
 
-source("code/ODNB/ODNB_setup.R")
-
-
 ## TODO: Are there odnb articles beyond index 99999? I think so..., but then what's the limit? Don't want to download a large number of sparsely populated documents. 
 
-## Load helper functions
-print("----- Loading helper functions and data")
-source("code/ODNB/text_processing/helper/clean_HTML_functions.R")
+
+source("code/ODNB/ODNB_setup.R")
 
 ## Load data
 load(zzfile_textproc_preproc_rawHTML)

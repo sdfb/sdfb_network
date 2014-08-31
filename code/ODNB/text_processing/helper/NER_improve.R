@@ -374,14 +374,6 @@ insert.tag = function(start, len, tags) { # Check for null return.
   return(tags)
 }
 
-good_docs_dates = t(sapply(good_docs, function(k) {
-  res = range(ODNB_improvedpred[[k]][[3]]$date, na.rm = TRUE)
-  if (!is.finite(res[1])) { return(c(NA, NA)) } else {return (res) }
-}))
-
-
-
-
 
 ## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (find_closest_date)
 #' <<BasicInfo>> 

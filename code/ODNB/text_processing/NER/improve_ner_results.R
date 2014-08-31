@@ -66,7 +66,10 @@ good_docs = which(sapply(ODNB_improvedpred, function(x) {!is.null(x) & (class(x)
 
 good_docs[2132]
 
-
+good_docs_dates = t(sapply(good_docs, function(k) {
+  res = range(ODNB_improvedpred[[k]][[3]]$date, na.rm = TRUE)
+  if (!is.finite(res[1])) { return(c(NA, NA)) } else {return (res) }
+}))
 
 match(good_docs, full_result$ID) -> good_match
 full_result2 = cbind(full_result, bio_min_date = NA, bio_max_date = NA)

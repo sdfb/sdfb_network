@@ -34,12 +34,12 @@ zzfile_textproc_ner_combtags = "data/ODNB_intermediate/NER/ODNB_combtags20140404
 
 
 
-
-
-## Data files that haven't been updated properly? (generation code isn't completely fixed yet)
-zzfile_NOTUPDATED_metadata = "data/ODNB_raw/ODNB_metadata20140404.Rdata"
-
-
-"../../private_data/odnb_data_proc/ODNB_improvedpred.Rdata"
-"../../private_data/odnb_data_proc/ODNB_entitymatrix.Rdata"
-"../../private_data/odnb_data_proc/ODNB_fullnamelist.Rdata"
+# 
+# 
+# ## Data files that haven't been updated properly? (generation code isn't completely fixed yet)
+# zzfile_NOTUPDATED_metadata = "data/ODNB_raw/ODNB_metadata20140404.Rdata"
+# 
+# 
+# "../../private_data/odnb_data_proc/ODNB_improvedpred.Rdata"
+# "../../private_data/odnb_data_proc/ODNB_entitymatrix.Rdata"
+# "../../private_data/odnb_data_proc/ODNB_fullnamelist.Rdata"
