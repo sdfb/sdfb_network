@@ -1,5 +1,6 @@
-This folder contains all code (mostly R...)
+This folder contains all code (mostly in R, some shell scripts...)
 
-ODNB/ contains code that processes the ODNB code & the model fitting => confidence matrix
-misc/ contains code that attempts miscellaneous small things, not necessarily pertaining to ODNB stuff. 
-network_visualization/ contains code that produces static visualizations of networks. 
+misc/                   -- code for trying different ideas, not necessarily ODNB stuff
+network_visualization/  -- code that produces static visualizations of networks
+ODNB/                   -- code that processes the ODNB code & the model fitting => confidence matrix
+other_data_sources/     -- code that processes other data sources (doesn't go very far)
