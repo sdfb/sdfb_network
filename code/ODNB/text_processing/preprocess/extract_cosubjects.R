@@ -132,5 +132,3 @@ for(j in 1:199999) {
 }
 
 save(ODNB_text, ODNB_cleantext, ODNB_groupcosub, file = zzfile_textproc_preproc_splitcosub)
-#|                                                      **********************************
-#|----##Use variable instead of filename --Sat Aug 30 22:08:59 2014--

@@ -16,11 +16,7 @@ RUN_TEXT_CHECK = FALSE ## This only needs to be true for the first time; this ch
 ## Load raw text data file
 if (!any(ls() == "ODNB_cleantext")) {
   load(zzfile_textproc_preproc_splitcosub)
-#|     **********************************
-#|----##Use variable instead of filename --Sat Aug 30 22:08:59 2014--
   load(zzfile_textproc_ner_results)
-#|     ***************************
-#|----##Use variable instead of filename --Sat Aug 30 22:10:36 2014--
 }
 
 ## Text check, if needed
@@ -91,8 +87,6 @@ for(j in 1:200) {
 }
 
 save(ODNB_tokenized1, file = zzfile_textproc_ner_token1)
-#|                           **************************
-#|----##Use variable instead of filename --Sat Aug 30 22:11:20 2014--
 rm(ODNB_tokenized1)
 
 ODNB_tokenized2 = list()
@@ -129,8 +123,6 @@ for(j in 201:400) {
 }
 
 save(ODNB_tokenized2, file = zzfile_textproc_ner_token2)
-#|                           **************************
-#|----##Use variable instead of filename --Sat Aug 30 22:11:50 2014--
 rm(ODNB_tokenized2)
 
 ODNB_tokenized3 = list()
@@ -167,8 +159,6 @@ for(j in 401:Ncomp) {
 }
 
 save(ODNB_tokenized3, file = zzfile_textproc_ner_token3)
-#|                           **************************
-#|----##Use variable instead of filename --Sat Aug 30 22:11:59 2014--
 rm(ODNB_tokenized3)
 
 

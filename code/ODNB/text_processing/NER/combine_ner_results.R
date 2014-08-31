@@ -33,8 +33,6 @@ if (PARAM_START < 2) {
   ODNB_combtags = list()
   
   load(zzfile_textproc_ner_token1)
-#|     **************************
-#|----##Use variable instead of filename --Sat Aug 30 22:11:20 2014--
 
   ids = which(sapply(ODNB_tokenized1, function(x) {!is.null(x)}))
 
@@ -59,10 +57,6 @@ if (PARAM_START < 2) {
   }
 
   save(ODNB_combtags, file = zzfile_textproc_ner_combtags)
-#|                           ****************************
-#|----##Use variable instead of filename --Sat Aug 30 22:12:36 2014--
-#|                            ******************************************************
-#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
 } 
 
 
@@ -72,14 +66,8 @@ if (PARAM_START < 3) {
 
   if (PARAM_START > 1) {
     load(zzfile_textproc_ner_combtags)
-#|       ****************************
-#|----##Use variable instead of filename --Sat Aug 30 22:12:36 2014--
-#|        ******************************************************
-#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
   }
   load(zzfile_textproc_ner_token2)
-#|     **************************
-#|----##Use variable instead of filename --Sat Aug 30 22:11:50 2014--
   ids = which(sapply(ODNB_tokenized2, function(x) {!is.null(x)}))
   
   for(j in ids) {
@@ -103,10 +91,6 @@ if (PARAM_START < 3) {
   }
   
   save(ODNB_combtags, file = zzfile_textproc_ner_combtags)
-#|                           ****************************
-#|----##Use variable instead of filename --Sat Aug 30 22:12:36 2014--
-#|                            ******************************************************
-#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
 }
 
 if (PARAM_START < 4) {
@@ -114,16 +98,10 @@ if (PARAM_START < 4) {
   
   if (PARAM_START > 2) {
     load(zzfile_textproc_ner_combtags)
-#|       ****************************
-#|----##Use variable instead of filename --Sat Aug 30 22:12:36 2014--
-#|        ******************************************************
-#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
   }
   
   rm(ODNB_tokenized2)
   load(zzfile_textproc_ner_token3)
-#|     **************************
-#|----##Use variable instead of filename --Sat Aug 30 22:11:59 2014--
   ids = which(sapply(ODNB_tokenized3, function(x) {!is.null(x)}))
   
   for(j in ids) {
@@ -146,8 +124,4 @@ if (PARAM_START < 4) {
     print(j)
   }
   save(ODNB_combtags, file = zzfile_textproc_ner_combtags)
-#|                           ****************************
-#|----##Use variable instead of filename --Sat Aug 30 22:12:36 2014--
-#|                            ******************************************************
-#|----##Fix old directory structure --Sun Aug 10 11:39:43 2014--
 }

@@ -6,8 +6,6 @@ source("text_mining/ODNB/helper_functions.R")
 
 ## Load Data
 load(zzfile_textproc_preproc_splitcosub)
-#|   **********************************
-#|----##Use variable instead of filename --Sat Aug 30 22:08:59 2014--
 
 ## Extract names
 ext_names = lapply(ODNB_text, ODNB_extract_name_segment)
@@ -90,8 +88,6 @@ full_result = data.frame(
   bio_length = bio_len[good_names], stringsAsFactors = FALSE)
 
 save(full_result, file = "data/ODNB_raw/ODNB_metadata20140404.Rdata")
-#|                        *****************************************
-#|----##Fix old directory structure --Sun Aug 10 11:48:41 2014--
 
 res
 
