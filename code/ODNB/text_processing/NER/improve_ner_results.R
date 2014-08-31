@@ -1,7 +1,15 @@
 ## Code to improve NER results.
+
+source("code/ODNB/ODNB_setup.R")
+
+
+
+
+
+
 ## TODO: [Cleanup] This file needs code cleanup. 
 
-source("code/ODNB/text_processing/helper/NER_improve.R")
+
 
 load("data/ODNB_intermediate/NER/ODNB_combtags20140404.Rdata")
 #|          ******************************************************

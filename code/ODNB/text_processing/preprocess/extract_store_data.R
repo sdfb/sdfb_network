@@ -1,5 +1,5 @@
 ##@S This file contains code to create and store the ODNB.data file.
-source("code/ODNB/file_locations.R")
+source("code/ODNB/ODNB_setup.R")
 
 ODNB_rawHTML = list()
 

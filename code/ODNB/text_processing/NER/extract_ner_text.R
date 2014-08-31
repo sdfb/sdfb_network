@@ -1,4 +1,6 @@
 ##@S This file contains code that extracts the ner-processed text, and saves it into a .Rdata file
+source("code/ODNB/ODNB_setup.R")
+
 Ncomp = 529
 
 ## Rawtext
