@@ -211,3 +211,4 @@ sample.for.nodenum(1743)
 
 hist(apply(a$path[[2]], 1, sum), main = "Distribution of number of edges/node (lambda = 0.1)", breaks = 20,
      xlab = "Number of Edges in Node")
+
