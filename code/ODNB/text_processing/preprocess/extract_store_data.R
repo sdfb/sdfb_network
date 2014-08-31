@@ -1,11 +1,12 @@
-##@S This file contains code to create and store the ODNB.data file.
+##@S Read HTML files into a ODNB list
+
 source("code/ODNB/ODNB_setup.R")
 
 ODNB_rawHTML = list()
 
 for(i in 1:99999) {
   if (i %% 100 == 0) { print(i) }
-  filename = paste("private_data/odnb_data_text/HTML/file_",i,".txt", sep = "")
+  filename = paste("data/ODNB_raw/HTML/file_",i,".txt", sep = "")
   ODNB_rawHTML[[i]] = readLines(filename)
 }
 
