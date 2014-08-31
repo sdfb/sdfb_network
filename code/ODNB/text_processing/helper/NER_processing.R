@@ -3,25 +3,20 @@
 
 ## Split truedocs into words
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (format_text_and_split)
-#' <<BasicInfo>> 
+#' This function does the following:
+#' 1. add spaces before punctuation
+#' 2. add spaces before/after (), [], {}, as to separate them off => easier to count
+#' 3. remove more than one space in a row.
+#' 4. Tokenize (split into a word-by-word representation).
+#' 4a. Fix problems with ;. 
 #' 
-#' @param text temp
+#' @param text character vector
 #' 
-#' @return temp
+#' @return formatted text
 #' 
 #' @export
 #' 
 format_text_and_split = function(text) {
-  ## This function does the following:
-  ## 1. add spaces before punctuation
-  ## 2. add spaces before/after (), [], {}, as to separate them off => easier to count
-  ## 3. remove more than one space in a row.
-  ## 4. Tokenize (split into a word-by-word representation).
-  ## 4a. Fix problems with ;. 
-  
-  ## text should be a character vector.
-  
   ## Collapse text
   temp = paste(text, collapse = " ")
   
@@ -59,40 +54,36 @@ format_text_and_split = function(text) {
   return(text_split)
 }
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (paste_two)
-#' <<BasicInfo>> 
+
+
+#' this pastes together two consecutive entries in a vector
+#' starting with ind.start and then ind.start+1
+#' and edits the vector to remove the extra cell
 #' 
-#' @param vec temp
-#' @param ind.start temp
+#' @param vec vector
+#' @param ind.start where to paste
 #' 
-#' @return temp
+#' @return updated vector
 #' 
 #' @export
 #' 
 paste_two = function(vec,ind.start) {
-  # this pastes together two consecutive entries in a vector
-  #  starting with ind.start and then ind.start+1
-  #  and edits the vector to remove the extra cell
   vec[ind.start] = paste(vec[ind.start], vec[ind.start+1], sep = "")
   return(vec[-(ind.start+1)])
 }
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (normalize_tagtext)
-#' <<BasicInfo>> 
+
+#' This vectorizes and normalizes the tagged text by standardizing the tags to have the same format between taggers. 
 #' 
-#' @param text temp
-#' @param true.text temp
-#' @param type temp
+#' @param text tagged text
+#' @param true.text raw text
+#' @param type "ST" or "LP"
 #' 
-#' @return temp
+#' @return normalized form of tagged text 
 #' 
 #' @export
 #' 
 normalize_tagtext = function(text, true.text, type) { 
-  ## This vectorizes, normalizes tagged text
-  ##   by standardizing the tags to the same format between the two taggers. 
-  ## type = "ST" or "LP"
-  
   #   text = gsub("£", "?", text) ## pound symbol... convert to ?
   #   text = gsub("&amp;", "&", text)
   
@@ -137,23 +128,18 @@ normalize_tagtext = function(text, true.text, type) {
 }
 
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (proc_tagtext)
-#' <<BasicInfo>> 
+#' returns vectors of tags matching tag. PERSON, ORGANIZATION, LOCATION 
 #' 
-#' @param tagged.text temp
-#' @param type temp
-#' @param tag.types temp
+#' @param tagged.text vectorized tagged text
+#' @param type ST or LP
+#' @param tag.types  existing tag.types
 #' 
-#' @return temp
+#' @return fix this
 #' 
 #' @export
 #' 
 proc_tagtext = function(tagged.text, type,
                          tag.types = c("PERSON", "ORGANIZATION", "LOCATION")) {
-  ## returns vectors of tags matching tag. PERSON, ORGANIZATION, LOCATION
-  #type = ST or LP
-  #tag.types = existing tag.types
-  
   toreturn = matrix("", nrow = length(tagged.text), ncol = length(tag.types))
   colnames(toreturn) = paste(type,tag.types,sep =":")
   
@@ -286,12 +272,12 @@ proc_tagtext = function(tagged.text, type,
   return(toreturn)
 }
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (tag_dates)
-#' <<BasicInfo>> 
+
+#' Finds dates between 1500-1900
 #' 
-#' @param vec temp
+#' @param vec text
 #' 
-#' @return temp
+#' @return vector with dates extracted...
 #' 
 #' @export
 #' 
@@ -304,17 +290,16 @@ tag_dates = function(vec) {
   return(res)
 }
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (compute_parenthesis)
-#' <<BasicInfo>> 
+
+#' This function computes the level of parenthesis embedding
 #' 
-#' @param vec temp
+#' @param vec text
 #' 
-#' @return temp
+#' @return vector of parenthesis embedding
 #' 
 #' @export
 #' 
 compute_parenthesis = function(vec) {
-  ## This function computes the level of parenthesis embedding
   starts = grep("[{([]", vec)
   ends = grep("[]})]", vec)
   res = rep(0, times = length(vec))
@@ -335,22 +320,16 @@ compute_parenthesis = function(vec) {
 }
 
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (combine_two)
-#' <<BasicInfo>> 
+#' Takes two predictor vectors and outputs a combined predictor vector, giving priority to vector a. 
 #' 
-#' @param a temp
-#' @param b temp
+#' @param a tagged output
+#' @param b tagged output
 #' 
-#' @return temp
+#' @return combined tagged output
 #' 
 #' @export
 #' 
 combine_two = function(a,b) {
-  ## Input      a,b = char vec ("P", "PS", etc.)
-  ## Output     char vec ("P",etc.)
-  ## 
-  ## Takes two predictors and outputs a combined predictor vector, giving priority to vector a. 
-  
   if (length(a) != length(b)) { error("ERROR: mismatching vector lengths") }
   
   toreturn = a

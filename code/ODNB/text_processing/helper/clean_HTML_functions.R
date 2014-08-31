@@ -71,19 +71,16 @@ check_cosubject = function(text) {
   }
 }
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (exists_cosubject)
-#' <<BasicInfo>> 
+
+#' Detects if this there are cosubject mentions in this biography
 #' 
-#' @param text temp
+#' @param text odnb text
 #' 
-#' @return temp
+#' @return T/F: True if 'cosubject' appears in document'
 #' 
 #' @export
 #' 
 exists_cosubject = function(text) {
-  ## Input:Text
-  ## Output: T/f: True if 'cosubject' appears in document'
-  
   if (length(grep("cosubject", text)) > 0) {
     return(TRUE)
   } else {
@@ -92,20 +89,16 @@ exists_cosubject = function(text) {
 }
 
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (process_cosubject)
-#' <<BasicInfo>> 
+#' This function determines the type of cosubject biography, 
+#' and consequently splits it (and returns a list of texts and id numbers for the texts)
 #' 
-#' @param ids temp
+#' @param ids is a vector of numbers that refer to the same document
 #' 
-#' @return temp
+#' @return list of cosubject biographies
 #' 
 #' @export
 #' 
 process_cosubject = function(ids) {
-  ## This function determines the type of cosubject biography, and consequently splits it (and returns a list of texts and id numbers for the texts)
-  ## Input should be the base document (and we can call dnb_grab_main on it)
-  ## input is a vector of numbers that refer to the same document
-  
   ## These are names 
   drop_names = c("family", "Society", "emperors", "school", "Crazy Gang", "Castilians", "group", "brothers", "Corps", "Club", "Boys", "scholars", "Queen's", "club", "Edinburgh Seven", "sisters", "Vorticists", "knights", "colourists", "kings", "conspirators", "Group", "Martyrs", "witches", "officers", "wives", "Pioneers", "artists", "visitors", "painters", "Kings", "Girls", "women", "Babes", "Gruffudd ap Rhys", "Moneyers", "officials", "Women", "spies", "American Indians", "Servants")
 
@@ -160,18 +153,16 @@ process_cosubject = function(ids) {
 }
 
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (ODNB_extract_name_segment)
-#' <<BasicInfo>> 
+#' This function returns a list of two elements: the substring in the text that matches the name segment 
+#' (including html), and the character number that signifies the end of the string.
 #' 
-#' @param text temp
+#' @param text odnb text
 #' 
-#' @return temp
+#' @return FIX THIS
 #' 
 #' @export
 #' 
 ODNB_extract_name_segment = function(text) {
-## This function returns a list of two elements: the substring in the text that matches the name segment (including html), and the character number that signifies the end of the string.
-  
   if(is.null(text)) { return(list(text = "", end = NA)) }
   if (length(text) == 0) { return(list(text = "", end = NA)) }
   
@@ -213,21 +204,16 @@ ODNB_extract_name_segment = function(text) {
   
 }
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (ODNB_fix_accent_html)
-#' <<BasicInfo>> 
+
+#' This removes/fixes all sorts of HTML things. 
 #' 
-#' @param text temp
+#' @param text  char vec (ODNB)
 #' 
-#' @return temp
+#' @return char vec
 #' 
 #' @export
 #' 
 ODNB_fix_accent_html =  function(text) {
-  ## Input      text = char vec (ODNB)
-  ## Output     char vec
-  ## 
-  ## This removes/fixes all sorts of HTML things. 
-  
   temp = text
   
   ## Removes/Fixes HTML expressions
