@@ -1,3 +1,6 @@
+## Note that this is code from some stat undergrad. 
+## TODO: Figure out the exact source of this code (it's in the emails somewhere...)
+
 library(network)
 library(sna)
 
