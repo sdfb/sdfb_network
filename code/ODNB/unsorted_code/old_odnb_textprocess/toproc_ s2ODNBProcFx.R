@@ -291,40 +291,6 @@ compute.error <- function(tr,pr) {
 }
 
 
-## copied4/4/2014
-text.remove.punct <- function(vec) {
-  # Always run TWICE...
-  # Removes punctuation from every entry in vec, to go from text entry to "entity name"
-  vec = gsub("[,;!?:()|`]", "", vec) #remove `,;!?| (),[]'s
-  vec = gsub("\\[", "", vec)
-  vec = gsub("]", "", vec)
-  
-  # Remove tailing 's
-  vec = gsub("'s$", "", vec)
-  
-  #remove tailing/leading ' 's
-  vec = gsub(" '+", " ", vec)
-  vec = gsub("'+ ", " ", vec)
-  vec = gsub("^'+", "", vec)
-  vec = gsub("'+$", "", vec)
-  vec = gsub("'[.]$", "", vec)
-  
-  # remove .'s not followed by a SINGLE cap letter
-  all.periods = grep("[.]", vec)
-  spec.periods = grep(" [[:upper:]][.]", vec)
-  diff = setdiff(all.periods, spec.periods)
-  vec[diff] = gsub("[.]", "", vec[diff])
-  if (length(spec.periods) > 0) {
-    for (i in spec.periods) {
-      a = gregexpr("[^[:upper:]][.]", vec[i])[[1]]
-      if (a[1] != -1) {
-        vec[i] = paste(substr(vec[i], 1, a[1]), substr(vec[i], a[1]+2, nchar(vec[i])), sep = "")
-      }
-    }
-  }
-  
-  return(vec)
-}
 ## COpied 4/4/2014
 remove.badentities <- function(comb.tag.mat, position.df) {
   # Anything with \\, /, $, +, *, =, # is not going to be an entity. 

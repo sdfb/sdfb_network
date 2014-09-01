@@ -113,7 +113,9 @@ improve_pred = function(comb.tag, main.person = NULL,
   }
   
   print("::::: Searching --- Finding more matches: Exact, length > 1")
-  text = text.remove.punct(text.remove.punct(comb.tag[,1]))
+  text = text_remove_punct(text_remove_punct(comb.tag[,1]))
+#|                         *****************
+#|----##replace period with _ --Mon Sep  1 16:51:30 2014--
   longs = which(matches.matrix$NumWords > 1)
   
   to.add = matrix("", nrow = 2500, ncol = 3)
@@ -272,15 +274,19 @@ find_tagpositions = function(mat) { ## formerly find.names
   } else { temp = NULL }
   
   temp2 = rbind(toreturn, temp)
-  text = text.remove.punct(temp2[,1])
-  text = text.remove.punct(text)
+  text = text_remove_punct(temp2[,1])
+#|       *****************
+#|----##replace period with _ --Mon Sep  1 16:51:30 2014--
+  text = text_remove_punct(text)
+#|       *****************
+#|----##replace period with _ --Mon Sep  1 16:51:30 2014--
   temp = data.frame(Name=text, Location=as.numeric(temp2[,2]), stringsAsFactors = FALSE)
   
   return(temp[order(temp[,2]),])
 }
 
 
-text.remove.punct = function(vec) {
+text_remove_punct = function(vec) {
   # Always run TWICE...
   # Removes punctuation from every entry in vec, to go from text entry to "entity name"
   vec = gsub("[,;!?:()|`]", "", vec) #remove `,;!?| (),[]'s
