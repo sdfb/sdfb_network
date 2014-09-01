@@ -253,7 +253,9 @@ pt = improve_pred(comb.tag = at)
 compute.error(tr = mt, pr = at)
 
 #
-find.tagpositions(combined.tags[[28]])
+find_tagpositions(combined.tags[[28]])
+#|*****************
+#|----##replace period with _ --Mon Sep  1 16:49:37 2014--
 
 #test for punctuation
 lens = sapply(combined.tags, dim)
@@ -264,7 +266,9 @@ exists.doc.comb = which(lens2 == 2)
 i = sample(exists.doc.comb, size = 130)
 
 for(j in 1:130) {
-  a = find.tagpositions(combined.tags[[i[j]]])
+  a = find_tagpositions(combined.tags[[i[j]]])
+#|    *****************
+#|----##replace period with _ --Mon Sep  1 16:49:37 2014--
   b = grep("[^[:alnum:] '.&-]", a[,1])  # - needs to be last
   #print(j)
   if (length(b) > 0) {print(a[b,])}
@@ -284,7 +288,9 @@ lens2 = sapply(lens, length)
 exists.doc.comb = which(lens2 == 2)
 
 for (j in exists.doc.comb) {
-  a = find.tagpositions(combined.tags[[j]])
+  a = find_tagpositions(combined.tags[[j]])
+#|    *****************
+#|----##replace period with _ --Mon Sep  1 16:49:37 2014--
   b = grep("[^[:alnum:] '.&/$+*=-]", a[,1])  # - needs to be last
   if (length(b) > 0) {print(a[b,])}  
   if (j %% 1000 == 0) { print(j) }
@@ -294,7 +300,9 @@ for (j in exists.doc.comb) {
 # Anything with numbers is not going to be an entity
 
 # 68575 test
-a = find.tagpositions(combined.tags[[68575]])
+a = find_tagpositions(combined.tags[[68575]])
+#|  *****************
+#|----##replace period with _ --Mon Sep  1 16:49:37 2014--
 
 remove.badentities(combined.tags[[68575]], position.df = a)
 table(combined.tags[[68575]][a[,2],2])

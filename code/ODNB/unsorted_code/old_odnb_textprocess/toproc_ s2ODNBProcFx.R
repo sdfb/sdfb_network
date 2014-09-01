@@ -290,46 +290,6 @@ compute.error <- function(tr,pr) {
   return(results)
 }
 
-########## This function copied over. 4/4/2014
-find.tagpositions <- function(mat) { ## formerly find.names
-  ## Input      mat = two column matrix of predictions (1st col = text, 2nd = "PS", etc
-  ## Output     matrix, 1st col = names identified; 2nd col = location
-  ## 
-  ## Finds all identified names and outputs it
-  
-  single = which(mat[,2] == "P")
-  starts = which(mat[,2] == "PS")
-  ends = which(mat[,2] == "PE")
-  
-  ## sanity check for tags: make sure appropriate
-  if (length(starts) != length(ends) ) {
-    return("ERROR (find.names): not same number of PS, PE")
-  } 
-  num.errs = sum(starts > ends) 
-  if (num.errs > 0) {
-    return("ERROR (find.names): not all PS/PE are in correct order")
-  }
-  
-  ## Single matches 
-  if (length(single) > 0) {
-    toreturn = cbind(mat[single, 1],single)
-  } else { toreturn = NULL }
-  
-  # Multiple-length matches    
-  if (length(starts) > 0) {
-    temp = matrix(nrow = length(starts), ncol = 2)
-    for (i in 1:length(starts)) {
-      temp[i,] = c(paste(mat[starts[i]:ends[i], 1], collapse = " "), starts[i])
-    }
-  } else { temp = NULL }
-  
-  temp2 = rbind(toreturn, temp)
-  text = text.remove.punct(temp2[,1])
-  text = text.remove.punct(text)
-  temp = data.frame(Name=text, Location=as.numeric(temp2[,2]), stringsAsFactors = FALSE)
-  
-  return(temp[order(temp[,2]),])
-}
 
 ## copied4/4/2014
 text.remove.punct <- function(vec) {

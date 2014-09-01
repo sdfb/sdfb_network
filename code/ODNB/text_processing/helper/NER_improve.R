@@ -9,7 +9,9 @@ improve_pred = function(comb.tag, main.person = NULL,
   
   print("::::: Setup, Tagging")
   # Resolve current matches into Entity/Position matrix
-  tag.positions = find.tagpositions(comb.tag)
+  tag.positions = find_tagpositions(comb.tag)
+#|                *****************
+#|----##replace period with _ --Mon Sep  1 16:49:37 2014--
   
   # Remove weird entries (bad punct in entities, non-capitalized: see remove.badentities)
   temp = remove.badentities(comb.tag.mat = comb.tag, position.df = tag.positions)
@@ -237,7 +239,7 @@ improve_pred = function(comb.tag, main.person = NULL,
 }
 
 
-find.tagpositions = function(mat) { ## formerly find.names
+find_tagpositions = function(mat) { ## formerly find.names
   ## Input      mat = two column matrix of predictions (1st col = text, 2nd = "PS", etc
   ## Output     matrix, 1st col = names identified; 2nd col = location
   ## 
