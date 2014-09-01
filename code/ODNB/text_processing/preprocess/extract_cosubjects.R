@@ -1,12 +1,18 @@
 ##@S This file contains code that extracts all the cosubjects and splits all cosubject documents according to a simple rule. 
 
-## TODO: Are there odnb articles beyond index 99999? I think so..., but then what's the limit? Don't want to download a large number of sparsely populated documents. 
+## TODO: [Data Quality] Are there odnb articles beyond index 99999? I think so..., but then what's the limit? Don't want to download a large number of sparsely populated documents. 
 
 
 source("code/ODNB/ODNB_setup.R")
 
 ## Load data
 load(zzfile_textproc_preproc_rawHTML)
+
+
+
+
+
+
 
 
 ## Step 1: Process cosubject biographies, split these into separate bios.

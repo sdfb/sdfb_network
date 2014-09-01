@@ -1,5 +1,17 @@
 #@S Functions relating to NER iterative improvements
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (improve_pred)
+#' <<BasicInfo>> 
+#' 
+#' @param comb.tag temp
+#' @param main.person temp
+#' @param exact.words temp
+#' @param regex.words temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 improve_pred = function(comb.tag, main.person = NULL,
                          exact.words = NULL, regex.words = NULL) {
   # basically, adjustd version of analyze.text
@@ -253,6 +265,15 @@ improve_pred = function(comb.tag, main.person = NULL,
 }
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (find_tagpositions)
+#' <<BasicInfo>> 
+#' 
+#' @param mat temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 find_tagpositions = function(mat) { ## formerly find.names
   ## Input      mat = two column matrix of predictions (1st col = text, 2nd = "PS", etc
   ## Output     matrix, 1st col = names identified; 2nd col = location
@@ -298,6 +319,15 @@ find_tagpositions = function(mat) { ## formerly find.names
 }
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (text_remove_punct)
+#' <<BasicInfo>> 
+#' 
+#' @param vec temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 text_remove_punct = function(vec) {
   # Always run TWICE...
   # Removes punctuation from every entry in vec, to go from text entry to "entity name"
@@ -332,6 +362,16 @@ text_remove_punct = function(vec) {
   return(vec)
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (remove_badentities)
+#' <<BasicInfo>> 
+#' 
+#' @param comb.tag.mat temp
+#' @param position.df temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 remove_badentities = function(comb.tag.mat, position.df) {
 #|******************
 #|----##replace period with _ --Mon Sep  1 16:55:56 2014--
@@ -364,6 +404,16 @@ remove_badentities = function(comb.tag.mat, position.df) {
   }
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (remove_entries)
+#' <<BasicInfo>> 
+#' 
+#' @param tags temp
+#' @param entries temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 remove_entries = function(tags, entries) {
 #|**************
 #|----##replace period with _ --Mon Sep  1 16:56:42 2014--
@@ -380,6 +430,17 @@ remove_entries = function(tags, entries) {
   return(toreturn)
 }
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (insert_tag)
+#' <<BasicInfo>> 
+#' 
+#' @param start temp
+#' @param len temp
+#' @param tags temp
+#' 
+#' @return temp
+#' 
+#' @export
+#' 
 insert_tag = function(start, len, tags) { # Check for null return. 
 #|**********
 #|----##replace period with _ --Mon Sep  1 16:57:46 2014--
