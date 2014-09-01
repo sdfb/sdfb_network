@@ -154,7 +154,9 @@ for(i in 1:length(newids)) {
 idlist$Location[idlist$ID == 0]
 which(idlist$ID == 0)
 zzz[which(idlist$ID == 0),2]
-test2 = remove.entries(tags = cur.test, entries = zzz[,2])
+test2 = remove_entries(tags = cur.test, entries = zzz[,2])
+#|      **************
+#|----##replace period with _ --Mon Sep  1 16:56:42 2014--
 
 error.rate(true.tag[2,], b[[3]])
 error.findall(true.tag, rbind(true.tag[1,], b[[3]]))

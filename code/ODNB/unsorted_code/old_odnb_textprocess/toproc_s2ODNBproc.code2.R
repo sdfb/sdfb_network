@@ -304,7 +304,9 @@ a = find_tagpositions(combined.tags[[68575]])
 #|  *****************
 #|----##replace period with _ --Mon Sep  1 16:49:37 2014--
 
-remove.badentities(combined.tags[[68575]], position.df = a)
+remove_badentities(combined.tags[[68575]], position.df = a)
+#|******************
+#|----##replace period with _ --Mon Sep  1 16:55:56 2014--
 table(combined.tags[[68575]][a[,2],2])
 
 a = improve_pred(comb.tag = combined.tags[[1]], main.person = "Jacques Abbadie")

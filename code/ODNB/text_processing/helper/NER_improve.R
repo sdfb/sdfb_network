@@ -13,8 +13,12 @@ improve_pred = function(comb.tag, main.person = NULL,
 #|                *****************
 #|----##replace period with _ --Mon Sep  1 16:49:37 2014--
   
-  # Remove weird entries (bad punct in entities, non-capitalized: see remove.badentities)
-  temp = remove.badentities(comb.tag.mat = comb.tag, position.df = tag.positions)
+  # Remove weird entries (bad punct in entities, non-capitalized: see remove_badentities)
+#|                                                                    ******************
+#|----##replace period with _ --Mon Sep  1 16:55:56 2014--
+  temp = remove_badentities(comb.tag.mat = comb.tag, position.df = tag.positions)
+#|       ******************
+#|----##replace period with _ --Mon Sep  1 16:55:56 2014--
   comb.tag = temp[[1]]
   tag.positions = temp[[2]]
   
@@ -70,7 +74,9 @@ improve_pred = function(comb.tag, main.person = NULL,
     }
     if (!is.null(matches.toclear)) {
       matches.matrix = matches.matrix[-ids.to.rm,]
-      comb.tag[,2] = remove.entries(tags = comb.tag[,2], 
+      comb.tag[,2] = remove_entries(tags = comb.tag[,2], 
+#|                   **************
+#|----##replace period with _ --Mon Sep  1 16:56:42 2014--
                                     entries = idlist$Position[matches.toclear])
       idlist = idlist[-matches.toclear,]
       
@@ -131,7 +137,9 @@ improve_pred = function(comb.tag, main.person = NULL,
             num = num + length(grep(splitted[k], text[i + k - 1]))
           }
           if (num == length(splitted)) {
-            temp = insert.tag(start = i, len = num, tags = comb.tag[,2])
+            temp = insert_tag(start = i, len = num, tags = comb.tag[,2])
+#|                 **********
+#|----##replace period with _ --Mon Sep  1 16:57:46 2014--
             if (!is.null(temp)) {
               comb.tag[,2] = temp
               to.add[cur.add.index,] = c(paste(text[i:(i+num-1)], collapse = " "), i, 
@@ -150,7 +158,9 @@ improve_pred = function(comb.tag, main.person = NULL,
   for (j in shorts) {
     loc = grep(j, text)
     for(i in loc) {
-      temp = insert.tag(start = i, len = 1, tags = comb.tag[,2])
+      temp = insert_tag(start = i, len = 1, tags = comb.tag[,2])
+#|           **********
+#|----##replace period with _ --Mon Sep  1 16:57:46 2014--
       if (!is.null(temp)) {
         comb.tag[,2] = temp
         to.add[cur.add.index,] = c(text[i], i, -1)
@@ -168,7 +178,9 @@ improve_pred = function(comb.tag, main.person = NULL,
     word.id = which(matches.matrix$MatchName == j)
     loc = grep(j, text)
     for(i in loc) {
-      temp = insert.tag(start = i, len = 1, tags = comb.tag[,2])
+      temp = insert_tag(start = i, len = 1, tags = comb.tag[,2])
+#|           **********
+#|----##replace period with _ --Mon Sep  1 16:57:46 2014--
       if (!is.null(temp)) {
         comb.tag[,2] = temp
         to.add[cur.add.index,] = c(text[i], i, matches.matrix$ID[word.id])
@@ -320,7 +332,9 @@ text_remove_punct = function(vec) {
   return(vec)
 }
 
-remove.badentities = function(comb.tag.mat, position.df) {
+remove_badentities = function(comb.tag.mat, position.df) {
+#|******************
+#|----##replace period with _ --Mon Sep  1 16:55:56 2014--
   # Anything with \\, /, $, +, *, =, # is not going to be an entity. 
   # Anything with numbers is not going to be an entity
   # Anything length 2 or shorter in total is not an entity
@@ -341,14 +355,18 @@ remove.badentities = function(comb.tag.mat, position.df) {
                  which(!sapply(text.totest, is.cap)) ))
   if (length(bad) > 0) {
     pos = position.df[bad,2]
-    comb.tag.mat[,2] = remove.entries(tags = comb.tag.mat[,2], entries = pos)
+    comb.tag.mat[,2] = remove_entries(tags = comb.tag.mat[,2], entries = pos)
+#|                     **************
+#|----##replace period with _ --Mon Sep  1 16:56:42 2014--
     return(list(comb.tag.mat, position.df[-bad,]))
   } else {
     return(list(comb.tag.mat, position.df))
   }
 }
 
-remove.entries = function(tags, entries) {
+remove_entries = function(tags, entries) {
+#|**************
+#|----##replace period with _ --Mon Sep  1 16:56:42 2014--
   toreturn = tags
   for (j in entries) {
     if (toreturn[j] == "P") {
@@ -362,7 +380,9 @@ remove.entries = function(tags, entries) {
   return(toreturn)
 }
 
-insert.tag = function(start, len, tags) { # Check for null return. 
+insert_tag = function(start, len, tags) { # Check for null return. 
+#|**********
+#|----##replace period with _ --Mon Sep  1 16:57:46 2014--
   if (all(tags[start:(start+len-1)] == "")) {
     if (len == 1) {
       tags[start] = "P"
