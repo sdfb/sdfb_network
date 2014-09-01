@@ -2,46 +2,46 @@
 
 
 
-#' Removes all entries which only have spaces
+#' Removes all elements which only have spaces
 #' 
-#' @param text character vector corresponding to lines in a document
+#' @param raw_htmltext Character vector corresponding to lines in a document (HTML code)
 #' 
-#' @return Returns the document without empty lines
+#' @return Character vector without empty lines
 #' 
 #' @export
 #' 
-rm_emptylines = function(text) {   
-  a = grep(pattern = "^[[:space:]]*$", text)
-  return(text[-a])
+rm_emptylines = function(raw_htmltext) {   
+  a = grep(pattern = "^[[:space:]]*$", raw_htmltext)
+  return(raw_htmltext[-a])
 }
 
 
 #' This extracts the pertinent part of the html code and outputs that.
 #' 
-#' @param artic char vector (format = read from ODNB html file)
+#' @param raw_htmltext Character vector corresponding to lines in a document (HTML code)
 #' 
-#' @return biography portion of document
+#' @return Character vector contains biography section of code
 #' 
 #' @export
 #' 
-dnb_grab_main = function(artic) {
-  base_article = rm_emptylines(artic)
+dnb_grab_main = function(raw_htmltext) {
+  base_article = rm_emptylines(raw_htmltext)
   sta = min(grep(pattern = "<div class=\"para\">" , base_article))
   end = grep(pattern = "<div id=\"references\">" , base_article)
   return(base_article[(sta+1):(end-2)])
 }
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (is_nobio)
+
 #' Checks if the HTML file is a biography
 #' 
-#' @param text read in ODNB file
+#' @param raw_htmltext Character vector corresponding to lines in a document (HTML code)
 #' 
 #' @return TRUE if file is not a biography
 #' 
 #' @export
 #' 
-is_nobio = function(text) {
-  if (length(grep(pattern = "Server Error", text[6])) > 0) {
+is_nobio = function(raw_htmltext) {
+  if (length(grep(pattern = "Server Error", raw_htmltext[6])) > 0) {
     return(TRUE)
   } else { 
     return(FALSE)
@@ -52,20 +52,20 @@ is_nobio = function(text) {
 
 #' Returns all cosubjects listed in this biography
 #' 
-#' @param text char vector (format = processed through dnb.grab.main)
+#' @param htmltext Character vector : only section pertaining to biography
 #' 
 #' @return vector of cosubjects in biography
 #' 
 #' @export
 #' 
-check_cosubject = function(text) {
-  co = grep(pattern = "cosubject_", x = text)
+check_cosubject = function(htmltext) {
+  co = grep(pattern = "cosubject_", x = htmltext)
   if (length(co) == 0) { return(0) }
   else {
     toreturn = 0
     for(i in 1:length(co)) {
-      temp = regexpr(pattern = "[[:digit:]]+", text = text[co[i]]) 
-      toreturn[i] = substr(text[co[i]], start = 20, stop = 19 + attr(temp, "match.length")[1])
+      temp = regexpr(pattern = "[[:digit:]]+", text = htmltext[co[i]]) 
+      toreturn[i] = substr(htmltext[co[i]], start = 20, stop = 19 + attr(temp, "match.length")[1])
     }
     return(as.numeric(toreturn))
   }
@@ -74,14 +74,14 @@ check_cosubject = function(text) {
 
 #' Detects if this there are cosubject mentions in this biography
 #' 
-#' @param text odnb text
+#' @param htmltext Character vector : only section pertaining to biography
 #' 
 #' @return T/F: True if 'cosubject' appears in document'
 #' 
 #' @export
 #' 
-exists_cosubject = function(text) {
-  if (length(grep("cosubject", text)) > 0) {
+exists_cosubject = function(htmltext) {
+  if (length(grep("cosubject", htmltext)) > 0) {
     return(TRUE)
   } else {
     return(FALSE)
