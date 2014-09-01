@@ -29,7 +29,9 @@ for(j in seq_along(full_result$ID)) {
   }
 
   ODNB_improvedpred[[full_result$ID[j]]] =
-    try(expr = improve.pred(comb.tag = ODNB_combtags[[full_result$ID[j]]], main.person = mainp,
+    try(expr = improve_pred(comb.tag = ODNB_combtags[[full_result$ID[j]]], main.person = mainp,
+#|             ************
+#|----##replace period with _ --Mon Sep  1 16:46:42 2014--
           regex.words = c("Commonwealth", "Catholic", "Greek", 
             "Roman", "Describe", "Treatise"),
           exact.words = c("Abbey", "House", "Island",

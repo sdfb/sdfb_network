@@ -1,8 +1,6 @@
+#@S Functions relating to NER iterative improvements
 
-
-##### Copied Over 3/24/2014
-
-improve.pred = function(comb.tag, main.person = NULL,
+improve_pred = function(comb.tag, main.person = NULL,
                          exact.words = NULL, regex.words = NULL) {
   # basically, adjustd version of analyze.text
   # input combined tags, etc.; output is cleaned up version with new matches etc. 

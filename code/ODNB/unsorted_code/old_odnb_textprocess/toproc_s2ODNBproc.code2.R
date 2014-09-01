@@ -224,7 +224,9 @@ fix.text = fix.tagtext(text = text, true.text = combined.tags[[ODNB.nums[j]]][,1
 
 mt = proc.tagtext(fix.text, type = "ST")[,1]
 at = combined.tags[[ODNB.nums[j]]][,2]
-pt = improve.pred(comb.tag = cbind(true.text, at), main.person = man.tagged.names[k],
+pt = improve_pred(comb.tag = cbind(true.text, at), main.person = man.tagged.names[k],
+#|   ************
+#|----##replace period with _ --Mon Sep  1 16:46:42 2014--
                   regex.words = c("Commonwealth", "£", "Catholic", "Greek", 
                                   "Roman", "Describe", "Treatise"),
                   exact.words = c("Abbey", "House", "Island",
@@ -245,7 +247,9 @@ fix.text = fix.tagtext(text = text, true.text = combined.tags[[j]][,1], type = "
 
 mt = proc.tagtext(fix.text, type = "ST")
 at = combined.tags[[j]][,2]
-pt = improve.pred(comb.tag = at)
+pt = improve_pred(comb.tag = at)
+#|   ************
+#|----##replace period with _ --Mon Sep  1 16:46:42 2014--
 compute.error(tr = mt, pr = at)
 
 #
@@ -295,7 +299,9 @@ a = find.tagpositions(combined.tags[[68575]])
 remove.badentities(combined.tags[[68575]], position.df = a)
 table(combined.tags[[68575]][a[,2],2])
 
-a = improve.pred(comb.tag = combined.tags[[1]], main.person = "Jacques Abbadie")
+a = improve_pred(comb.tag = combined.tags[[1]], main.person = "Jacques Abbadie")
+#|  ************
+#|----##replace period with _ --Mon Sep  1 16:46:42 2014--
 # Testing final: 
 source("s2ODNBProcFx.R")
 load("comb.tags.Rdata")
@@ -315,7 +321,9 @@ for (k in exists.doc.comb) {
   } else {
     main.person = paste(name.list[[k]], collapse = " ")
   }
-  a = improve.pred(comb.tag = combined.tags[[k]], main.person = main.person,
+  a = improve_pred(comb.tag = combined.tags[[k]], main.person = main.person,
+#|    ************
+#|----##replace period with _ --Mon Sep  1 16:46:42 2014--
                    regex.words = c("Commonwealth", "Catholic", "Greek", 
                                    "Roman", "Describe", "Treatise"),
                    exact.words = c("Abbey", "House", "Island",
