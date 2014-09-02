@@ -1,4 +1,4 @@
-﻿## saving data
+## saving data
 #save(is.checkCO, is.name, is.wordCO, uses, file = "curnums.Rdata")
 
 name.normal = rep("", times = length(ODNB.data))
@@ -245,8 +245,12 @@ find.wordlists <- function(main.person, dat.mat) { # need to make more general? 
 # lp1 = lp.docs[[1]][[2]]
 # st1 = st.docs[[1]][[2]]
 #get.truetext(1000)
-#test1 = fix.tagtext(text = lp1, true.text = text1, type = "LP")
-#test2 = fix.tagtext(text = st1, true.text = text1, type = "ST")
+#test1 = fix_tagtext(text = lp1, true.text = text1, type = "LP")
+#|       ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
+#test2 = fix_tagtext(text = st1, true.text = text1, type = "ST")
+#|       ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
 #test3 = proc.tagtext(text = test1, type = "LP")
 #test4 = proc.tagtext(text = test2, tag="LOCATION", type = "ST")
 

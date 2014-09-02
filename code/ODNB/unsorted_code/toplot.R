@@ -61,7 +61,9 @@ find.err.rates.simple <- function(j) {
   man.fn = ".proc.txt"
   read = readLines(paste(numss[j], man.fn, sep = ""))
   true = get.truetext(numss[j])
-  tt = fix.tagtext(text = read, true.text = true, type = "ST")
+  tt = fix_tagtext(text = read, true.text = true, type = "ST")
+#|     ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
   true.tag = proc.tagtext(tt, tag = "PERSON", type = "ST")
   pred.tag = find.tags(num = numss[j], which.types = cur.types)
   

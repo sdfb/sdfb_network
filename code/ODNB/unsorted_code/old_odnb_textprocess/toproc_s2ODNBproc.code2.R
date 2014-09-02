@@ -4,7 +4,9 @@ load("truedocsv2.Rdata")
 # checking function: stanford/lingpipe
 load("stancheck.Rdata")
 for(i in which(exists.truedoc)) {
-  a = fix.tagtext(text = st.docs[[i]], true.text = true.docs.word[[i]], type = "ST")
+  a = fix_tagtext(text = st.docs[[i]], true.text = true.docs.word[[i]], type = "ST")
+#|    ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
   if (length(a) > 2) {
   } else {
     print(paste("ERROR:",i))
@@ -14,7 +16,9 @@ for(i in which(exists.truedoc)) {
 
 load("lpcheck.Rdata")
 for(i in which(exists.truedoc)) {
-  a = fix.tagtext(text = lp.docs[[i]], true.text = true.docs.word[[i]], type = "LP")
+  a = fix_tagtext(text = lp.docs[[i]], true.text = true.docs.word[[i]], type = "LP")
+#|    ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
   if (length(a) > 2) {
   } else {
     print(paste("ERROR:",i))
@@ -32,7 +36,9 @@ for(i in which(exists.truedoc)) {
 load("truedocsv2.Rdata")
 load("stancheck.Rdata")
 for(i in which(exists.truedoc)) {
-  a = fix.tagtext(text = st.docs[[i]], true.text = true.docs.word[[i]], type = "ST")
+  a = fix_tagtext(text = st.docs[[i]], true.text = true.docs.word[[i]], type = "ST")
+#|    ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
   # temp fixes : need to apply to processing function
   a = gsub("</*DATE>", "", a)
   a = gsub("</*MONEY>", "", a)
@@ -62,7 +68,9 @@ for(i in which(exists.truedoc)) {
 
 load("lpcheck.Rdata")
 for(i in which(exists.truedoc)) {
-  a = fix.tagtext(text = lp.docs[[i]], true.text = true.docs.word[[i]], type = "LP")
+  a = fix_tagtext(text = lp.docs[[i]], true.text = true.docs.word[[i]], type = "LP")
+#|    ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
   # temp fixes: apply to processing function
   a = gsub("</ENAMEX>-<ENAMEXTYPE=\"[[:alpha:]]+\">", "-", a)
   if (length(a) > 2) {
@@ -101,8 +109,12 @@ to.do = which(exists.truedoc)
 to.do = to.do[to.do>34840] #for trial 3
 for(i in to.do) {
   print(i)
-  st.fix = fix.tagtext(text = st.docs[[i]], true.text = true.docs.word[[i]], type = "ST")
-  lp.fix = fix.tagtext(text = lp.docs[[i]], true.text = true.docs.word[[i]], type = "LP")
+  st.fix = fix_tagtext(text = st.docs[[i]], true.text = true.docs.word[[i]], type = "ST")
+#|         ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
+  lp.fix = fix_tagtext(text = lp.docs[[i]], true.text = true.docs.word[[i]], type = "LP")
+#|         ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
   proc.docs3[[i]] = cbind(true.docs.word[[i]],  #modify storage location
                           proc.tagtext(tagged.text = st.fix, type = "ST"),
                           proc.tagtext(tagged.text = lp.fix, type = "LP"))
@@ -228,7 +240,9 @@ k=5
 j = man.tagged[k]
 text = readLines(paste("dataman/mantag/",j,".mtag.txt", sep = ""))
 true.text = combined.tags[[ODNB.nums[j]]][,1]
-fix.text = fix.tagtext(text = text, true.text = combined.tags[[ODNB.nums[j]]][,1], type = "MT")
+fix.text = fix_tagtext(text = text, true.text = combined.tags[[ODNB.nums[j]]][,1], type = "MT")
+#|         ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
 
 mt = proc.tagtext(fix.text, type = "ST")[,1]
 at = combined.tags[[ODNB.nums[j]]][,2]
@@ -251,7 +265,9 @@ man.tagged2 = c(570, 990, 3210, 4697, 7044, 8148, 14072, 15506, 24288, 25519)
 j = man.tagged2[4]
 text = readLines(paste("dataman/mantag/",j,".proc.txt", sep = ""))
 true.text = combined.tags[[j]][,1]
-fix.text = fix.tagtext(text = text, true.text = combined.tags[[j]][,1], type = "MT")
+fix.text = fix_tagtext(text = text, true.text = combined.tags[[j]][,1], type = "MT")
+#|         ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
 
 mt = proc.tagtext(fix.text, type = "ST")
 at = combined.tags[[j]][,2]

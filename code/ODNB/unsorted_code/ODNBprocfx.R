@@ -182,8 +182,12 @@ find.tags <- function(num, which.types) { ######### DONT NEED EXCEPT TO COMBINE 
   if (!check) {
     print("ERROR in (find.tags): LP doc number, ST doc number dont match")
   }
-  lp.text = fix.tagtext(text = lp.docs[[recordl[num]]][[2]], true.text = true, type = "LP")
-  st.text = fix.tagtext(text = st.docs[[records[num]]][[2]], true.text = true, type = "ST")
+  lp.text = fix_tagtext(text = lp.docs[[recordl[num]]][[2]], true.text = true, type = "LP")
+#|          ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
+  st.text = fix_tagtext(text = st.docs[[records[num]]][[2]], true.text = true, type = "ST")
+#|          ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
   
   if (is.null(lp.text) | is.null(st.text)) {
     return(NULL)

@@ -97,8 +97,12 @@ normalize_tagtext = function(text, true.text, type) {
     text = gsub("&quot;", "\"", text)
     text = gsub("</*?s.*?>", "", text)
   } else {
-    print("Error in (fix.tagtext): Invalid TYPE")
-    return("Error in (fix.tagtext): Invalid TYPE")
+    print("Error in (fix_tagtext): Invalid TYPE")
+#|                   ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
+    return("Error in (fix_tagtext): Invalid TYPE")
+#|                    ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
   }
   
   words = format_text_and_split(text)
@@ -160,7 +164,9 @@ proc_tagtext = function(tagged.text, type,
     adj.start = 13
     adj.stop = 2
   } else {
-    print("Error in (fix.tagtext): Invalid TYPE")
+    print("Error in (fix_tagtext): Invalid TYPE")
+#|                   ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
     return(NULL)
   }
   

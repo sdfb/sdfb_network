@@ -37,71 +37,6 @@ listify.text <- function(main.text, num) {
   return(temp)
 }
 
-### functions for processing truetext and combining processed outputs
-
-paste.two <- function(vec,ind.start) {
-  # this pastes together two consecutive entries in a vector
-  #  starting with ind.start and then ind.start+1
-  #  and edits the vector to remove the extra cell
-  vec[ind.start] = paste(vec[ind.start], vec[ind.start+1], sep = "")
-  return(vec[-(ind.start+1)])
-}
-
-
-###########################
-############# 3/17/2014 : this function copied over / redone for updated version
-fix.tagtext <- function(text, true.text, type) { 
-  ## This vectorizes, normalizes tagged text
-  ## type = "ST" or "LP"
-  
-  #   text = gsub("£", "?", text) ## pound symbol... convert to ?
-  #   text = gsub("&amp;", "&", text)
-  
-  if (type == "ST") {    
-    # do nothing
-  } else if (type == "MT") {
-    # man.tag issues
-    text = gsub("£", "$", text)
-  } else if (type == "LP") {
-    ## Single-words ENAMEX, fixes ' as organization issue. 
-    text = gsub("<ENAMEX TYPE=\"ORGANIZATION\">'</ENAMEX>","\'", text)
-    text = gsub("ENAMEX TYPE=", "ENAMEXTYPE=", text)
-    text = gsub("&amp;", "&", text)
-    text = gsub("&quot;", "\"", text)
-  } else {
-    print("Error in (fix.tagtext): Invalid TYPE")
-    return("Error in (fix.tagtext): Invalid TYPE")
-  }
-  
-  words = strsplit(text, " ")
-  words = c(words, recursive = TRUE)
-  words = words[words != ""]
-  
-  to.test = gsub("<.*?>", "", words) # removing all <>'s , comparing spacing
-  j = 1
-  N = length(true.text)
-  #N = 336
-  while(j <= N) {
-    if (true.text[j] == to.test[j]) {
-      j = j+1
-    } else {
-      if (length(grep(paste(to.test[j],to.test[j+1], sep = ""),
-                      true.text[j], fixed = TRUE)) > 0) {
-        to.test = paste.two(to.test, j)
-        words = paste.two(words, j)
-      } else {
-        print(paste("ERROR... temp: j=",j))
-        return("ERROR.")
-      }
-    }
-  }
-  while(length(words) > N) {
-    words = paste.two(words, N)
-  }
-  
-  return(words)
-}
-##############3
 
 ######################### This function copied over and modified 3/17/2014
 # given
@@ -131,7 +66,9 @@ proc.tagtext <- function(tagged.text, type,
     adj.start = 13
     adj.stop = 2
   } else {
-    print("Error in (fix.tagtext): Invalid TYPE")
+    print("Error in (fix_tagtext): Invalid TYPE")
+#|                   ***********
+#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
     return(NULL)
   }
   
