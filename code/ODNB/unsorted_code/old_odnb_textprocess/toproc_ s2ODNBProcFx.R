@@ -1,8 +1,6 @@
-##########################################################################
-#########################################################################
-#### Reading in original data
-##   This makes the original HTML files non-necessary, unless mistakes were
-##   made in doing this. 
+##@S This codefile should be cleaned mostly. 
+
+# Stuff to delete (not found anywhere else?) ------------------------------
 
 
 #################################################################################################
@@ -40,9 +38,8 @@ listify.text <- function(main.text, num) {
 
 
 
-
-
-
+# Function for computing error rates for NER ------------------------------
+## 9/2/2014 -- this code hasn't been updated for ~ 1.5 years. 
 
 
 compute.error <- function(tr,pr) {
