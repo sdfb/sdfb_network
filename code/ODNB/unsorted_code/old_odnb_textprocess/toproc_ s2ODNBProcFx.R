@@ -5,6 +5,8 @@
 ##   made in doing this. 
 
 
+#################################################################################################
+## 9/2/2014 -- Are these functions even used anymore? in a different form?
 get.subject <- function(text) {
   ## Input      text = char vector (format = processed through dnb.grab.main)
   ## Output     char singleton
@@ -17,8 +19,6 @@ get.subject <- function(text) {
   tx = strsplit(tx, split = "<")[[1]][1]
   return(tx)
 }
-
-
 listify.text <- function(main.text, num) {
   ## Input      main.text = char vector (format = dnb) 
   ##            num = file number for text
@@ -36,105 +36,12 @@ listify.text <- function(main.text, num) {
   temp = list(about = ab, num = num, len = len, dates = da, text = main.text)
   return(temp)
 }
+#################################################################################################
 
 
-######################### This function copied over and modified 3/17/2014
-# given
-proc.tagtext <- function(tagged.text, type,
-                         tag.types = c("PERSON", "ORGANIZATION", "LOCATION")) {
-  ## returns vectors of tags matching tag. PERSON, ORGANIZATION, LOCATION
-  #type = ST or LP
-  #tag.types = existing tag.types
-  
-  toreturn = matrix("", nrow = length(tagged.text), ncol = length(tag.types))
-  colnames(toreturn) = paste(type,tag.types,sep =":")
-  
-  # Finds where tags are
-  if (type == "ST") {
-    tagged.text = gsub("</*DATE>", "", tagged.text)
-    tagged.text = gsub("</*TIME>", "", tagged.text)
-    tagged.text = gsub("</*MONEY>", "", tagged.text)
-    tagged.text = gsub("</*PERCENT>", "", tagged.text)
-    begin = gregexpr(paste("<[[:alpha:]]+>", sep = ""), tagged.text)
-    end = gregexpr(paste("</[[:alpha:]]+>", sep = ""), tagged.text)
-    adj.start = 1
-    adj.stop = 1
-  } else if (type == "LP") {
-    # tagged.text = gsub("</.*?>-<.*?>", "-", tagged.text) [maybe this can be avoided]
-    begin = gregexpr(paste("<ENAMEXTYPE.+?>", sep = ""), tagged.text)
-    end = gregexpr(paste("</ENAMEX>", sep = ""), tagged.text)
-    adj.start = 13
-    adj.stop = 2
-  } else {
-    print("Error in (fix_tagtext): Invalid TYPE")
-#|                   ***********
-#|----##replace period with _ --Tue Sep  2 09:43:54 2014--
-    return(NULL)
-  }
-  
-  #Assign types to gregexpr starts
-  non.zero.begin = sapply(begin, function(x) { return(any(x > 0)) })
-  non.zero.end = sapply(end, function(x){ return(any(x > 0)) })
-  
-  nn = sum(sapply(begin[non.zero.begin], length))
-  all.matches = matrix("", nrow = 2*nn, ncol = 3) #col1 = match entry, 
-  #col2 = match position, col3 = match type
-  cur.pos = 1
-  for(i in which(non.zero.begin)) {
-    for(j in 1:length(begin[[i]])) {
-      all.matches[cur.pos,1] = i
-      all.matches[cur.pos,2] = begin[[i]][j]
-      all.matches[cur.pos,3] = substr(x = tagged.text[i], 
-                                      start = begin[[i]][j] + adj.start, 
-                                      stop = attr(begin[[i]], "match.length")[j] - adj.stop)
-      cur.pos = cur.pos + 2
-    }
-  }
-  cur.pos = 2
-  for(i in which(non.zero.end)) {
-    for(j in 1:length(end[[i]])) {
-      all.matches[cur.pos,1] = i
-      all.matches[cur.pos,2] = end[[i]][j]
-      all.matches[cur.pos,3] = "END"
-      cur.pos = cur.pos + 2
-    }
-  }
-  #   sorting = order(as.numeric(all.matches[,1]), as.numeric(all.matches[,2]))
-  #   match.data = data.frame(ind=as.numeric(all.matches[,1]),
-  #                           pos=as.numeric(all.matches[,2]),
-  #                           type=all.matches[,3])
-  
-  #   find.type.gregexpr <- function(g.return, text) {
-  #     substr(text, start = g.return[[1]], stop = g.return[[1]] + attr(g.return[[1]], "match.length") -1)
-  #   }
-  helper.f1 = function(x) {
-    return(all.matches[x,1] == all.matches[x+1,1])
-  }
-  
-  # Process results
-  for (k in 1:length(tag.types)) {
-    good = which(all.matches[,3] == tag.types[k])
-    if (length(good) > 0) {
-      # Single-length
-      singles = sapply(good, helper.f1)
-      toreturn[unique(as.numeric(all.matches[good[singles],1])),k] = "P"
-      
-      # longer: 
-      for (m in good[!singles]) {
-        s = as.numeric(all.matches[m,1])
-        e = as.numeric(all.matches[m+1,1])
-        check = (toreturn[s,k] == "PE")
-        toreturn[s:e,k] = "P*"
-        toreturn[e,k] = "PE"
-        if (!check) {
-          toreturn[s,k] = "PS"
-        }
-      }
-    }
-  }
-  
-  return(toreturn)
-}
+
+
+
 
 
 

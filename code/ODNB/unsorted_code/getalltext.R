@@ -251,8 +251,12 @@ find.wordlists <- function(main.person, dat.mat) { # need to make more general? 
 #test2 = fix_tagtext(text = st1, true.text = text1, type = "ST")
 #|       ***********
 #|----##replace period with _ --Tue Sep  2 09:43:54 2014--
-#test3 = proc.tagtext(text = test1, type = "LP")
-#test4 = proc.tagtext(text = test2, tag="LOCATION", type = "ST")
+#test3 = proc_tagtext(text = test1, type = "LP")
+#|       ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
+#test4 = proc_tagtext(text = test2, tag="LOCATION", type = "ST")
+#|       ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
 
 cur.types = matrix(c("ST", "LP", "ST", "LP", "PERSON", "PERSON", "ORGANIZATION", 
                      "ORGANIZATION"), nrow = 4)

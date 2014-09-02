@@ -17,7 +17,9 @@ ODNB.data[[24255]]
 tagged.text = c(strsplit(readLines("dataman/mantag/24288.proc.txt"), " "), recursive = TRUE)
 sum(tagged.text == "")
 tagged.text = tagged.text[!(tagged.text == "")]
-a = proc.tagtext(text = tagged.text, type = "ST")
+a = proc_tagtext(text = tagged.text, type = "ST")
+#|  ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
 head(a)
 
 load("truedocs.Rdata")

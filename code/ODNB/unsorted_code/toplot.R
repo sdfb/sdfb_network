@@ -64,7 +64,9 @@ find.err.rates.simple <- function(j) {
   tt = fix_tagtext(text = read, true.text = true, type = "ST")
 #|     ***********
 #|----##replace period with _ --Tue Sep  2 09:43:54 2014--
-  true.tag = proc.tagtext(tt, tag = "PERSON", type = "ST")
+  true.tag = proc_tagtext(tt, tag = "PERSON", type = "ST")
+#|           ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
   pred.tag = find.tags(num = numss[j], which.types = cur.types)
   
   d = find.wordlists(main.person = namess[[j]], dat.mat = pred.tag)

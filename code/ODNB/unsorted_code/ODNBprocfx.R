@@ -200,9 +200,13 @@ find.tags <- function(num, which.types) { ######### DONT NEED EXCEPT TO COMBINE 
   for(i in 1:NN) {
     typ = which.types[i,1]
     if (typ == "LP") {
-      tags = proc.tagtext(text = lp.text, tag = which.types[i,2], type = typ)
+      tags = proc_tagtext(text = lp.text, tag = which.types[i,2], type = typ)
+#|           ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
     } else if (typ == "ST") {
-      tags = proc.tagtext(text = st.text, tag = which.types[i,2], type = typ)
+      tags = proc_tagtext(text = st.text, tag = which.types[i,2], type = typ)
+#|           ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
     }
     name[i] = paste(which.types[i,1], 
                     substr(which.types[i,2],1,min(3, nchar(which.types[i,2]))), sep = "")

@@ -116,8 +116,12 @@ for(i in to.do) {
 #|         ***********
 #|----##replace period with _ --Tue Sep  2 09:43:54 2014--
   proc.docs3[[i]] = cbind(true.docs.word[[i]],  #modify storage location
-                          proc.tagtext(tagged.text = st.fix, type = "ST"),
-                          proc.tagtext(tagged.text = lp.fix, type = "LP"))
+                          proc_tagtext(tagged.text = st.fix, type = "ST"),
+#|                        ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
+                          proc_tagtext(tagged.text = lp.fix, type = "LP"))
+#|                        ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
 }
 
 # save(proc.docs, file = "proc.docs.Rdata")
@@ -244,7 +248,9 @@ fix.text = fix_tagtext(text = text, true.text = combined.tags[[ODNB.nums[j]]][,1
 #|         ***********
 #|----##replace period with _ --Tue Sep  2 09:43:54 2014--
 
-mt = proc.tagtext(fix.text, type = "ST")[,1]
+mt = proc_tagtext(fix.text, type = "ST")[,1]
+#|   ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
 at = combined.tags[[ODNB.nums[j]]][,2]
 pt = improve_pred(comb.tag = cbind(true.text, at), main.person = man.tagged.names[k],
 #|   ************
@@ -269,7 +275,9 @@ fix.text = fix_tagtext(text = text, true.text = combined.tags[[j]][,1], type = "
 #|         ***********
 #|----##replace period with _ --Tue Sep  2 09:43:54 2014--
 
-mt = proc.tagtext(fix.text, type = "ST")
+mt = proc_tagtext(fix.text, type = "ST")
+#|   ************
+#|----##replace period with _ --Tue Sep  2 09:49:17 2014--
 at = combined.tags[[j]][,2]
 pt = improve_pred(comb.tag = at)
 #|   ************
