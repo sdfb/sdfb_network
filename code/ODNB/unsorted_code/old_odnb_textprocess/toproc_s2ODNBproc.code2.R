@@ -153,7 +153,9 @@ system.time(
   for(i in 1:250) {
     if (!is.null(proc.docs[[i]])) {
       test = proc.docs[[i]]
-      combine.two(test[,2], test[,5])
+      combine_two(test[,2], test[,5])
+#|    ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
       
     }
   }
@@ -170,7 +172,9 @@ for(i in 1:18150) {
   if (!is.null(proc.docs[[i]])) {
     temp = proc.docs[[i]][,combine.index[1]]
     for(j in 2:length(combine.index)) {
-      temp = combine.two(a=temp, b=proc.docs[[i]][,combine.index[j]])
+      temp = combine_two(a=temp, b=proc.docs[[i]][,combine.index[j]])
+#|           ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
     }
     combined.tags[[i]] = cbind(proc.docs[[i]][,1],temp)
   }
@@ -186,7 +190,9 @@ for(i in 18151:34840) {
   if (!is.null(proc.docs2[[i]])) {
     temp = proc.docs2[[i]][,combine.index[1]]
     for(j in 2:length(combine.index)) {
-      temp = combine.two(a=temp, b=proc.docs2[[i]][,combine.index[j]])
+      temp = combine_two(a=temp, b=proc.docs2[[i]][,combine.index[j]])
+#|           ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
     }
     combined.tags[[i]] = cbind(proc.docs2[[i]][,1],temp)
   }
@@ -199,7 +205,9 @@ for(i in 34841:99996) {
   if (!is.null(proc.docs3[[i]])) {
     temp = proc.docs3[[i]][,combine.index[1]]
     for(j in 2:length(combine.index)) {
-      temp = combine.two(a=temp, b=proc.docs3[[i]][,combine.index[j]])
+      temp = combine_two(a=temp, b=proc.docs3[[i]][,combine.index[j]])
+#|           ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
     }
     combined.tags[[i]] = cbind(proc.docs3[[i]][,1],temp)
   }

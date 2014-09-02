@@ -103,9 +103,15 @@ sta.p = proc.person(sta.txt)
 sta.o = proc.person(sta.txt, "ORGANIZATION")
 lin.p = proc.enamex(lin.txt)
 lin.o = proc.enamex(lin.txt, "ORGANIZATION")
-sta.op = combine.two(sta.p[2,], sta.o[2,])
-lin.op = combine.two(lin.p[2,], lin.o[2,])
-stalin.op = combine.two(sta.op, lin.op)
+sta.op = combine_two(sta.p[2,], sta.o[2,])
+#|       ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
+lin.op = combine_two(lin.p[2,], lin.o[2,])
+#|       ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
+stalin.op = combine_two(sta.op, lin.op)
+#|          ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
 
   yy[[i]] = error.findall(true = true.tag, pred = rbind(true.tag[1,], stalin.op))
 }
@@ -127,9 +133,15 @@ sta.p = proc.person(sta.txt)
 sta.o = proc.person(sta.txt, "ORGANIZATION")
 lin.p = proc.enamex(lin.txt)
 lin.o = proc.enamex(lin.txt, "ORGANIZATION")
-sta.op = combine.two(sta.p[2,], sta.o[2,])
-lin.op = combine.two(lin.p[2,], lin.o[2,])
-stalin.op = combine.two(sta.op, lin.op)
+sta.op = combine_two(sta.p[2,], sta.o[2,])
+#|       ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
+lin.op = combine_two(lin.p[2,], lin.o[2,])
+#|       ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
+stalin.op = combine_two(sta.op, lin.op)
+#|          ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
 
 true.tag = proc.person(readLines(paste("adatagged/",12359, man.fn, sep = "")))
 name.test = paste(rev(strsplit(ODNB.data[[12359]]$about, ",")[[1]]), collapse = " ")

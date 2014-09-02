@@ -21,7 +21,9 @@ PARAM_START = 2
 #  if (!is.null(proc.docs[[i]])) {
 #    temp = proc.docs[[i]][,combine.index[1]]
 #    for(j in 2:length(combine.index)) {
-#      temp = combine.two(a=temp, b=proc.docs[[i]][,combine.index[j]])
+#      temp = combine_two(a=temp, b=proc.docs[[i]][,combine.index[j]])
+#|            ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
 #    }
 #    combined.tags[[i]] = cbind(proc.docs[[i]][,1],temp)
 #  }

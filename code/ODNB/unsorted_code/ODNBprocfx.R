@@ -1,4 +1,4 @@
-﻿
+
 find.err.rates <- function(num) {
   ## Input      File number
   ## Output     num matrix
@@ -34,10 +34,18 @@ find.err.rates <- function(num) {
   lin.tag.l = proc.enamex(lin.txt, "LOCATION")
   toreturn[6,] = error.rate(true.tag[2,], lin.tag.l[2,])
   
-  SL.p = combine.two(sta.tag.p[2,], lin.tag.p[2,])
-  S.po = combine.two(sta.tag.p[2,], sta.tag.o[2,])
-  L.po = combine.two(lin.tag.p[2,], lin.tag.o[2,])
-  SL.po = combine.two(S.po, L.po)
+  SL.p = combine_two(sta.tag.p[2,], lin.tag.p[2,])
+#|       ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
+  S.po = combine_two(sta.tag.p[2,], sta.tag.o[2,])
+#|       ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
+  L.po = combine_two(lin.tag.p[2,], lin.tag.o[2,])
+#|       ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
+  SL.po = combine_two(S.po, L.po)
+#|        ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
   toreturn[7,] = error.rate(true.tag[2,], SL.p)
   toreturn[8,] = error.rate(true.tag[2,], S.po)
   toreturn[9,] = error.rate(true.tag[2,], L.po)
@@ -195,9 +203,13 @@ find.tags <- function(num, which.types) { ######### DONT NEED EXCEPT TO COMBINE 
     name[i] = paste(which.types[i,1], 
                     substr(which.types[i,2],1,min(3, nchar(which.types[i,2]))), sep = "")
 
-    comb.tags = combine.two(comb.tags, tags)
+    comb.tags = combine_two(comb.tags, tags)
+#|              ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
     if (is.null(comb.tags)) {
-      return("ERROR in combine.two (maybe LP error?)")
+      return("ERROR in combine_two (maybe LP error?)")
+#|                     ***********
+#|----##replace period with _ --Tue Sep  2 09:31:55 2014--
     }
     toreturn = cbind(toreturn, tags)
     print(i)
@@ -255,35 +267,3 @@ which.ids <- function(vec) { ## OBSELETE... don't need this, since there are "P*
   return(toret[1:(loc-1)])
 }
 
-
-
-old.combine.two = function(a,b) {
-
-  a.id = which(a != "")
-  b.id = which(b != "")
-  to.rm = intersect(a.id, b.id)
-  to.blank = 0
-  if (length(to.rm) > 0) {
-    for(i in to.rm) {
-      if (b[i] == "P") { 
-        to.blank = c(to.blank, i)
-      } else {
-        pss = which(b == "PS")
-        pes = which(b == "PE")
-        if (length(pss[pss <= i]) == 0 | length(pes[pes >= i]) == 0) {
-          return(NULL)
-        } else {
-          to.blank = c(to.blank,max(pss[pss <= i]):min(pes[pes >= i]))
-        }
-      }
-    }
-  }
-  to.blank = unique(to.blank[-1])
-  b[to.blank] = ""
-  
-  adds = which(b != "")
-  if (length(adds) > 0) {
-    toreturn[adds] = b[adds]
-  }
-  return(toreturn)
-}

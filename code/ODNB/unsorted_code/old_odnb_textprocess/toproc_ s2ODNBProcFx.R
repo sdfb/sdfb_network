@@ -199,37 +199,6 @@ proc.tagtext <- function(tagged.text, type,
   return(toreturn)
 }
 
-### Copied over 3/24/2014
-combine.two <- function(a,b) {
-  ## Input      a,b = char vec ("P", "PS", etc.)
-  ## Output     char vec ("P",etc.)
-  ## 
-  ## Takes two predictors and outputs a combined predictor vector
-  
-  if (length(a) != length(b)) { error("ERROR: mismatching vector lengths") }
-  
-  toreturn = a
-  a.blank = which(toreturn == "")
-  
-  # add singles from 2nd one. 
-  b.single = which(b == "P")
-  toreturn[intersect(b.single, a.blank)] = "P" # fill in
-  a.fill = which(toreturn != "")
-  
-  # add long-matches
-  starts = which(b == "PS")
-  ends = which(b == "PE")
-  if (length(starts) > 0) {
-    for(i in 1:length(starts)) {
-      both = intersect(starts[i]:ends[i], a.fill)
-      if (length(both) == 0) {
-        toreturn[starts[i]:ends[i]] = b[starts[i]:ends[i]]
-      }
-    }
-  }
-  return(toreturn)
-}
-
 
 
 compute.error <- function(tr,pr) {
