@@ -8,8 +8,20 @@ The working directory for all the R code SHOULD be this base folder. (Thus, when
 The shell scripts, on the other hand, should be run from the directory that they reside. 
 
 
-Progress: 
+The folder structure 
+====================
+
+code/ ---------- Any written code for the project
+data/ ---------- Automatically generated data (by code)
+data_manual/ --- Data written by a human (or edited)
+software/ ------ Software packages needed
+
+
+Progress
+========
+
 For text_processing: moved all from old text_mining except the toproc ones. 
 network_processing: nothing to do here; readme file written. 
 network_estimation: added in all code here; obtained from old PGL folder. 
 network_visualization: added code. 
+
