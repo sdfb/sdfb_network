@@ -6,3 +6,9 @@
 .Rproj.user
 /results/*
 *.csv
+*.toc
+*.aux
+*.log
+*.pdf
+*.gz
+*~

@@ -1,0 +1,74 @@
+\documentclass[11pt]{article}
+\usepackage{graphicx}
+\usepackage[margin=1in]{geometry}
+
+\newcommand{\filename}[1]{ \texttt{#1}}
+
+\begin{document}
+
+
+\title{Documentation for 6DFB Project}
+\author{Lawrence Wang}
+
+\maketitle
+\tableofcontents
+\pagebreak
+
+\section{Process Documentation}
+
+\subsection{Preprocess Data -- /preprocess}
+
+\begin{enumerate}
+\item Scripts to obtain ODNB HTML files
+\begin{enumerate}
+\item Run \filename{download\_data.sh} -- creates a compressed file with documents
+\end{enumerate}
+
+\item Compress/decompress them into .tar.gz file
+\begin{enumerate}
+\item \filename{decompress\_data.sh} -- decompresses the files into appropriate directory
+\end{enumerate}
+
+\item Read HTML files into R, store as a list
+\begin{enumerate}
+\item Extract data and store into .Rdata file -- \filename{extract\_store\_data.R}
+\item Split data along co-subjects -- \filename{extract\_cosubjects.R}
+\end{enumerate}
+
+\end{enumerate}
+
+
+\subsection{Run Data through NER -- /NER}
+\begin{enumerate}
+\item Code to process text files into combined versions
+\item Scripts to run Stanford/Lingpipe tools
+
+\end{enumerate}
+
+
+\subsection{Postprocess Data -- /postprocess}
+
+
+
+
+
+\section{Data Documentation}
+
+
+
+\section{Function Documentation}
+See package? link in package documentation?
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+
