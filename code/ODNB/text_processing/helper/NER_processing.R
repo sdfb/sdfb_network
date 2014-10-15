@@ -279,7 +279,7 @@ proc_tagtext = function(tagged.text, type,
 }
 
 
-#' Finds dates between 1500-1900
+#' Finds dates between 1200-1900
 #' 
 #' @param vec text
 #' 
@@ -287,10 +287,9 @@ proc_tagtext = function(tagged.text, type,
 #' 
 #' @export
 #' 
-tag_dates = function(vec) {
-  ## This function looks for 4-number dates between 1500-1900.
+tag_dates = function(vec, mindate = 1100, maxdate = 1900) {
   numbs = as.numeric(vec)
-  ids = which(numbs >= 1500 & numbs <= 1900)
+  ids = which(numbs >= mindate & numbs <= maxdate)
   res = rep(NA, times = length(vec))
   res[ids] = numbs[ids]
   return(res)

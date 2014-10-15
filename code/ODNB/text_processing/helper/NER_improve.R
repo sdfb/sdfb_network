@@ -22,15 +22,9 @@ improve_pred = function(comb.tag, main.person = NULL,
   print("::::: Setup, Tagging")
   # Resolve current matches into Entity/Position matrix
   tag.positions = find_tagpositions(comb.tag)
-#|                *****************
-#|----##replace period with _ --Mon Sep  1 16:49:37 2014--
   
   # Remove weird entries (bad punct in entities, non-capitalized: see remove_badentities)
-#|                                                                    ******************
-#|----##replace period with _ --Mon Sep  1 16:55:56 2014--
   temp = remove_badentities(comb.tag.mat = comb.tag, position.df = tag.positions)
-#|       ******************
-#|----##replace period with _ --Mon Sep  1 16:55:56 2014--
   comb.tag = temp[[1]]
   tag.positions = temp[[2]]
   
@@ -87,8 +81,6 @@ improve_pred = function(comb.tag, main.person = NULL,
     if (!is.null(matches.toclear)) {
       matches.matrix = matches.matrix[-ids.to.rm,]
       comb.tag[,2] = remove_entries(tags = comb.tag[,2], 
-#|                   **************
-#|----##replace period with _ --Mon Sep  1 16:56:42 2014--
                                     entries = idlist$Position[matches.toclear])
       idlist = idlist[-matches.toclear,]
       
@@ -132,8 +124,6 @@ improve_pred = function(comb.tag, main.person = NULL,
   
   print("::::: Searching --- Finding more matches: Exact, length > 1")
   text = text_remove_punct(text_remove_punct(comb.tag[,1]))
-#|                         *****************
-#|----##replace period with _ --Mon Sep  1 16:51:30 2014--
   longs = which(matches.matrix$NumWords > 1)
   
   to.add = matrix("", nrow = 2500, ncol = 3)
@@ -150,8 +140,6 @@ improve_pred = function(comb.tag, main.person = NULL,
           }
           if (num == length(splitted)) {
             temp = insert_tag(start = i, len = num, tags = comb.tag[,2])
-#|                 **********
-#|----##replace period with _ --Mon Sep  1 16:57:46 2014--
             if (!is.null(temp)) {
               comb.tag[,2] = temp
               to.add[cur.add.index,] = c(paste(text[i:(i+num-1)], collapse = " "), i, 
@@ -171,8 +159,6 @@ improve_pred = function(comb.tag, main.person = NULL,
     loc = grep(j, text)
     for(i in loc) {
       temp = insert_tag(start = i, len = 1, tags = comb.tag[,2])
-#|           **********
-#|----##replace period with _ --Mon Sep  1 16:57:46 2014--
       if (!is.null(temp)) {
         comb.tag[,2] = temp
         to.add[cur.add.index,] = c(text[i], i, -1)
@@ -191,8 +177,6 @@ improve_pred = function(comb.tag, main.person = NULL,
     loc = grep(j, text)
     for(i in loc) {
       temp = insert_tag(start = i, len = 1, tags = comb.tag[,2])
-#|           **********
-#|----##replace period with _ --Mon Sep  1 16:57:46 2014--
       if (!is.null(temp)) {
         comb.tag[,2] = temp
         to.add[cur.add.index,] = c(text[i], i, matches.matrix$ID[word.id])
@@ -308,11 +292,7 @@ find_tagpositions = function(mat) { ## formerly find.names
   
   temp2 = rbind(toreturn, temp)
   text = text_remove_punct(temp2[,1])
-#|       *****************
-#|----##replace period with _ --Mon Sep  1 16:51:30 2014--
   text = text_remove_punct(text)
-#|       *****************
-#|----##replace period with _ --Mon Sep  1 16:51:30 2014--
   temp = data.frame(Name=text, Location=as.numeric(temp2[,2]), stringsAsFactors = FALSE)
   
   return(temp[order(temp[,2]),])
