@@ -16,38 +16,84 @@
 
 \section{Process Documentation}
 
-\subsection{Preprocess Data -- /preprocess}
+\subsection{Preprocess Data -- ODNB/text\_processing/preprocess}
 
 \begin{enumerate}
-\item Scripts to obtain ODNB HTML files
+\item \filename{download\_data.sh}
 \begin{enumerate}
-\item Run \filename{download\_data.sh} -- creates a compressed file with documents
+\item Obtains ODNB HTML files
+\item Creates a compressed file with all downloaded documents
+\item (Only keep compressed file around, so this can be passed around and the raw document files can be discarded)
 \end{enumerate}
 
-\item Compress/decompress them into .tar.gz file
+\item \filename{decompress\_data.sh} 
 \begin{enumerate}
-\item \filename{decompress\_data.sh} -- decompresses the files into appropriate directory
+\item Decompress files into appropriate directory
 \end{enumerate}
 
-\item Read HTML files into R, store as a list
+\item \filename{extract\_store\_data.R}
+Read HTML files into R, store as a list
 \begin{enumerate}
-\item Extract data and store into .Rdata file -- \filename{extract\_store\_data.R}
-\item Split data along co-subjects -- \filename{extract\_cosubjects.R}
+\item Read HTML files into R. Store as a list in (---).Rdata
 \end{enumerate}
 
-\end{enumerate}
-
-
-\subsection{Run Data through NER -- /NER}
+\item \filename{extract\_cosubjects.R}
 \begin{enumerate}
-\item Code to process text files into combined versions
-\item Scripts to run Stanford/Lingpipe tools
+\item Splits data based on co-subject identification
+\item Writes files into chunks of 100 documents for NER purposes
+\end{enumerate}
 
 \end{enumerate}
 
 
-\subsection{Postprocess Data -- /postprocess}
+\subsection{Run Data through NER -- ODNB/text\_processing/NER}
+\begin{enumerate}
 
+\item \filename{ner\_scripts.R} 
+\begin{enumerate}
+\item Generates shell scripts \filename{stanSCRIPT.sh} and \filename{lingprecopySCRIPT.sh}/\filename{lingpostcopySCRIPT.sh} that are used to run the corresponding NER tools on the data. 
+\item Also includes command line code in source. 
+\item These are scripts to run the two NER tools. (Lingpipe files needed some moving, since there was issues with moving around directories...)
+\end{enumerate}
+
+\item \filename{extract\_ner\_text.R}
+\begin{enumerate}
+\item Takes NER-processed text and stores it into Rdata format. 
+\end{enumerate}
+
+\item \filename{extract\_ner\_results.R}
+\begin{enumerate}
+\item Code that processes the NER results
+\item Results in tokenized text vectors, a set for each document: raw text, lingpipe tagged, stanford tagged, and all normalized in length to the raw text
+\end{enumerate}
+
+\item \filename{combine\_ner\_results.R}
+\begin{enumerate}
+\item Compiles the NER results, gives data frame for each document. Tokenized text, named-entity tagging, approximate date estimate. 
+\end{enumerate}
+
+\item \filename{improve\_ner\_results.R}
+\begin{enumerate}
+\item Contains code that does adjustments to the NER results that increase recall/precision
+\end{enumerate}
+
+\end{enumerate}
+
+\subsection{Postprocess Data -- ODNB/text\_processing/postprocess}
+\begin{enumerate}
+\item \filename{create\_model\_data.R}
+\begin{enumerate}
+
+\end{enumerate}
+
+
+\item \filename{extract\_metadata.R}
+\begin{enumerate}
+
+\end{enumerate}
+
+
+\end{enumerate}
 
 
 

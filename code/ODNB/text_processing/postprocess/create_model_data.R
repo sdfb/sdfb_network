@@ -2,7 +2,7 @@
 
 load("../../private_data/odnb_data_proc/ODNB_fullnamelist.Rdata")
 load("../../private_data/odnb_data_proc/ODNB_entitymatrix.Rdata")
-# load("../../private_data/odnb_data_proc/ODNB_improvedpred.Rdata")
+load("../../private_data/odnb_data_proc/ODNB_improvedpred.Rdata")
 
 nrow(full_result3)
 
