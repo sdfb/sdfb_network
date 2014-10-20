@@ -2,7 +2,7 @@
 \usepackage{graphicx}
 \usepackage[margin=1in]{geometry}
 
-\newcommand{\filename}[1]{ \texttt{#1}}
+\newcommand{\filename}[1]{\texttt{#1}}
 
 \begin{document}
 
@@ -83,13 +83,13 @@ Read HTML files into R, store as a list
 \begin{enumerate}
 \item \filename{create\_model\_data.R}
 \begin{enumerate}
-
+\item test
 \end{enumerate}
 
 
 \item \filename{extract\_metadata.R}
 \begin{enumerate}
-
+\item test
 \end{enumerate}
 
 
@@ -99,7 +99,34 @@ Read HTML files into R, store as a list
 
 
 \section{Data Documentation}
+The files are sorted by directory. 
 
+\subsection{data/ODNB\_raw/}
+\begin{enumerate}
+\item \filename{ODNB\_rawHTML<******>.Rdata}
+\item \filename{ODNB\_splitcosubjects<******>.Rdata}
+\item \filename{ODNB\_metadata<******>.Rdata}
+\end{enumerate}
+
+\subsection{data/ODNB\_int/NER/}
+\begin{enumerate}
+\item \filename{ODNB\_nerproc<******>.Rdata}
+\item \filename{ODNB\_NERtokenized<******>\_<\#>.Rdata}
+\item \filename{ODNB\_combtags<******>.Rdata}
+\end{enumerate}
+
+
+\subsection{data/OLD\_ODNB}
+\begin{enumerate}
+\item \filename{ODNB\_fullnamelist<******>.Rdata} \\
+Contains variable \texttt{full\_result3} which is a 73655 $\times$ 13 data frame, each row corresponds to a historical figure. The columns contain various fields for ID numbers, names, and dates. 
+
+\item \filename{ODNB\_entitymatrix<******>.Rdata} \\
+Contains variable \texttt{big\_entity\_matrix}, a $1118968 \times 7$ matrix which contains Entity, IDnum, Document Segment, Min/Max Mention Date, and Document NUmber. 
+
+\item \filename{ODNB\_improvedpred<******>.Rdata} \\
+
+\end{enumerate}
 
 
 \section{Function Documentation}
