@@ -5,12 +5,9 @@ source("code/ODNB/ODNB_setup.R")
 ## TODO: [Rewrite] This script probably needs to be made 'less hacky'. 
 
 ## parameters
-PARAM_START = 2
+PARAM_START = 1
 
 ## This also notes where parenthesis are, and also attempts to date-tag the data.
-
-
-
 
 # combined tags: 
 # ORDER in proc.docs :
