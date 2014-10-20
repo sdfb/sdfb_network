@@ -2,67 +2,61 @@
 
 source("code/ODNB/ODNB_setup.R")
 
-
-
-
-
-
 ## TODO: [Cleanup] This file needs code cleanup. 
 
-
-
-load(zzfile_textproc_ner_combtags)
-load("data/ODNB_raw/ODNB_metadata20140404.Rdata")
-
-ODNB_improvedpred = list()
-
-for(j in seq_along(full_result$ID)) {
-  cat(j, "::", full_result$ID[j], "\n")
-  
-  mainp = NULL
-  if (!is.na(full_result$main_name[j])) {
-    s = strsplit(full_result$main_name[j], split = ", *")[[1]]
-    mainp = paste(rev(s), collapse = " ")
-    mainp = gsub("[^[:alpha:] ]", "", mainp)
-    mainp = gsub(" +", " ", mainp)
-    mainp = gsub(" $", "", mainp)
-  }
-
-  ODNB_improvedpred[[full_result$ID[j]]] =
-    try(expr = improve_pred(comb.tag = ODNB_combtags[[full_result$ID[j]]], main.person = mainp,
-#|             ************
-#|----##replace period with _ --Mon Sep  1 16:46:42 2014--
-          regex.words = c("Commonwealth", "Catholic", "Greek", 
-            "Roman", "Describe", "Treatise"),
-          exact.words = c("Abbey", "House", "Island",
-            "University", "College", "Cathedral",
-            "Pamphlet", "Religion", "Country", 
-            "Act", "Restoration", "Empire",
-            "Government", "State", "Lawgiving",
-            "Palace", "Petition", "Parliament", "Death")) )
-}
-
-## Some errors might occur; trap these (and ignore for now..?)
-
-## Adjust cell IDS
-#10yxxxxx -> single ODNB article
-#20yxxxxx -> multiple people for ODNB id
-#30yyyyyy -> not matched to ODNB article
-## xx's are ODNB ids
-## yy's are indicators for counts
-
-idnums = full_result$ID
-which(idnums > 99999) -> tofix
-match(idnums[tofix] - 100000, idnums) -> lower_tofix
-lower_tofix = lower_tofix[!is.na(lower_tofix)]
-setdiff(1:length(idnums), union(tofix, lower_tofix)) -> single_arts
-
-idnums[single_arts] = idnums[single_arts] + 10000000
-idnums[tofix] = idnums[tofix] +             20000000
-idnums[lower_tofix] = idnums[lower_tofix] + 20000000
-
-## Figure out observed date range of biography
-save(ODNB_improvedpred, full_result, file = "../../private_data/odnb_data_proc/ODNB_improvedpred.Rdata")
+####### NOTE: ALL THIS COPIED INTO improve_combtags.R
+# 
+# load(zzfile_textproc_ner_combtags)
+# load("data/ODNB_raw/ODNB_metadata20140404.Rdata")
+# 
+# ODNB_improvedpred = list()
+# 
+# for(j in seq_along(full_result$ID)) {
+#   cat(j, "::", full_result$ID[j], "\n")
+#   
+#   mainp = NULL
+#   if (!is.na(full_result$main_name[j])) {
+#     s = strsplit(full_result$main_name[j], split = ", *")[[1]]
+#     mainp = paste(rev(s), collapse = " ")
+#     mainp = gsub("[^[:alpha:] ]", "", mainp)
+#     mainp = gsub(" +", " ", mainp)
+#     mainp = gsub(" $", "", mainp)
+#   }
+# 
+#   ODNB_improvedpred[[full_result$ID[j]]] =
+#     try(expr = improve_pred(comb.tag = ODNB_combtags[[full_result$ID[j]]], main.person = mainp,
+#           regex.words = c("Commonwealth", "Catholic", "Greek", 
+#             "Roman", "Describe", "Treatise"),
+#           exact.words = c("Abbey", "House", "Island",
+#             "University", "College", "Cathedral",
+#             "Pamphlet", "Religion", "Country", 
+#             "Act", "Restoration", "Empire",
+#             "Government", "State", "Lawgiving",
+#             "Palace", "Petition", "Parliament", "Death")) )
+# }
+# 
+# ## Some errors might occur; trap these (and ignore for now..?)
+# 
+# ## Adjust cell IDS
+# #10yxxxxx -> single ODNB article
+# #20yxxxxx -> multiple people for ODNB id
+# #30yyyyyy -> not matched to ODNB article
+# ## xx's are ODNB ids
+# ## yy's are indicators for counts
+# 
+# idnums = full_result$ID
+# which(idnums > 99999) -> tofix
+# match(idnums[tofix] - 100000, idnums) -> lower_tofix
+# lower_tofix = lower_tofix[!is.na(lower_tofix)]
+# setdiff(1:length(idnums), union(tofix, lower_tofix)) -> single_arts
+# 
+# idnums[single_arts] = idnums[single_arts] + 10000000
+# idnums[tofix] = idnums[tofix] +             20000000
+# idnums[lower_tofix] = idnums[lower_tofix] + 20000000
+# 
+# ## Figure out observed date range of biography
+# save(ODNB_improvedpred, full_result, file = "../../private_data/odnb_data_proc/ODNB_improvedpred.Rdata")
+##################################################################################################################
 
 good_docs = which(sapply(ODNB_improvedpred, function(x) {!is.null(x) & (class(x) != "try-error")}))
 
