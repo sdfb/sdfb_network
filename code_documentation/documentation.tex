@@ -99,19 +99,40 @@ Read HTML files into R, store as a list
 
 
 \section{Data Documentation}
-The files are sorted by directory. 
+The files are sorted by directory. Note that \texttt{<********>}'s refer to some date (creation / modification date for data; this acts as a version number)
 
 \subsection{data/ODNB\_raw/}
 \begin{enumerate}
-\item \filename{ODNB\_rawHTML<******>.Rdata}
+\item \filename{HTML\_ZIP/ODNB\_text.tar.gz} \\
+This is a compressed file containing all the raw .html files. \\
+
+\item \filename{ODNB\_rawHTML<******>.Rdata} \\
+Contains \texttt{ODNB\_rawHTML}, this is a list of the raw HTML files for each ID number from 1 to 99999. Each HTML file is stored as a character vector (with each element corresponding to a line in the .html document).  
+
 \item \filename{ODNB\_splitcosubjects<******>.Rdata}
+Contains variables: 
+\begin{itemize}
+\item \texttt{ODNB\_text}
+\item \texttt{ODNB\_cleantext}
+\item \texttt{ODNB\_groupsub}
+\end{itemize}
+
 \item \filename{ODNB\_metadata<******>.Rdata}
+
 \end{enumerate}
 
 \subsection{data/ODNB\_int/NER/}
 \begin{enumerate}
 \item \filename{ODNB\_nerproc<******>.Rdata}
+Contains variables: 
+\begin{itemize}
+\item \texttt{txt\_R}
+\item \texttt{txt\_S}
+\item \texttt{txt\_L}
+\end{itemize}
+
 \item \filename{ODNB\_NERtokenized<******>\_<\#>.Rdata}
+
 \item \filename{ODNB\_combtags<******>.Rdata}
 \end{enumerate}
 
