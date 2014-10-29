@@ -10,7 +10,7 @@ REMOVE_FILENAME_VARIABLES = function() {
 
 
 ## Stores raw HTML files
-zzfile_textproc_preproc_rawHTML = "data/ODNB_raw/ODNB_rawHTML_20131107.Rdata"
+zzfile_textproc_preproc_rawHTML = "data/ODNB_raw/ODNB_rawHTML_20141029.Rdata"
 
 ## Stores cosubject splitting information
 zzfile_textproc_preproc_splitcosub = "data/ODNB_intermediate/preNER/ODNB_splitcosub20140228.Rdata"

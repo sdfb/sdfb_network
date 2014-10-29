@@ -9,12 +9,6 @@ source("code/ODNB/ODNB_setup.R")
 load(zzfile_textproc_preproc_rawHTML)
 
 
-
-
-
-
-
-
 ## Step 1: Process cosubject biographies, split these into separate bios.
 # Assumption: If this is an article about a person, with other entities added, then take the new article as only until the end of that paragraph. If this is a group biography, then split on each new person. Of course this won't be perfect...
 
