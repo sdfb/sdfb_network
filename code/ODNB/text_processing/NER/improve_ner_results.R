@@ -57,84 +57,84 @@ source("code/ODNB/ODNB_setup.R")
 # ## Figure out observed date range of biography
 # save(ODNB_improvedpred, full_result, file = "../../private_data/odnb_data_proc/ODNB_improvedpred.Rdata")
 ##################################################################################################################
-
-good_docs = which(sapply(ODNB_improvedpred, function(x) {!is.null(x) & (class(x) != "try-error")}))
-
-good_docs[2132]
-
-good_docs_dates = t(sapply(good_docs, function(k) {
-  res = range(ODNB_improvedpred[[k]][[3]]$date, na.rm = TRUE)
-  if (!is.finite(res[1])) { return(c(NA, NA)) } else {return (res) }
-}))
-
-match(good_docs, full_result$ID) -> good_match
-full_result2 = cbind(full_result, bio_min_date = NA, bio_max_date = NA)
-full_result2$bio_min_date[good_match] = good_docs_dates[,1]
-full_result2$bio_max_date[good_match] = good_docs_dates[,2]  
-
-## Adjust id numbers
-full_result2$ID = idnums
-
-find_closest_date(z[[2]], z[[3]]) -> y
-
-idlist = z[[1]]
-matches_d = y
-aggregate_matches = function(idlist, matches_d) {
-  if (is.null(matches_d)) {return(NULL)}
-  matches_d = matches_d[matches_d$ID > -1,]
-  toreturn = NULL
-  for(j in unique(matches_d$DocSplit)) {
-    matches_date = matches_d[matches_d$DocSplit == j,]
-    ids = unique(matches_date$ID)
-    
-    toret = data.frame(Entity=idlist$MatchName[match(ids, idlist$ID)],
-      ID = idlist$ID[match(ids, idlist$ID)], Segment = j)
-    counts = tapply(rep(1, times = nrow(matches_date)),  matches_date$ID, FUN=sum)
-    min_date = tapply(matches_date$Date, matches_date$ID, min)
-    max_date = tapply(matches_date$Date, matches_date$ID, max)
-  
-    second = data.frame(Count = counts, MinDate = min_date, MaxDate = max_date)
-
-    
-    toret = cbind(toret, second)
-    toreturn = rbind(toreturn, toret)
-  }
-  toreturn = toreturn[toreturn$Count != 0,]
-
-  return(toreturn)
-}
-aggregate_matches(z[[1]], y)
-
-## Aggregate all the matches in the documents..
-ODNB_aggcounts = list()
-for(k in good_docs) {
-  print(k)
-  z = ODNB_improvedpred[[k]]
-  y = find_closest_date(z[[2]], z[[3]])
-  ODNB_aggcounts[[k]] = aggregate_matches(z[[1]],y)
-}
-
-partial_entity_matrix = list()
-for(k in 1:100) {
-  print(k)
-  partial_entity_matrix[[k]] = data.frame()
-  for(j in good_docs[(530 * (k-1)) + 1:530]) {
-    if (!is.null(ODNB_aggcounts[[j]])) {
-      res = cbind(ODNB_aggcounts[[j]], DocumentNum = j)
-      partial_entity_matrix[[k]] = rbind(partial_entity_matrix[[k]], res)
-    }
-  }
-}
-
-big_entity_matrix = data.frame()
-for(j in 1:100) {
-  print(j)
-  big_entity_matrix = rbind(big_entity_matrix, partial_entity_matrix[[j]])
-}
-
-
-ls()
-save(big_entity_matrix, file = "../../private_data/odnb_data_proc/ODNB_entitymatrix.Rdata")
+# 
+# good_docs = which(sapply(ODNB_improvedpred, function(x) {!is.null(x) & (class(x) != "try-error")}))
+# 
+# good_docs[2132]
+# 
+# good_docs_dates = t(sapply(good_docs, function(k) {
+#   res = range(ODNB_improvedpred[[k]][[3]]$date, na.rm = TRUE)
+#   if (!is.finite(res[1])) { return(c(NA, NA)) } else {return (res) }
+# }))
+# 
+# match(good_docs, full_result$ID) -> good_match
+# full_result2 = cbind(full_result, bio_min_date = NA, bio_max_date = NA)
+# full_result2$bio_min_date[good_match] = good_docs_dates[,1]
+# full_result2$bio_max_date[good_match] = good_docs_dates[,2]  
+# 
+# ## Adjust id numbers
+# full_result2$ID = idnums
+# 
+# find_closest_date(z[[2]], z[[3]]) -> y
+# 
+# idlist = z[[1]]
+# matches_d = y
+# aggregate_matches = function(idlist, matches_d) {
+#   if (is.null(matches_d)) {return(NULL)}
+#   matches_d = matches_d[matches_d$ID > -1,]
+#   toreturn = NULL
+#   for(j in unique(matches_d$DocSplit)) {
+#     matches_date = matches_d[matches_d$DocSplit == j,]
+#     ids = unique(matches_date$ID)
+#     
+#     toret = data.frame(Entity=idlist$MatchName[match(ids, idlist$ID)],
+#       ID = idlist$ID[match(ids, idlist$ID)], Segment = j)
+#     counts = tapply(rep(1, times = nrow(matches_date)),  matches_date$ID, FUN=sum)
+#     min_date = tapply(matches_date$Date, matches_date$ID, min)
+#     max_date = tapply(matches_date$Date, matches_date$ID, max)
+#   
+#     second = data.frame(Count = counts, MinDate = min_date, MaxDate = max_date)
+# 
+#     
+#     toret = cbind(toret, second)
+#     toreturn = rbind(toreturn, toret)
+#   }
+#   toreturn = toreturn[toreturn$Count != 0,]
+# 
+#   return(toreturn)
+# }
+# aggregate_matches(z[[1]], y)
+# 
+# ## Aggregate all the matches in the documents..
+# ODNB_aggcounts = list()
+# for(k in good_docs) {
+#   print(k)
+#   z = ODNB_improvedpred[[k]]
+#   y = find_closest_date(z[[2]], z[[3]])
+#   ODNB_aggcounts[[k]] = aggregate_matches(z[[1]],y)
+# }
+# 
+# partial_entity_matrix = list()
+# for(k in 1:100) {
+#   print(k)
+#   partial_entity_matrix[[k]] = data.frame()
+#   for(j in good_docs[(530 * (k-1)) + 1:530]) {
+#     if (!is.null(ODNB_aggcounts[[j]])) {
+#       res = cbind(ODNB_aggcounts[[j]], DocumentNum = j)
+#       partial_entity_matrix[[k]] = rbind(partial_entity_matrix[[k]], res)
+#     }
+#   }
+# }
+# 
+# big_entity_matrix = data.frame()
+# for(j in 1:100) {
+#   print(j)
+#   big_entity_matrix = rbind(big_entity_matrix, partial_entity_matrix[[j]])
+# }
+# 
+# 
+# ls()
+# save(big_entity_matrix, file = "../../private_data/odnb_data_proc/ODNB_entitymatrix.Rdata")
 
 ## load("../../private_data/odnb_data_proc/ODNB_entitymatrix.Rdata")
 

@@ -28,7 +28,7 @@ zzfile_textproc_ner_combtags = "data/ODNB_intermediate/NER/ODNB_combtags20141001
 
 # ../../private_data/odnb_data_proc/ODNB_fullnamelist.Rdata
 zzfile_textproc_post_fullnamelist = "data/OLD_ODNB/ODNB_fullnamelist.Rdata" ## Dated 2014 4/04
-zzfile_textproc_post_entitymatrix = "data/OLD_ODNB/ODNB_entitymatrix.Rdata" ## Dated 2014 4/11
+zzfile_textproc_post_entitymatrix = "data/OLD_ODNB/ODNB_entitymatrix20141001.Rdata" ## Dated 2014 4/11
 zzfile_textproc_post_improvedpred = "data/OLD_ODNB/ODNB_improvedpred20141001.Rdata" ## Dated 2014 4/04
 
 
