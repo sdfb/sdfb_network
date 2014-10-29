@@ -3,5 +3,5 @@
 
 curl -o ../../../../data/ODNB_raw/HTML/file_#1.txt "http://www.oxforddnb.com/templates/article.jsp?articleid=[1-99999]"
 
-tar -zcvf ../../../../data/ODNB_raw/ODNB_text.tar.gz ../../../../data/ODNB_raw/HTML
+tar -zcvf ../../../../data/ODNB_raw/HTML_ZIP/ODNB_text.tar.gz ../../../../data/ODNB_raw/HTML
 
