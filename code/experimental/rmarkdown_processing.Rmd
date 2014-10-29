@@ -1,26 +1,32 @@
 Examination of ODNB processing results
 --------------------
 
-[//]: # (Setup)
+
 ```{r setup, include=FALSE}
-source(file ="../ODNB/ODNB_file_locations.R")
+setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
+source("code/ODNB/ODNB_setup.R")
 ODNBID = 18800
 ```
 
-[//]: # (Load Raw HTML file)
-## This is the raw HTML file (with empty lines stripped)
+## Table of contents 
+- Raw HTML file
+- Processed text file (accents removed, HTML cleaned up)
+
+[rawHtml]: #rawHtml
+## Raw HTML file (with empty lines stripped)
+
 ```{r loadhtml}
-load(paste("../../", zzfile_textproc_preproc_rawHTML, sep = ""))
+setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
+load(zzfile_textproc_preproc_rawHTML)
 rawHTML = ODNB_raw[[ODNBID]]
-rm_emptylines(rawHTML)
+s = rm_emptylines(rawHTML)
+for(j in seq_along(s)) {cat("[*** Line",j,"***]", s[j], "\n")}
+rm(ODNB_raw)
 ```
 
+## Processed text (right before NER)
 
-
-
-
-
-
+## This is the next section
 
 
 
