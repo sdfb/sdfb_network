@@ -8,26 +8,21 @@ source("code/ODNB/ODNB_setup.R")
 ## Load data
 load(zzfile_textproc_preproc_rawHTML)
 
-
 ## Step 1: Process cosubject biographies, split these into separate bios.
 # Assumption: If this is an article about a person, with other entities added, then take the new article as only until the end of that paragraph. If this is a group biography, then split on each new person. Of course this won't be perfect...
 
-## figures out which documents have cosubjects
+
+print("----- Identifying documents that have cosubjects")
 ind_cosub = sapply(ODNB_rawHTML, exists_cosubject)
 
-## creates a list, each entry is a vector of character lengths of segments. This will be used to compare documents to identify identical documents. 
-print("----- Counting character lengths of documents")
-nchar_list = list()
+print("----- Counting character lengths of all documents")
+nchar_list = lapply(1:99999, function(x) {
+  if (!is_nobio(ODNB_rawHTML[[x]])) { return(nchar(dnb_grab_main(ODNB_rawHTML[[x]]))) } else { return(0) }
+})
 
-for(j in 1:99999) {
-  if (!is_nobio(ODNB_rawHTML[[j]])) {
-    nchar_list[[j]] = nchar(dnb_grab_main(ODNB_rawHTML[[j]]))
-  } else {
-    nchar_list[[j]] = 0
-  }
-  if (j %% 1000 == 0) { cat(j, " ") }
-}
+print("----- Count number of lines in each document")
 nchar_lengths = sapply(nchar_list, length)
+
 
 ## creates a list, where each entry denotes all the documents referring to the same biography (and in one case, the 'blank' biography [server error])
 print("----- Aggregating identical documents")
@@ -77,7 +72,7 @@ for(j in 1:length(cosub_list)) {
     
   } else {
     temp = dnb_grab_main(ODNB_rawHTML[[cosub_list[[j]][1]]])
-    ODNB_text[[j]] = temp[-length(temp)]
+    ODNB_text[[cosub_list[[j]][1]]] = temp[-length(temp)]
   }
 }
 

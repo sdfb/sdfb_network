@@ -13,7 +13,7 @@ REMOVE_FILENAME_VARIABLES = function() {
 zzfile_textproc_preproc_rawHTML = "data/ODNB_raw/ODNB_rawHTML_20141029.Rdata"
 
 ## Stores cosubject splitting information
-zzfile_textproc_preproc_splitcosub = "data/ODNB_intermediate/preNER/ODNB_splitcosub20140228.Rdata"
+zzfile_textproc_preproc_splitcosub = "data/ODNB_intermediate/preNER/ODNB_splitcosub20141029.Rdata"
 
 ## Stores output from NER programs
 zzfile_textproc_ner_results = "data/ODNB_intermediate/NER/ODNB_NERproc20140202.Rdata"
