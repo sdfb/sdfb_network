@@ -1,0 +1,39 @@
+Examination of ODNB processing results
+--------------------
+
+[//]: # (Setup)
+```{r setup, include=FALSE}
+source(file ="../ODNB/ODNB_file_locations.R")
+ODNBID = 18800
+```
+
+[//]: # (Load Raw HTML file)
+## This is the raw HTML file (with empty lines stripped)
+```{r loadhtml}
+load(paste("../../", zzfile_textproc_preproc_rawHTML, sep = ""))
+rawHTML = ODNB_raw[[ODNBID]]
+rm_emptylines(rawHTML)
+```
+
+
+
+
+
+
+
+
+
+
+
+## Load helper file scripts (to be replaced by SDFB library)
+source("code/ODNB/text_processing/helper/clean_HTML_functions.R")
+source("code/ODNB/text_processing/helper/NER_processing.R")
+source("code/ODNB/text_processing/helper/NER_improve.R")
+
+## Load the file location variables. 
+source("code/ODNB/ODNB_file_locations.R")
+
+
+
+
+
