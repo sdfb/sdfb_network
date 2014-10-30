@@ -37,6 +37,7 @@ for(B in 1:3) {
       stop(paste("ERROR: Mismatching input lengths in compilation", j))
     }
   }
+  print("--- Saving...")
   save(ODNB_tokenized, file = zzfile_textproc_ner_token_vec[B])
   rm(ODNB_tokenized)
 }

@@ -28,7 +28,7 @@ zzfile_textproc_ner_token2 = "data/ODNB_intermediate/NER/ODNB_NERtokenized201410
 zzfile_textproc_ner_token3 = "data/ODNB_intermediate/NER/ODNB_NERtokenized20141029_3.Rdata"
 
 ## Stores combined tokenized results
-zzfile_textproc_ner_combtags = "data/ODNB_intermediate/NER/ODNB_combtags20141001.Rdata"
+zzfile_textproc_ner_combtags = "data/ODNB_intermediate/NER/ODNB_combtags20141029.Rdata"
 
 # ../../private_data/odnb_data_proc/ODNB_fullnamelist.Rdata
 zzfile_textproc_post_fullnamelist = "data/OLD_ODNB/ODNB_fullnamelist.Rdata" ## Dated 2014 4/04
