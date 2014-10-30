@@ -37,9 +37,9 @@ writeLines(script, con = "code/ODNB/text_processing/NER/lingprecopySCRIPT.sh")
 script = rep("", times = 5)
 script[1] = "#!/bin/sh"
 script[2] = ""
-script[3] = "cp ../../software/lingpipe/demos/generic/bin/proc/* ../../../../data/ODNB_intermediate/NER/proc_LING/"
-script[4] = "rm ../../software/lingpipe/demos/generic/bin/proc/*"
-script[5] = "rm ../../software/lingpipe/demos/generic/bin/unproc/*"
+script[3] = "cp ../../../../software/lingpipe/demos/generic/bin/proc/* ../../../../data/ODNB_intermediate/NER/proc_LING/"
+script[4] = "rm ../../../../software/lingpipe/demos/generic/bin/proc/*"
+script[5] = "rm ../../../../software/lingpipe/demos/generic/bin/unproc/*"
 
 writeLines(script, con = "code/ODNB/text_processing/NER/lingpostcopySCRIPT.sh")
 
