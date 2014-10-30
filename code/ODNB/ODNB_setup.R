@@ -5,9 +5,9 @@
 ## Load SDFB library (when this works...)
 
 ## Load helper file scripts (to be replaced by SDFB library)
-source("code/ODNB/text_processing/helper/clean_HTML_functions.R")
-source("code/ODNB/text_processing/helper/NER_processing.R")
-source("code/ODNB/text_processing/helper/NER_improve.R")
+source("code/SDFBFunctions/R/clean_HTML_functions.R")
+source("code/SDFBFunctions/R/NER_processing.R")
+source("code/SDFBFunctions/R/NER_improve.R")
 
 ## Load the file location variables. 
 source("code/ODNB/ODNB_file_locations.R")

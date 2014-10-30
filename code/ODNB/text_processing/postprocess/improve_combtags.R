@@ -5,6 +5,8 @@ source("code/ODNB/ODNB_setup.R")
 HAVE_MANUAL_METADATA = TRUE
 
 if (!HAVE_MANUAL_METADATA) {
+  ## TODO: [Cleanup] Process this code here
+  
 #   ## Old code: relied on my metadata file. probabaly needs fixing?
 #   
 #   load(zzfile_textproc_ner_combtags)

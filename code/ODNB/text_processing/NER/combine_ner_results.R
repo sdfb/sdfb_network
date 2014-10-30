@@ -10,6 +10,7 @@ for(B in 1:3) {
   ## Figure out which ids are non-empty
   ids = which(sapply(ODNB_tokenized, function(x) {!is.null(x)}))
   for(j in ids) {
+    cat(j, "")
     combtag = cbind(proc_tagtext(ODNB_tokenized[[j]]$st, "ST"), proc_tagtext(ODNB_tokenized[[j]]$lp, "LP"))
     comb_index = match(comb_order, colnames(combtag))
     temp = combtag[,comb_index[1]]

@@ -72,15 +72,22 @@ Read HTML files into R, store as a list
 \item Compiles the NER results, gives data frame for each document. Tokenized text, named-entity tagging, approximate date estimate. 
 \end{enumerate}
 
-\item \filename{improve\_ner\_results.R}
-\begin{enumerate}
-\item Contains code that does adjustments to the NER results that increase recall/precision
-\end{enumerate}
-
 \end{enumerate}
 
 \subsection{Postprocess Data -- ODNB/text\_processing/postprocess}
 \begin{enumerate}
+
+\item \filename{improve\_combtags.R}
+\begin{enumerate}
+\item Runs function that improves the predictions by removing non-sensical predictions, and applying some rules to matching single-names (eg. only matching Milton when looking for John Milton, when John Milton was already referenced. These rules might warrant a closer look.)
+
+\end{enumerate}
+
+\item \filename{create\_entity\_matrix.R}
+\begin{enumerate}
+\item Takes 
+\end{enumerate}
+
 \item \filename{create\_model\_data.R}
 \begin{enumerate}
 \item test
@@ -112,9 +119,9 @@ Contains \texttt{ODNB\_rawHTML}, this is a list of the raw HTML files for each I
 \item \filename{ODNB\_splitcosubjects<******>.Rdata}
 Contains variables: 
 \begin{itemize}
-\item \texttt{ODNB\_text}
-\item \texttt{ODNB\_cleantext}
-\item \texttt{ODNB\_groupsub}
+\item \texttt{ODNB\_text} List of documents without most HTML. Indices are ODNB numbers (adjusted for cosubjects)
+\item \texttt{ODNB\_cleantext} Version of documents without ANY HTML, and fixed for input into NER tools. 
+\item \texttt{ODNB\_groupsub} Logical vector denoting cosubject status
 \end{itemize}
 
 \item \filename{ODNB\_metadata<******>.Rdata}
@@ -126,10 +133,11 @@ Contains variables:
 \item \filename{ODNB\_nerproc<******>.Rdata}
 Contains variables: 
 \begin{itemize}
-\item \texttt{txt\_R}
-\item \texttt{txt\_S}
-\item \texttt{txt\_L}
+\item \texttt{txt\_R} List of compiled original documents
+\item \texttt{txt\_S} List of compiled stanford-processed documents
+\item \texttt{txt\_L} List of compiled lingpipe-processed documents
 \end{itemize}
+These are all length 584 (since the documents were broken into that many compilations)
 
 \item \filename{ODNB\_NERtokenized<******>\_<\#>.Rdata}
 

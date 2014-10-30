@@ -1,6 +1,9 @@
 ## Code to improve NER results.
 
 source("code/ODNB/ODNB_setup.R")
+## TODO: [Obselete] This file should be completely obseleted. 
+
+
 
 ## TODO: [Cleanup] This file needs code cleanup. 
 
