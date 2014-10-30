@@ -98,16 +98,17 @@ exists_cosubject = function(htmltext) {
 #' 
 #' @export
 #' 
-process_cosubject = function(ids) {
+process_cosubject = function(ids_input) {
+  
   ## These are names 
   drop_names = c("family", "Society", "emperors", "school", "Crazy Gang", "Castilians", "group", "brothers", "Corps", "Club", "Boys", "scholars", "Queen's", "club", "Edinburgh Seven", "sisters", "Vorticists", "knights", "colourists", "kings", "conspirators", "Group", "Martyrs", "witches", "officers", "wives", "Pioneers", "artists", "visitors", "painters", "Kings", "Girls", "women", "Babes", "Gruffudd ap Rhys", "Moneyers", "officials", "Women", "spies", "American Indians", "Servants")
-
+  
   text_list = list()
   id_list = list()
   ## base document: 
-  doc = dnb_grab_main(ODNB_rawHTML[[ids[1]]])
-  id_vec = rep(ids[1], times = length(ids))
-
+  doc = dnb_grab_main(ODNB_rawHTML[[ids_input[1]]])
+  id_vec = rep(NA, times = length(ids_input))
+  
   group_cosub = FALSE
   name = ODNB_extract_name_segment(doc)
   for(k in 1:length(drop_names)) {
@@ -115,7 +116,7 @@ process_cosubject = function(ids) {
       group_cosub = TRUE
     }
   }
-
+  
   if (group_cosub) {
     ## split at every cosubject
     comb_doc = paste(doc, collapse = "#*#*#")
@@ -124,13 +125,17 @@ process_cosubject = function(ids) {
     matchs = regmatches(comb_doc, match_locs)[[1]]
     matchs_inv = regmatches(comb_doc, match_locs, invert = TRUE)[[1]]
     
-    ids = as.numeric(gsub("[^0-9]", "", matchs))
     text_list[[1]] = strsplit(matchs_inv[1], "#*#*#", fixed = TRUE)[[1]]
-    
-    for(k in seq_along(ids)) {
-      text_list[[k+1]] = strsplit(matchs_inv[k+1], "#*#*#", fixed = TRUE)[[1]]
-      id_vec[k+1] = as.numeric(gsub("[^0-9]", "", matchs[k]))
+    l = 1
+    for(k in seq_along(matchs)) {
+      match_id = as.numeric(gsub("[^0-9]", "", matchs[k]))
+      if (match_id < 100000) {
+        text_list[[l+1]] = strsplit(matchs_inv[l+1], "#*#*#", fixed = TRUE)[[1]]
+        id_vec[l+1] = match_id
+        l = l + 1
+      }
     }
+    id_vec = id_vec[seq_along(text_list)]
     
   } else {
     ## split, and remove until next cosubject or until end of paragraph.
@@ -143,10 +148,23 @@ process_cosubject = function(ids) {
     k = 2
     for(m in seq_along(matchs)) {
       for(n in seq_along(matchs[[m]])) {
-        text_list[[k]] = matchs_inv[[m]][n+1]
-        id_vec[k] = as.numeric(gsub("[^0-9]", "", matchs[[m]][n]))
-        k = k + 1
+        match_id = as.numeric(gsub("[^0-9]", "", matchs[[m]][n]))
+        if (match_id < 100000) {
+          text_list[[k]] = matchs_inv[[m]][n+1]
+          id_vec[k] = match_id
+          k = k + 1
+        }
       }
+    }
+  }
+  if (sum(is.na(id_vec)) > 1) { stop("Two non-identified ODNB numbers in bio. Cannot detect main person...")}
+  if (sum(is.na(id_vec)) == 1) { 
+    missing_id = ids_input[!(ids_input %in% id_vec)]
+    if (length(missing_id) == 0) {
+      text_list = text_list[-which(is.na(id_vec))]
+      id_vec = id_vec[-which(is.na(id_vec))]
+    } else {
+      id_vec[is.na(id_vec)] = missing_id
     }
   }
   return(list(text = text_list, ids = id_vec, group = group_cosub))
@@ -172,7 +190,7 @@ ODNB_extract_name_segment = function(text) {
   start_i = 2
   end_i = 1
   embed = 1
-
+  
   if (length(starts == 1) & length(ends) == 1) {
     y = ends[1] + attr(ends,"match.length")[1] - 1
     return(list(text = substr(text[[1]], start =1, stop = y),
