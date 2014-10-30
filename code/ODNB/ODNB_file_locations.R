@@ -16,12 +16,16 @@ zzfile_textproc_preproc_rawHTML = "data/ODNB_raw/ODNB_rawHTML_20141029.Rdata"
 zzfile_textproc_preproc_splitcosub = "data/ODNB_intermediate/preNER/ODNB_splitcosub20141029.Rdata"
 
 ## Stores output from NER programs
-zzfile_textproc_ner_results = "data/ODNB_intermediate/NER/ODNB_NERproc20140202.Rdata"
+zzfile_textproc_ner_results = "data/ODNB_intermediate/NER/ODNB_NERproc20141029.Rdata"
 
 ## Stores tokenized versions by segment
-zzfile_textproc_ner_token1 = "data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_1.Rdata"
-zzfile_textproc_ner_token2 = "data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_2.Rdata"
-zzfile_textproc_ner_token3 = "data/ODNB_intermediate/NER/ODNB_NERtokenized20140202_3.Rdata"
+ZNSPLITS = 584 ## Global variable storing number of data splits. 
+zzfile_textproc_ner_token_vec = c("data/ODNB_intermediate/NER/ODNB_NERtokenized20141029_1.Rdata", 
+                                  "data/ODNB_intermediate/NER/ODNB_NERtokenized20141029_2.Rdata", 
+                                  "data/ODNB_intermediate/NER/ODNB_NERtokenized20141029_3.Rdata")
+zzfile_textproc_ner_token1 = "data/ODNB_intermediate/NER/ODNB_NERtokenized20141029_1.Rdata"
+zzfile_textproc_ner_token2 = "data/ODNB_intermediate/NER/ODNB_NERtokenized20141029_2.Rdata"
+zzfile_textproc_ner_token3 = "data/ODNB_intermediate/NER/ODNB_NERtokenized20141029_3.Rdata"
 
 ## Stores combined tokenized results
 zzfile_textproc_ner_combtags = "data/ODNB_intermediate/NER/ODNB_combtags20141001.Rdata"
