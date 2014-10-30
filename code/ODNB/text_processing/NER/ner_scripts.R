@@ -1,13 +1,13 @@
 ##@S This file contains code that generates scripts for running the NER programs.
+source("code/ODNB/ODNB_setup.R")
 
 ## Script for stanford NER tool processing
-N = 529 # number of split-files
-script = rep("", times = N+3)
+script = rep("", times = ZNSPLITS+3)
 script[1] = "#!/bin/sh"
 script[2] = "scriptdir=`dirname $0`"
 script[3] = ""
 
-for(i in 1:N) {
+for(i in 1:ZNSPLITS) {
   temp = paste("sh ../../../../software/stanNER/ner.sh ../../../../data/ODNB_intermediate/NER/compiled_raw/",i,".txt > ../../../../data/ODNB_intermediate/NER/proc_STAN/ST_",i,".txt", sep = "")
   
   script[i+3] = temp
