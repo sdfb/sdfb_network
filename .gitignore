@@ -16,3 +16,4 @@
 *.txt
 /software/lingpipe/*
 /software/stanNER/*
+*.Rd
