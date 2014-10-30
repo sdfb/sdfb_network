@@ -13,4 +13,4 @@
 *.gz
 *~
 *.html
-/data/ODNB_raw/HTML*
+*.txt
