@@ -19,7 +19,7 @@ ODNBID = 18800
 ## Raw HTML file (with empty lines stripped) {#rawHtml}
 
 [Return to Table of Contents](#toc)
-```{r loadhtml}
+```{r loadhtml, echo=FALSE}
 setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
 load(zzfile_textproc_preproc_rawHTML)
 rawHTML = ODNB_rawHTML[[ODNBID]]
@@ -30,10 +30,23 @@ rm(ODNB_rawHTML)
 
 ## Processed text (right before NER) {#rawplain}
 [Return to Table of Contents](#toc)
-```{r loadplain}
+```{r loadplain, echo=FALSE}
 setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
-#load(zzfile_textproc_preproc_splitcosub)
-print('hello')
+load(zzfile_textproc_preproc_splitcosub)
+if (!is.null(ODNB_cleantext[[ODNBID + 100000]])) {
+  cat("There is a cosubject listed with the same ODNBID; they were assigned an ODNB ID of", 
+      ODNBID + 100000, ".\n")
+}
+s = ODNB_cleantext[[ODNBID[1]]]
+for(j in seq_along(s)) {cat("[*** Paragraph",j,"***]", s[j], "\n")}
+
+if (!is.null(ODNB_cleantext[[ODNBID + 100000]])) { 
+  cat("Their section of the biography is given next.\n")
+  ODNBID = c(ODNBID, ODNBID + 100000)
+  s = ODNB_cleantext[[ODNBID[2]]]
+  for(j in seq_along(s)) {cat("[*** Paragraph",j,"***]", s[j], "\n")}
+}
+## Do something about ODNBID + 100000. If this is the case, display & follow both users? OR do ODNBID mod 100000 in rawHTML. 
 ```
 
 
