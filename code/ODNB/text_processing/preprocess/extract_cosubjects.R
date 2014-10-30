@@ -1,90 +1,95 @@
 ##@S This file contains code that extracts all the cosubjects and splits all cosubject documents according to a simple rule. 
 
-## TODO: [Data Quality] Are there odnb articles beyond index 99999? I think so..., but then what's the limit? Don't want to download a large number of sparsely populated documents. 
-
+## TODO: [Data Quality] Are there odnb articles beyond index 99999? I think so..., but then what's the limit? Don't want to download a large number of sparsely populated documents. Ignored for now, but may be worth a look if there are significant documents here. 
 
 source("code/ODNB/ODNB_setup.R")
 
 ## Load data
 load(zzfile_textproc_preproc_rawHTML)
 
-## Step 1: Process cosubject biographies, split these into separate bios.
-# Assumption: If this is an article about a person, with other entities added, then take the new article as only until the end of that paragraph. If this is a group biography, then split on each new person. Of course this won't be perfect...
 
+# Split cosubject biographies into appropriate sections -------------------
+## Assumption: IF this is an article about a person with other entities added, take the new article as the start of the cosubject identifier until the end of the paragraph. If this is a group biography, do the split on each new person. Of course, this won't be perfect and may require modifications. 
 
 print("----- Identifying documents that have cosubjects")
 ind_cosub = sapply(ODNB_rawHTML, exists_cosubject)
+
 
 print("----- Counting character lengths of all documents")
 nchar_list = lapply(1:99999, function(x) {
   if (!is_nobio(ODNB_rawHTML[[x]])) { return(nchar(dnb_grab_main(ODNB_rawHTML[[x]]))) } else { return(0) }
 })
 
+
 print("----- Count number of lines in each document")
 nchar_lengths = sapply(nchar_list, length)
 
 
-## creates a list, where each entry denotes all the documents referring to the same biography (and in one case, the 'blank' biography [server error])
-print("----- Aggregating identical documents")
-cosub_list = list()
-ind = 1
-new_indicator = rep(TRUE, times = 99999)
+print("----- Identifying identical documents and cosubject candidates")
+## Find documents that have the same number of lines
+length_doc_list = lapply(1:max(nchar_lengths), function(x) {which(x == nchar_lengths)})
+
+cosub_list = list() ## list of indices which all refer to the same document. 
+ind = 1 ## indexes progress
+new_indicator = rep(TRUE, times = 99999) ## If TRUE -> still need to process this document. 
 for(j in 1:99999) {
-  if (new_indicator[j]) {
+  if (j %% 100 == 0) { cat(j, " ") }
+  
+  ## For each document, if it hasn't already been identified as identical, then process. 
+  if (new_indicator[j] && any(nchar_list[[j]] > 0)) {
     base = nchar_list[[j]]
-    cosub_list[[ind]] = j
+    maindnb = dnb_grab_main(ODNB_rawHTML[[j]])
     
-    for(k in which(length(base) == nchar_lengths)) {      
-      if (all(base == nchar_list[[k]]) & (k != j)) {
+    cosub_list[[ind]] = j
+    for(k in length_doc_list[[nchar_lengths[j]]]) {
+      ## Check for nonequal index, then nonequal character numbers, then finally for nonequal exact text. 
+      if ((k != j) && all(base == nchar_list[[k]]) && all(maindnb == dnb_grab_main(ODNB_rawHTML[[k]]))) {
         cosub_list[[ind]] = c(cosub_list[[ind]], k)
       }
     }
+    new_indicator[cosub_list[[ind]]] = FALSE
+    
     ind = ind + 1
-    new_indicator[cosub_list[[ind - 1]]] = FALSE
-    cat(j, " ")
   }
 }
+## Cleanup
+rm(ind, new_indicator, base, maindnb, j, k)
 
-## if name contains drop_names, then split before each name. Otherwise, split until start of new paragraph or another cosubject.
-print("----- Creating new list of documents")
+
+print("----- Splitting cosubject biographies into new list of documents")
 ODNB_text = vector("list", length = 199999)
 ODNB_groupcosub = rep(FALSE, times = 199999)
 
 for(j in 1:length(cosub_list)) {
   if (j %% 1000 == 0) { cat(j, " ") }
   
-  if (length(cosub_list[[j]]) > 100) {
-    ## do nothing; this ignores all the error pages
-  } else if (length(cosub_list[[j]]) > 1) {
-    ## test for common name
-    
-    cos_res = process_cosubject(ids = cosub_list[[j]])
-    ODNB_groupcosub[cosub_list[[j]][1]] = cos_res$group
-    
-    for(k in seq_along(cos_res$text)) {
-      if (!is.null(ODNB_text[[cos_res$ids[k]]])) {
+  if (length(cosub_list[[j]]) == 1) {
+    ODNB_text[[cosub_list[[j]][1]]] = dnb_grab_main(ODNB_rawHTML[[cosub_list[[j]][1]]])
+  } else {
+    ## Process cosubject determines if name is a 'group' biography; if so, splits are at every name. 
+    ## Otherwise, splits are for single paragraphs for smaller cosubjects. 
+    cosub_result = process_cosubject(ids_input = cosub_list[[j]])
+    ODNB_groupcosub[cosub_list[[j]][1]] = cosub_result$group
+    for(k in seq_along(cosub_result$ids)) {
+      if (!is.null(ODNB_text[[cosub_result$ids[k]]])) { 
         ## For whatever reason, some people share ID nums (cosubjects). I'm adding 100,000 to the id number for these... 
-        ODNB_text[[cos_res$ids[k] + 100000]] <- cos_res$text[[k]]
+        if (!is.null(ODNB_text[[cosub_result$ids[k] + 100000]])) { stop("Error at ", j) }
+        ODNB_text[[cosub_result$ids[k] + 100000]] = cosub_result$text[[k]]
       } else {
-        ODNB_text[[cos_res$ids[k]]] <- cos_res$text[[k]]
+        ODNB_text[[cosub_result$ids[k]]] = cosub_result$text[[k]]
       }
     }
-    
-  } else {
-    temp = dnb_grab_main(ODNB_rawHTML[[cosub_list[[j]][1]]])
-    ODNB_text[[cosub_list[[j]][1]]] = temp[-length(temp)]
   }
 }
 
 
 ## Strange text problems:
-ODNB_text[[44722]] = c(paste(ODNB_text[[44722]][1:4], collapse = " "), ODNB_text[[44722]][-1:-4])
-ODNB_text[[48216]] = c(paste(ODNB_text[[48216]][1:4], collapse = " "), ODNB_text[[48216]][-1:-3])
-
+# ODNB_text[[62274]] = c(paste(ODNB_text[[62274]][1:3], collapse = " "), ODNB_text[[62274]][-1:-3])
+# ODNB_text[[69990]] = c(paste(ODNB_text[[69990]][1:2], collapse = " "), ODNB_text[[69990]][-1:-2])
 
 
 ## Removing accents/HTML
-print("Cleaning text")
+print("----- Cleaning text")
 
 ODNB_cleanup = function(x) {
   ## This removes all remaining <>'s.
@@ -100,6 +105,8 @@ for(i in 1:199999) {
     ODNB_cleantext[[i]] = ODNB_cleanup(tmp)
   }
 }
+
+## RAN TO HERE ------------------------------
 
 ## Step 2: Save the text documents into files with 100 documents each
 
