@@ -5,122 +5,39 @@ source("code/ODNB/ODNB_setup.R")
 
 ## Treat the title person differently (use extract names function from the pure HTML, and ignore NER results here.
 Ntexts = 199999
-Ncomp = 584
 
 
 ## The following needs to be done in three parts, due to memory issues... 
 ## Process combined documents into individual segments.
-ODNB_tokenized1 = list()
-for(j in 1:200) {
-  cat("Processing compilation", j, "------\n")
-  z = which(txt_R[[j]] == "@@@@@")
-  ts = gsub("<.*?>", "", txt_S[[j]])
-  y = which(ts == "@@@@@")
-  tl = gsub("<.*?>", "", txt_L[[j]])
-  x = which(tl == "@@@@@")
-
-  if (all(z == y) & all (z == x)) {
-    starts = z
-    ends = c(z[-1] - 1, length(txt_R[[j]]))
-    docnums = sapply(txt_R[[j]][starts+3], function(x) {as.numeric(strsplit(x, "=")[[1]][2])})
-    for(k in 1:length(docnums)) {
-      if (k %% 10 == 0) { print(k) }
-      main = (starts[k] + 6):(ends[k] - 2)
-      ODNB_tokenized1[[docnums[k]]] = list()
-      ODNB_tokenized1[[docnums[k]]]$raw = format_text_and_split(txt_R[[j]][main])
-      ODNB_tokenized1[[docnums[k]]]$st = normalize_tagtext(
-                                    txt_S[[j]][main],
-                                    ODNB_tokenized1[[docnums[k]]]$raw,
-                                    "ST")
-      ODNB_tokenized1[[docnums[k]]]$lp = normalize_tagtext(
-                                    txt_L[[j]][main],
-                                    ODNB_tokenized1[[docnums[k]]]$raw,
-                                    "LP")
-                                   
+ODNB_tokenized = list()
+for(B in 1:3) {
+  inds_iterate = seq(from = 200*(B-1) + 1, to = min(ZNSPLITS, 200*B))
+  for(j in inds_iterate) {
+    cat("Processing compilation", j, "------\n")
+    z = which(txt_R[[j]] == "@@@@@")
+    ts = gsub("<.*?>", "", txt_S[[j]])
+    y = which(ts == "@@@@@")
+    tl = gsub("<.*?>", "", txt_L[[j]])
+    x = which(tl == "@@@@@")
+    if (all(z == y) & all (z == x)) {
+      starts = z
+      ends = c(z[-1] - 1, length(txt_R[[j]]))
+      docnums = sapply(txt_R[[j]][starts+3], function(x) {as.numeric(strsplit(x, "=")[[1]][2])})
+      for(k in 1:length(docnums)) {
+        if (k %% 10 == 0) { print(k) }
+        main = (starts[k] + 6):(ends[k] - 2)
+        ODNB_tokenized[[docnums[k]]] = list()
+        ODNB_tokenized[[docnums[k]]]$raw = format_text_and_split(txt_R[[j]][main])
+        ODNB_tokenized[[docnums[k]]]$st = normalize_tagtext(
+          txt_S[[j]][main], ODNB_tokenized1[[docnums[k]]]$raw, "ST")
+        ODNB_tokenized[[docnums[k]]]$lp = normalize_tagtext(
+          txt_L[[j]][main], ODNB_tokenized1[[docnums[k]]]$raw, "LP")
+      }
+    } else {
+      stop(paste("ERROR: Mismatching input lengths in compilation", j))
     }
-  } else {
-    stop(paste("ERROR: Mismatching input lengths in compilation", j))
   }
+  save(ODNB_tokenized, file = zzfile_textproc_ner_token_vec[B])
+  rm(ODNB_tokenized)
 }
-
-save(ODNB_tokenized1, file = zzfile_textproc_ner_token1)
-rm(ODNB_tokenized1)
-
-ODNB_tokenized2 = list()
-for(j in 201:400) {
-  cat("Processing compilation", j, "------\n")
-  z = which(txt_R[[j]] == "@@@@@")
-  ts = gsub("<.*?>", "", txt_S[[j]])
-  y = which(ts == "@@@@@")
-  tl = gsub("<.*?>", "", txt_L[[j]])
-  x = which(tl == "@@@@@")
-
-  if (all(z == y) & all (z == x)) {
-    starts = z
-    ends = c(z[-1] - 1, length(txt_R[[j]]))
-    docnums = sapply(txt_R[[j]][starts+3], function(x) {as.numeric(strsplit(x, "=")[[1]][2])})
-    for(k in 1:length(docnums)) {
-      if (k %% 10 == 0) { print(k) }
-      main = (starts[k] + 6):(ends[k] - 2)
-      ODNB_tokenized2[[docnums[k]]] = list()
-      ODNB_tokenized2[[docnums[k]]]$raw = format_text_and_split(txt_R[[j]][main])
-      ODNB_tokenized2[[docnums[k]]]$st = normalize_tagtext(
-                                    txt_S[[j]][main],
-                                    ODNB_tokenized2[[docnums[k]]]$raw,
-                                    "ST")
-      ODNB_tokenized2[[docnums[k]]]$lp = normalize_tagtext(
-                                    txt_L[[j]][main],
-                                    ODNB_tokenized2[[docnums[k]]]$raw,
-                                    "LP")
-                                   
-    }
-  } else {
-    stop(paste("ERROR: Mismatching input lengths in compilation", j))
-  }
-}
-
-save(ODNB_tokenized2, file = zzfile_textproc_ner_token2)
-rm(ODNB_tokenized2)
-
-ODNB_tokenized3 = list()
-for(j in 401:Ncomp) {
-  cat("Processing compilation", j, "------\n")
-  z = which(txt_R[[j]] == "@@@@@")
-  ts = gsub("<.*?>", "", txt_S[[j]])
-  y = which(ts == "@@@@@")
-  tl = gsub("<.*?>", "", txt_L[[j]])
-  x = which(tl == "@@@@@")
-
-  if (all(z == y) & all (z == x)) {
-    starts = z
-    ends = c(z[-1] - 1, length(txt_R[[j]]))
-    docnums = sapply(txt_R[[j]][starts+3], function(x) {as.numeric(strsplit(x, "=")[[1]][2])})
-    for(k in 1:length(docnums)) {
-      if (k %% 10 == 0) { print(k) }
-      main = (starts[k] + 6):(ends[k] - 2)
-      ODNB_tokenized3[[docnums[k]]] = list()
-      ODNB_tokenized3[[docnums[k]]]$raw = format_text_and_split(txt_R[[j]][main])
-      ODNB_tokenized3[[docnums[k]]]$st = normalize_tagtext(
-                                    txt_S[[j]][main],
-                                    ODNB_tokenized3[[docnums[k]]]$raw,
-                                    "ST")
-      ODNB_tokenized3[[docnums[k]]]$lp = normalize_tagtext(
-                                    txt_L[[j]][main],
-                                    ODNB_tokenized3[[docnums[k]]]$raw,
-                                    "LP")
-                                   
-    }
-  } else {
-    stop(paste("ERROR: Mismatching input lengths in compilation", j))
-  }
-}
-
-save(ODNB_tokenized3, file = zzfile_textproc_ner_token3)
-rm(ODNB_tokenized3)
-
-
-
-
-
-
 
