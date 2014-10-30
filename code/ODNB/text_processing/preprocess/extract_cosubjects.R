@@ -129,4 +129,30 @@ for(j in 1:199999) {
   }
 }
 
+
+print("----- Run text check")
+## Check if there are any HTML remnants in the code
+for(i in 1:Ntexts) {
+  a = grep("<.*>", ODNB_cleantext[[i]])
+  if (i %% 10000 == 0) { cat(i) }
+  if ( length(a) > 0 ) {
+    print(paste("Docu#",i," Index#",a, "\n"))
+    b = gregexpr("<.*>", ODNB_cleantext[[i]])
+    print(regmatches(ODNB_cleantext[[i]], b))
+  }  
+}
+check.other.punct <- function(text) {
+  b = gregexpr("&[^[:space:]]{1,10};", text)
+  m = regmatches(text, b)
+  return(m[sapply(m, length) > 0])
+}
+for(i in 1:Ntexts) {
+  a = check.other.punct(ODNB_cleantext[[i]])
+  if (i %% 10000 == 0) {cat(i)}
+  if ( length(a) > 0 ) {
+    print(paste("Docu#",i," Index#",a))
+  }
+}
+## Text is clean, now just need to merge them and extract identified name locations.
+
 save(ODNB_text, ODNB_cleantext, ODNB_groupcosub, file = zzfile_textproc_preproc_splitcosub)
