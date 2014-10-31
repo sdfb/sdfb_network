@@ -2,12 +2,16 @@
 
 ## Load pertinent libraries
 
-## Load SDFB library (when this works...)
+## Load SDFB library or helper files. 
+use_library = FALSE
 
-## Load helper file scripts (to be replaced by SDFB library)
-source("code/SDFBFunctions/R/clean_HTML_functions.R")
-source("code/SDFBFunctions/R/NER_processing.R")
-source("code/SDFBFunctions/R/NER_improve.R")
+if (use_library) {
+  library(SDFBFunctions)
+} else {
+  source("code/SDFBFunctions/R/clean_HTML_functions.R")
+  source("code/SDFBFunctions/R/NER_processing.R")
+  source("code/SDFBFunctions/R/NER_improve.R")
+}
 
 ## Load the file location variables. 
 source("code/ODNB/ODNB_file_locations.R")

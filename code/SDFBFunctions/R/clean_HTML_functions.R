@@ -89,10 +89,12 @@ exists_cosubject = function(htmltext) {
 }
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (process_cosubject)
 #' This function determines the type of cosubject biography, 
 #' and consequently splits it (and returns a list of texts and id numbers for the texts)
 #' 
 #' @param ids is a vector of numbers that refer to the same document
+#' @param ids_input temp
 #' 
 #' @return list of cosubject biographies
 #' 

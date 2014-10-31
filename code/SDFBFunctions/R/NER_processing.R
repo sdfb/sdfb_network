@@ -279,9 +279,12 @@ proc_tagtext = function(tagged.text, type,
 }
 
 
+## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (tag_dates)
 #' Finds dates between 1200-1900
 #' 
 #' @param vec text
+#' @param mindate temp
+#' @param maxdate temp
 #' 
 #' @return vector with dates extracted...
 #' 
