@@ -3,7 +3,7 @@
 ## Load pertinent libraries
 
 ## Load SDFB library or helper files. 
-use_library = FALSE
+use_library = TRUE
 
 if (use_library) {
   library(SDFBFunctions)
@@ -15,5 +15,5 @@ if (use_library) {
 
 ## Load the file location variables. 
 source("code/ODNB/ODNB_file_locations.R")
-
+rm(use_library)
 

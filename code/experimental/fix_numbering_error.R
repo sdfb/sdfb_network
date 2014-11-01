@@ -10,6 +10,7 @@ for(j in 1:length(cosub_list)) {
     ## test for common name
     
     cos_res = process_cosubject(ids = cosub_list[[j]])
+#|----##Changing parameterization --Fri Oct 31 15:49:10 2014--
     
     for(k in seq_along(cos_res$text)) {
       if (!is.na(text[k])) {
