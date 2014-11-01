@@ -4,80 +4,63 @@
 
 source("code/ODNB/ODNB_setup.R")
 
+library(stringr)
+
+
 ## Load data
 load(zzfile_textproc_preproc_rawHTML)
 
 
 # Split cosubject biographies into appropriate sections -------------------
 ## Assumption: IF this is an article about a person with other entities added, take the new article as the start of the cosubject identifier until the end of the paragraph. If this is a group biography, do the split on each new person. Of course, this won't be perfect and may require modifications. 
-
 print("----- Identifying documents that have cosubjects")
 ind_cosub = sapply(ODNB_rawHTML, exists_cosubject)
 
+print("----- Alternate method to identify cosubjects")
+drop_NA = function(x) { return(x[!is.na(x)]) }
+drop_large = function(x, large) { return(x[x < large]) }
 
-print("----- Counting character lengths of all documents")
-nchar_list = lapply(1:99999, function(x) {
-  if (!is_nobio(ODNB_rawHTML[[x]])) { return(nchar(dnb_grab_main(ODNB_rawHTML[[x]]))) } else { return(0) }
-})
-
-
-print("----- Count number of lines in each document")
-nchar_lengths = sapply(nchar_list, length)
-
-
-print("----- Identifying identical documents and cosubject candidates")
-## Find documents that have the same number of lines
-length_doc_list = lapply(1:max(nchar_lengths), function(x) {which(x == nchar_lengths)})
-
-cosub_list = list() ## list of indices which all refer to the same document. 
-ind = 1 ## indexes progress
-new_indicator = rep(TRUE, times = 99999) ## If TRUE -> still need to process this document. 
-for(j in 1:99999) {
-  if (j %% 100 == 0) { cat(j, " ") }
-  
-  ## For each document, if it hasn't already been identified as identical, then process. 
-  if (new_indicator[j] && any(nchar_list[[j]] > 0)) {
-    base = nchar_list[[j]]
-    maindnb = dnb_grab_main(ODNB_rawHTML[[j]])
-    
-    cosub_list[[ind]] = j
-    for(k in length_doc_list[[nchar_lengths[j]]]) {
-      ## Check for nonequal index, then nonequal character numbers, then finally for nonequal exact text. 
-      if ((k != j) && all(base == nchar_list[[k]]) && all(maindnb == dnb_grab_main(ODNB_rawHTML[[k]]))) {
-        cosub_list[[ind]] = c(cosub_list[[ind]], k)
-      }
-    }
-    new_indicator[cosub_list[[ind]]] = FALSE
-    
-    ind = ind + 1
-  }
+alt_cosub = list() ## Stores all found ref:odnb/#s. 
+for(j in seq_along(ODNB_rawHTML)) {
+  alt_cosub[[j]] = as.numeric(gsub("ref:odnb/", "", c(str_extract_all(ODNB_rawHTML[[j]], "ref:odnb/[0-9]+"), recursive = TRUE)))
+  if (j %% 500 == 0) { print(j) }
 }
-## Cleanup
-rm(ind, new_indicator, base, maindnb, j, k)
 
+bio_ref = rep(NA, times = 99999) ## Stores index of main biography
+for(j in seq_along(alt_cosub)) {
+  if (is.na(bio_ref[j]) & (length(alt_cosub[[j]]) > 0)) { 
+    bio_ref[j] = j 
+    ids = alt_cosub[[j]]
+    found_ids = which(bio_ref %in% drop_NA(c(ids, bio_ref[ids])))
+    all_ids = drop_large(sort(unique(c(ids, found_ids, j))), large = 100000)
+    if (length(all_ids) > 0) {
+      z = sapply(all_ids, function(x) {length(unique(alt_cosub[[x]])) } )
+      bio_ref[all_ids] = all_ids[which(z == max(z))]
+    }
+  }
+  if (j %% 100 == 0) { print(j) }
+}
+
+bios_toprocess = sort(unique(bio_ref), na.last = NA)
 
 print("----- Splitting cosubject biographies into new list of documents")
-ODNB_text = vector("list", length = 199999)
-ODNB_groupcosub = rep(FALSE, times = 199999)
+ODNB_text = vector("list", length = 99999)
+ODNB_cosubstatus = rep("none", times = 99999)
 
-for(j in 1:length(cosub_list)) {
-  if (j %% 1000 == 0) { cat(j, " ") }
+for(j in seq_along(bios_toprocess)) {
+  if (j %% 200 == 0) { cat(j, "") }
+  main_id = bios_toprocess[j]
+  all_ids = which(bio_ref == main_id)
   
-  if (length(cosub_list[[j]]) == 1) {
-    ODNB_text[[cosub_list[[j]][1]]] = dnb_grab_main(ODNB_rawHTML[[cosub_list[[j]][1]]])
+  if (length(all_ids) == 1) {
+    ODNB_text[[main_id]] = dnb_grab_main(ODNB_rawHTML[[main_id]])
+    ODNB_cosubstatus[main_id] = "none"
   } else {
-    ## Process cosubject determines if name is a 'group' biography; if so, splits are at every name. 
-    ## Otherwise, splits are for single paragraphs for smaller cosubjects. 
-    cosub_result = process_cosubject(ids_input = cosub_list[[j]])
-    ODNB_groupcosub[cosub_list[[j]][1]] = cosub_result$group
+    cosub_result = process_cosubject(main_id = main_id, all_ids = all_ids)
     for(k in seq_along(cosub_result$ids)) {
-      if (!is.null(ODNB_text[[cosub_result$ids[k]]])) { 
-        ## For whatever reason, some people share ID nums (cosubjects). I'm adding 100,000 to the id number for these... 
-        if (!is.null(ODNB_text[[cosub_result$ids[k] + 100000]])) { stop("Error at ", j) }
-        ODNB_text[[cosub_result$ids[k] + 100000]] = cosub_result$text[[k]]
-      } else {
-        ODNB_text[[cosub_result$ids[k]]] = cosub_result$text[[k]]
-      }
+      id = cosub_result$ids[k]
+      ODNB_cosubstatus[id] = cosub_result$cosub_status[k]
+      ODNB_text[[id]] = cosub_result$text[[k]]
     }
   }
 }
