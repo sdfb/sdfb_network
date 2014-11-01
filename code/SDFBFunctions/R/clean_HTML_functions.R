@@ -89,87 +89,92 @@ exists_cosubject = function(htmltext) {
 }
 
 
-## TODO: [Documentation-AUTO] Check/fix Roxygen2 Documentation (process_cosubject)
+#' Split cosubject biographies into portions
+#' 
 #' This function determines the type of cosubject biography, 
 #' and consequently splits it (and returns a list of texts and id numbers for the texts)
 #' 
-#' @param ids is a vector of numbers that refer to the same document
-#' @param ids_input temp
+#' REQUIRES ODNB_rawHTML to exist in global environment. 
+#' 
+#' @param main_id ID number for person the document is mainly about (ignored if group bio)
+#' @param all_ids Vector of numbers that refer to the same document
 #' 
 #' @return list of cosubject biographies
 #' 
 #' @export
 #' 
-process_cosubject = function(ids_input) {
+process_cosubject = function(main_id, all_ids) {
   
-  ## These are names 
-  drop_names = c("family", "Society", "emperors", "school", "Crazy Gang", "Castilians", "group", "brothers", "Corps", "Club", "Boys", "scholars", "Queen's", "club", "Edinburgh Seven", "sisters", "Vorticists", "knights", "colourists", "kings", "conspirators", "Group", "Martyrs", "witches", "officers", "wives", "Pioneers", "artists", "visitors", "painters", "Kings", "Girls", "women", "Babes", "Gruffudd ap Rhys", "Moneyers", "officials", "Women", "spies", "American Indians", "Servants")
+  if (FALSE) {
+    main_id = 54525
+    all_ids = alt_cosub[[main_id]]
+  }
+  ## These are names that identify group cosubjects. 
+  group_names = c("family", "Society", "emperors", "school", "Crazy Gang", "Castilians", "group", "brothers", "Corps", "Club", "Boys", "scholars", "Queen's", "club", "Edinburgh Seven", "sisters", "Vorticists", "knights", "colourists", "kings", "conspirators", "Group", "Martyrs", "witches", "officers", "wives", "Pioneers", "artists", "visitors", "painters", "Kings", "Girls", "women", "Babes", "Gruffudd ap Rhys", "Moneyers", "officials", "Women", "spies", "American Indians", "Servants")
   
   text_list = list()
   id_list = list()
-  ## base document: 
-  doc = dnb_grab_main(ODNB_rawHTML[[ids_input[1]]])
-  id_vec = rep(NA, times = length(ids_input))
+  ## Extract base document
+  doc = dnb_grab_main(ODNB_rawHTML[[main_id]])
+  id_vec = rep(NA, times = length(all_ids))
   
+  ## Check if this is a group biography
   group_cosub = FALSE
   name = ODNB_extract_name_segment(doc)
-  for(k in 1:length(drop_names)) {
-    if (length(grep(drop_names[k], name$text)) > 0) {
-      group_cosub = TRUE
-    }
+  for(k in 1:length(group_names)) {
+    if (length(grep(group_names[k], name$text)) > 0) { group_cosub = TRUE }
   }
   
+  
   if (group_cosub) {
-    ## split at every cosubject
     comb_doc = paste(doc, collapse = "#*#*#")
     
+    ## Find locations of cosubjects and split these from the rest of the document. 
     match_locs = gregexpr("<a name=\"cosubject_[0-9]+\"></a>", comb_doc)
     matchs = regmatches(comb_doc, match_locs)[[1]]
+    match_ids = as.numeric(gsub("[^0-9]", "", matchs))
     matchs_inv = regmatches(comb_doc, match_locs, invert = TRUE)[[1]]
     
-    text_list[[1]] = strsplit(matchs_inv[1], "#*#*#", fixed = TRUE)[[1]]
-    l = 1
-    for(k in seq_along(matchs)) {
-      match_id = as.numeric(gsub("[^0-9]", "", matchs[k]))
-      if (match_id < 100000) {
-        text_list[[l+1]] = strsplit(matchs_inv[l+1], "#*#*#", fixed = TRUE)[[1]]
-        id_vec[l+1] = match_id
-        l = l + 1
-      }
+    ## Split at every cosubjects
+    text_list[[1]] = strsplit(x = matchs_inv[1], split = "#*#*#", fixed = TRUE)[[1]]
+    id_vec[1] = ifelse(test = !(any(main_id == match_ids)), yes = main_id, no = NA)
+    for(k in seq_along(match_ids)) {
+      text_list[[k+1]] = strsplit(matchs_inv[k+1], "#*#*#", fixed = TRUE)[[1]]
+      id_vec[k+1] = match_ids[k]
     }
-    id_vec = id_vec[seq_along(text_list)]
+    
+    id_status = c("main_group", rep("cosub_group", times = length(id_vec) - 1))
     
   } else {
-    ## split, and remove until next cosubject or until end of paragraph.
+    ## The main subject takes most of the document. All other subjects only last until next cosubject OR until the end of the paragraph. 
     
     match_locs = gregexpr("<a name=\"cosubject_[0-9]+\"></a>", doc)
     matchs = regmatches(doc, match_locs)
     matchs_inv = regmatches(doc, match_locs, invert = TRUE)
     
     text_list[[1]] = sapply(matchs_inv, function(x) {x[1]})
+    id_vec[1] = main_id
     k = 2
     for(m in seq_along(matchs)) {
       for(n in seq_along(matchs[[m]])) {
         match_id = as.numeric(gsub("[^0-9]", "", matchs[[m]][n]))
-        if (match_id < 100000) {
-          text_list[[k]] = matchs_inv[[m]][n+1]
-          id_vec[k] = match_id
-          k = k + 1
-        }
+        text_list[[k]] = matchs_inv[[m]][n+1]
+        id_vec[k] = match_id
+        k = k + 1
       }
     }
+    
+    id_status = c("main_subj", rep("cosub_subj", times = length(id_vec) - 1))
   }
-  if (sum(is.na(id_vec)) > 1) { stop("Two non-identified ODNB numbers in bio. Cannot detect main person...")}
-  if (sum(is.na(id_vec)) == 1) { 
-    missing_id = ids_input[!(ids_input %in% id_vec)]
-    if (length(missing_id) == 0) {
-      text_list = text_list[-which(is.na(id_vec))]
-      id_vec = id_vec[-which(is.na(id_vec))]
-    } else {
-      id_vec[is.na(id_vec)] = missing_id
-    }
+  
+  ## Drop non-identified OR large IDs. 
+  todrop = which(is.na(id_vec) | id_vec >= 100000)
+  if (length(todrop) > 0) {
+    text_list = text_list[-todrop]
+    id_vec = id_vec[-todrop]
   }
-  return(list(text = text_list, ids = id_vec, group = group_cosub))
+    
+  return(list(text = text_list, ids = id_vec, cosub_status = id_status))
 }
 
 
