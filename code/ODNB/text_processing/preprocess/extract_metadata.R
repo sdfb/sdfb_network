@@ -65,6 +65,7 @@ full_metadata = data.frame(ID = good_names, raw_name = sapply(ext_names[good_nam
 save(full_metadata, file = "data/ODNB_raw/ODNB_metadata20141101.Rdata")
 
 
+## TODO: [Clean] The remainder of the file. 
 ## Need to process remainder of file; do we need later code? 
 ## commented code below means probably obselete. 
 
