@@ -91,7 +91,12 @@ if (!HAVE_MANUAL_METADATA) {
   }
   
   ## Some errors might occur; trap these (and ignore for now..?)
+  ## No errors in this iteration? don't seem to have found any!
   
   save(ODNB_improvedpred, full_metadata, file = zzfile_textproc_post_improvedpred)  
 }
 
+## Count errors
+test = sapply(ODNB_improvedpred, function(x) {class(x) == "try-error"})
+test = sapply(ODNB_improvedpred, function(x) {nrow(x[[2]])})
+test2 = sapply(test, function(x) {ifelse(is.null(x), 0, x)})
