@@ -42,6 +42,11 @@ Read HTML files into R, store as a list
 \item Splits data based on co-subject identification
 \item Writes files into chunks of 100 documents for NER purposes
 \end{enumerate}
+ 
+\item \filename{extract\_metadata.R}
+\begin{enumerate}
+\item Extracts names, dates, occupations, biography lengths from the raw HTML documents. 
+\end{enumerate}
 
 \end{enumerate}
 
@@ -85,8 +90,16 @@ Read HTML files into R, store as a list
 
 \item \filename{create\_entity\_matrix.R}
 \begin{enumerate}
-\item Takes 
+\item This script extracts data to form the document-count matrix. This also separates the document into ~500 word sections, and keeps track of estimated mention dates for each of the names. 
 \end{enumerate}
+
+\item \filename{create\_doccount\_matrix.R}
+
+\begin{enumerate}
+\item test
+\end{enumerate}
+
+
 
 \item \filename{create\_model\_data.R}
 \begin{enumerate}
@@ -94,10 +107,6 @@ Read HTML files into R, store as a list
 \end{enumerate}
 
 
-\item \filename{extract\_metadata.R}
-\begin{enumerate}
-\item test
-\end{enumerate}
 
 
 \end{enumerate}
@@ -121,11 +130,20 @@ Contains variables:
 \begin{itemize}
 \item \texttt{ODNB\_text} List of documents without most HTML. Indices are ODNB numbers (adjusted for cosubjects)
 \item \texttt{ODNB\_cleantext} Version of documents without ANY HTML, and fixed for input into NER tools. 
-\item \texttt{ODNB\_groupsub} Logical vector denoting cosubject status
+\item \texttt{ODNB\_cosubstatus} Vector denoting whether subject is part of a cosubject biography (and its type)
 \end{itemize}
 
 \item \filename{ODNB\_metadata<******>.Rdata}
-
+Contains variable \texttt{full\_metadata} which is a data frame with the following fields: 
+\begin{itemize}
+\item ID -- ODNB ID
+\item raw\_name -- HTML version of the name
+\item full\_name -- full name just drop HTML. 
+\item short\_name -- shortened name (drop all brackets)
+\item Occu -- extracted occupation (if any)
+\item Dates -- extracted date segment
+\item BioLength -- approximate number of words in biography
+\end{itemize}
 \end{enumerate}
 
 \subsection{data/ODNB\_int/NER/}
@@ -140,20 +158,30 @@ Contains variables:
 These are all length 584 (since the documents were broken into that many compilations)
 
 \item \filename{ODNB\_NERtokenized<******>\_<\#>.Rdata}
+Each of these contains variable \texttt{ODNB\_tokenized}, which is a list of lists for each document. The sub-lists contain the tokenized forms of the raw text (\$raw), lingpipe-processed text (\$lp), and stanford-processed text (\$st).  
 
 \item \filename{ODNB\_combtags<******>.Rdata}
+This is a list of data frames (in \texttt{ODNB\_combtags}), each data frame having 'raw`, 'tag`, 'date`, 'paren` for the full texts. 
 \end{enumerate}
 
 
 \subsection{data/OLD\_ODNB}
 \begin{enumerate}
+\item \filename{ODNB\_improvedpred<******>.Rdata} \\
+Contains variable \texttt{ODNB\_improvedpred} in which -- \\
+For each document, there should be a list: 
+\begin{enumerate}
+\item Data frame with 'NumWords`, 'MatchName`, 'ID`
+\item Data frame with 'MatchName`, 'Position`, 'ID`, 'Length`
+\item Data frame of the full text, with 'raw word`, 'tag`, 'date`, 'paren\_depth`
+\end{enumerate} 
+Also contains a copy of variable \texttt{full\_metadata}
+
 \item \filename{ODNB\_fullnamelist<******>.Rdata} \\
 Contains variable \texttt{full\_result3} which is a 73655 $\times$ 13 data frame, each row corresponds to a historical figure. The columns contain various fields for ID numbers, names, and dates. 
 
 \item \filename{ODNB\_entitymatrix<******>.Rdata} \\
 Contains variable \texttt{big\_entity\_matrix}, a $1118968 \times 7$ matrix which contains Entity, IDnum, Document Segment, Min/Max Mention Date, and Document NUmber. 
-
-\item \filename{ODNB\_improvedpred<******>.Rdata} \\
 
 \end{enumerate}
 

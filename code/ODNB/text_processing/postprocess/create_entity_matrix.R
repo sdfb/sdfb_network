@@ -61,6 +61,7 @@ for(k in good_docs) {
   y = find_closest_date(z[[2]], z[[3]])
   ODNB_aggcounts[[k]] = aggregate_matches(z[[1]],y)
 }
+rm(ODNB_improvedpred)
 
 ## Now, combine the list of data frames into a large data frame. 
 ## do.call(rbind) works but seems hard to check progress of... 
