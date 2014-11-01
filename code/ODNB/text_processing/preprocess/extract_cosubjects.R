@@ -65,11 +65,13 @@ for(j in seq_along(bios_toprocess)) {
   }
 }
 
+print("----- Checking validity")
+sum(sapply(ODNB_text, function(x) {!is.null(x)}))
+sum(!is.na(bio_ref))
 
 ## Strange text problems:
 # ODNB_text[[62274]] = c(paste(ODNB_text[[62274]][1:3], collapse = " "), ODNB_text[[62274]][-1:-3])
-# ODNB_text[[69990]] = c(paste(ODNB_text[[69990]][1:2], collapse = " "), ODNB_text[[69990]][-1:-2])
-
+# ODNB_text[[69990]] = c(paste(ODNB_text[[69990]][1:3], collapse = " "), ODNB_text[[69990]][-1:-3])
 
 ## Removing accents/HTML
 print("----- Cleaning text")
@@ -80,8 +82,8 @@ ODNB_cleanup = function(x) {
   return(res)
 }
 
-ODNB_cleantext = vector("list", length = 199999)
-for(i in 1:199999) {
+ODNB_cleantext = vector("list", length = 99999)
+for(i in 62270:99999) {
   if (i %% 50 == 0) { cat(i, " ") }
   if (!is.null(ODNB_text[[i]]) & (length(ODNB_text[[i]]) > 0)) {
     tmp = ODNB_fix_accent_html(ODNB_text[[i]])
@@ -89,16 +91,35 @@ for(i in 1:199999) {
   }
 }
 
-## RAN TO HERE ------------------------------
-
 ## Step 2: Save the text documents into files with 100 documents each
+print("----- Run text check")
+## Check if there are any HTML remnants in the code
+for(i in 1:99999) {
+  a = grep("<.*>", ODNB_cleantext[[i]])
+  if (i %% 10000 == 0) { cat(i) }
+  if ( length(a) > 0 ) {
+    print(paste("Docu#",i," Index#",a, "\n"))
+    b = gregexpr("<.*>", ODNB_cleantext[[i]])
+    print(regmatches(ODNB_cleantext[[i]], b))
+  }  
+}
+check.other.punct <- function(text) {
+  b = gregexpr("&[^[:space:]]{1,10};", text)
+  m = regmatches(text, b)
+  return(m[sapply(m, length) > 0])
+}
+for(i in 1:99999) {
+  a = check.other.punct(ODNB_cleantext[[i]])
+  if (i %% 10000 == 0) {cat(i)}
+  if ( length(a) > 0 ) {
+    print(paste("Docu#",i," Index#",a))
+  }
+}
+## Text is clean, now just need to merge them and extract identified name locations.
 
-## TODO: NEED TO ADD HTML REMOVAL (and accents and stuff)
 print("----- Save all these text documents into files")
-
-
 count = 1
-for(j in 1:199999) {
+for(j in 1:99999) {
   if (count %% 100 == 1) {
     cat(count, " ")
     cur_file = paste("data/ODNB_intermediate/NER/compiled_raw/", round(count/100) + 1, ".txt", sep = "")
@@ -113,29 +134,4 @@ for(j in 1:199999) {
 }
 
 
-print("----- Run text check")
-## Check if there are any HTML remnants in the code
-for(i in 1:Ntexts) {
-  a = grep("<.*>", ODNB_cleantext[[i]])
-  if (i %% 10000 == 0) { cat(i) }
-  if ( length(a) > 0 ) {
-    print(paste("Docu#",i," Index#",a, "\n"))
-    b = gregexpr("<.*>", ODNB_cleantext[[i]])
-    print(regmatches(ODNB_cleantext[[i]], b))
-  }  
-}
-check.other.punct <- function(text) {
-  b = gregexpr("&[^[:space:]]{1,10};", text)
-  m = regmatches(text, b)
-  return(m[sapply(m, length) > 0])
-}
-for(i in 1:Ntexts) {
-  a = check.other.punct(ODNB_cleantext[[i]])
-  if (i %% 10000 == 0) {cat(i)}
-  if ( length(a) > 0 ) {
-    print(paste("Docu#",i," Index#",a))
-  }
-}
-## Text is clean, now just need to merge them and extract identified name locations.
-
-save(ODNB_text, ODNB_cleantext, ODNB_groupcosub, file = zzfile_textproc_preproc_splitcosub)
+save(ODNB_text, ODNB_cleantext, ODNB_cosubstatus, file = zzfile_textproc_preproc_splitcosub)
