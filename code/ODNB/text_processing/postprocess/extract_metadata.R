@@ -1,22 +1,116 @@
 ##@S This file contains code to extract various fields from raw html text
 
-
 ## Load help functions
-source("text_mining/ODNB/helper_functions.R")
+source("code/ODNB/ODNB_setup.R")
+
+
+# Other helper functions --------------------------------------------------
+
+ODNB_parse_date = function(text, end) {
+  ## Takes text, and integer for last position in name segment, and looks for next match.
+  if (is.null(text)) {return(NA)}
+  segments = gregexpr("\\(.*?\\)", text)
+  match = regmatches(text, segments)[[1]]
+  
+  j = min(which(segments[[1]] >= end))
+  if (length(match) > 0 & (!is.na(j)) & (j > 0)) {
+    return(match[j])
+  } else {
+    return(NA)
+  }
+}
+
 
 ## Load Data
 load(zzfile_textproc_preproc_splitcosub)
 
 ## Extract names
 ext_names = lapply(ODNB_text, ODNB_extract_name_segment)
+sapply(ODNB_text, function(x) { !is.null(x) }) -> temp
+sum(temp)
+good_names = which(temp)
 
-sapply(ext_names, function(x) {nchar(x$text) > 15})-> z
-sum(z)
-good_names = which(z)
-
+## Extract dates
 mapply(ODNB_parse_date, text = ODNB_text[good_names],
-       end = sapply(ext_names[good_names], function(x) {x$end})) -> y
-temp_dates = gsub("&#150;", "-", y)
+       end = sapply(ext_names[good_names], function(x) {x$end})) -> temp
+temp_dates = gsub("&#150;", "-", temp)
+
+## Extract occupations
+find_occ = function(inp) {
+  x = inp[[1]]
+  regm = gregexpr("<span class=\"occ\">.*?</span>", x)
+  res = regmatches(x, regm)
+  res = gsub("<.*?>", "", res)
+  return(res)
+}
+occs = sapply(ODNB_text[good_names], find_occ)
+
+bio_len = sapply(ODNB_cleantext, function(x) {
+  if (length(x) == 0) {return(0) }
+  z = strsplit(x, split = " ")
+  return(sum(sapply(z, length)))
+})
+
+fns = sapply(ext_names, function(x) {
+  x$text -> res
+  gsub("<.*?>", "", res) -> res
+  return(res)} )
+
+pns = gsub("[(\\[].+[])]", "", fns)
+pns = gsub(" +", " ", pns)
+pns = ODNB_fix_accent_html(pns)
+
+full_metadata = data.frame(ID = good_names, raw_name = sapply(ext_names[good_names], function(x) {x$text}), full_name = fns[good_names], short_name = pns[good_names], Occu = occs, Dates = temp_dates, BioLength = bio_len[good_names], stringsAsFactors = FALSE) 
+
+save(full_metadata, file = "data/ODNB_raw/ODNB_metadata20141101.Rdata")
+
+
+## Need to process remainder of file; do we need later code? 
+## commented code below means probably obselete. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Code to process all dates
 NN = length(temp_dates)
@@ -34,60 +128,46 @@ for(j in which(date_data$type == "not_processed")) {
   if(j %% 25 == 0) { print(j) }
 }
 
-find_occ = function(inp) {
-  x = inp[[1]]
-  regm = gregexpr("<span class=\"occ\">.*?</span>", x)
-  res = regmatches(x, regm)
-  res = gsub("<.*?>", "", res)
-  return(res)
-}
-
-occs = sapply(ODNB_text[good_names], find_occ)
-
 in_date_range = union(which(date_data$type == "not_processed"),
   intersect(which(date_data$Birth < 1800),
             which(date_data$Death > 1549)))
 in_date_range = sort(in_date_range)
 z = in_date_range
-
-fns = sapply(ext_names, function(x) {
-  x$text -> res
-  gsub("<.*?>", "", res) -> res
-  return(res)} )
-
-pns = gsub("[(\\[].+[])]", "", fns)
-pns = gsub(" +", " ", pns)
-pns = ODNB_fix_accent_html(pns)
-
-bio_len = sapply(ODNB_cleantext, function(x) {
-  if (length(x) == 0) {return(0) }
-  z = strsplit(x, split = " ")
-  return(sum(sapply(z, length)))
-})
-
-
-fin_result = data.frame(
-  ID = good_names[z],
-  main_name = pns[z],
-  full_name = fns[z],
-  ext_birth = date_data$Birth[z], ext_death = date_data$Death[z],
-  full_date = temp_dates[z],
-  occupation = occs[z],
-  bio_length = bio_len[good_names[z]])
-
-head(fin_result, 30)
-
-write.csv(fin_result, file = "test.csv", row.names = FALSE)
-full_result = data.frame(
-  ID = good_names,
-  main_name = pns[good_names],
-  full_name = fns[good_names],
-  ext_birth = date_data$Birth, ext_death = date_data$Death,
-  full_date = temp_dates,
-  occupation = occs,
-  bio_length = bio_len[good_names], stringsAsFactors = FALSE)
-
-save(full_result, file = "data/ODNB_raw/ODNB_metadata20140404.Rdata")
+# 
+# fns = sapply(ext_names, function(x) {
+#   x$text -> res
+#   gsub("<.*?>", "", res) -> res
+#   return(res)} )
+# 
+# pns = gsub("[(\\[].+[])]", "", fns)
+# pns = gsub(" +", " ", pns)
+# pns = ODNB_fix_accent_html(pns)
+# 
+# 
+# 
+# 
+# fin_result = data.frame(
+#   ID = good_names[z],
+#   main_name = pns[z],
+#   full_name = fns[z],
+#   ext_birth = date_data$Birth[z], ext_death = date_data$Death[z],
+#   full_date = temp_dates[z],
+#   occupation = occs[z],
+#   bio_length = bio_len[good_names[z]])
+# 
+# head(fin_result, 30)
+# 
+# write.csv(fin_result, file = "test.csv", row.names = FALSE)
+# full_result = data.frame(
+#   ID = good_names,
+#   main_name = pns[good_names],
+#   full_name = fns[good_names],
+#   ext_birth = date_data$Birth, ext_death = date_data$Death,
+#   full_date = temp_dates,
+#   occupation = occs,
+#   bio_length = bio_len[good_names], stringsAsFactors = FALSE)
+# 
+# save(full_result, file = "data/ODNB_raw/ODNB_metadata20140404.Rdata")
 
 res
 
@@ -237,19 +317,6 @@ get.dates <- function(text) { ## Updated 12/30/2012 3pm
 }
 
 
-ODNB_parse_date = function(text, end) {
-  ## Takes text, and integer for last position in name segment, and looks for next match.
-  if (is.null(text)) {return(NA)}
-  segments = gregexpr("\\(.*?\\)", text)
-  match = regmatches(text, segments)[[1]]
-
-  j = min(which(segments[[1]] >= end))
-  if (length(match) > 0 & (!is.na(j)) & (j > 0)) {
-    return(match[j])
-  } else {
-    return(NA)
-  }
-}
 
 temp_dates = rep("", times = length(ODNB_data))
 for(i in 1:length(ODNB_data)) {
