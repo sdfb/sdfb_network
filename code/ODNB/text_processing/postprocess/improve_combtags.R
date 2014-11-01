@@ -14,20 +14,20 @@ if (!HAVE_MANUAL_METADATA) {
 #   
 #   ODNB_improvedpred = list()
 #   
-#   for(j in seq_along(full_result$ID)) {
-#     cat(j, "::", full_result$ID[j], "\n")
+#   for(j in seq_along(full_metadata$ID)) {
+#     cat(j, "::", full_metadata$ID[j], "\n")
 #     
 #     mainp = NULL
-#     if (!is.na(full_result$main_name[j])) {
-#       s = strsplit(full_result$main_name[j], split = ", *")[[1]]
+#     if (!is.na(full_metadata$full_name[j])) {
+#       s = strsplit(full_metadata$full_name[j], split = ", *")[[1]]
 #       mainp = paste(rev(s), collapse = " ")
 #       mainp = gsub("[^[:alpha:] ]", "", mainp)
 #       mainp = gsub(" +", " ", mainp)
 #       mainp = gsub(" $", "", mainp)
 #     }
 #     
-#     ODNB_improvedpred[[full_result$ID[j]]] =
-#       try(expr = improve_pred(comb.tag = ODNB_combtags[[full_result$ID[j]]], main.person = mainp,
+#     ODNB_improvedpred[[full_metadata$ID[j]]] =
+#       try(expr = improve_pred(comb.tag = ODNB_combtags[[full_metadata$ID[j]]], main.person = mainp,
 #                               regex.words = c("Commonwealth", "Catholic", "Greek", 
 #                                               "Roman", "Describe", "Treatise"),
 #                               exact.words = c("Abbey", "House", "Island",
@@ -47,7 +47,7 @@ if (!HAVE_MANUAL_METADATA) {
 #   ## xx's are ODNB ids
 #   ## yy's are indicators for counts
 #   
-#   idnums = full_result$ID
+#   idnums = full_metadata$ID
 #   which(idnums > 99999) -> tofix
 #   match(idnums[tofix] - 100000, idnums) -> lower_tofix
 #   lower_tofix = lower_tofix[!is.na(lower_tofix)]
@@ -58,29 +58,29 @@ if (!HAVE_MANUAL_METADATA) {
 #   idnums[lower_tofix] = idnums[lower_tofix] + 20000000
 #   
 #   ## Figure out observed date range of biography
-#   save(ODNB_improvedpred, full_result, file = "../../private_data/odnb_data_proc/ODNB_improvedpred.Rdata")
+#   save(ODNB_improvedpred, full_metadata, file = "../../private_data/odnb_data_proc/ODNB_improvedpred.Rdata")
 #   
 } else {
   ## Rerunning, when not needing to set ID numbers. 
   
   load(zzfile_textproc_ner_combtags)
-  load("data/ODNB_raw/ODNB_metadata20140404.Rdata")
+  load("data/ODNB_raw/ODNB_metadata20141101.Rdata")
   
   ODNB_improvedpred = list()
-  for(j in seq_along(full_result$ID)) {
-    cat(j, "::", full_result$ID[j], "\n")
+  for(j in seq_along(full_metadata$ID)) {
+    cat(j, "::", full_metadata$ID[j], "\n")
     
     mainp = NULL
-    if (!is.na(full_result$main_name[j])) {
-      s = strsplit(full_result$main_name[j], split = ", *")[[1]]
+    if (!is.na(full_metadata$full_name[j])) {
+      s = strsplit(full_metadata$full_name[j], split = ", *")[[1]]
       mainp = paste(rev(s), collapse = " ")
       mainp = gsub("[^[:alpha:] ]", "", mainp)
       mainp = gsub(" +", " ", mainp)
       mainp = gsub(" $", "", mainp)
     }
     
-    ODNB_improvedpred[[full_result$ID[j]]] =
-      try(expr = improve_pred(comb.tag = ODNB_combtags[[full_result$ID[j]]], main.person = mainp,
+    ODNB_improvedpred[[full_metadata$ID[j]]] =
+      try(expr = improve_pred(comb.tag = ODNB_combtags[[full_metadata$ID[j]]], main.person = mainp,
                               regex.words = c("Commonwealth", "Catholic", "Greek", 
                                               "Roman", "Describe", "Treatise"),
                               exact.words = c("Abbey", "University", "College", "Cathedral",
@@ -92,6 +92,6 @@ if (!HAVE_MANUAL_METADATA) {
   
   ## Some errors might occur; trap these (and ignore for now..?)
   
-  save(ODNB_improvedpred, full_result, file = zzfile_textproc_post_improvedpred)  
+  save(ODNB_improvedpred, full_metadata, file = zzfile_textproc_post_improvedpred)  
 }
 
