@@ -126,8 +126,9 @@ save(nodeset, full_metadata, file = zzfile_curated_nodeset_update)
 ## Examine accents in search_all
 accents = which(gsub("[], --\\.'[:alpha:]]", "", nodeset$search_names_ALL) != "")
 
+library(stringr)
 ## For names with accents, use firstname/surname pair as additional name to search. 
-search_names = strsplit(nodeset$search_names_ALL, ",")
+search_names = lapply(strsplit(nodeset$search_names_ALL, ","), function(x) {gsub(" +", " ", str_trim(x))})
 firstlast_pair = paste(nodeset$first_name, nodeset$surname, sep = " ")
 
 search_vector = unique(c(c(search_names, recursive = TRUE), firstlast_pair))
@@ -199,7 +200,7 @@ for(j in seq_along(nodeset$ODNB_CORRECT_ID)) {
 ## bio matches => ID = 1
 ## unique matches => ID != 1
 ## shared matches
-docids = nodeset$ODNB_ID[!is.na(nodeset$ODNB_ID)]
+docids = nodeset$ODNB_CORRECT_ID[!is.na(nodeset$ODNB_CORRECT_ID)]
 bio_matches = fix_entitymatrix[fix_entitymatrix$ID == 1, ]
 bio_matches = bio_matches[bio_matches$DocumentNum %in% docids,]
 
@@ -241,10 +242,10 @@ for(j in seq_along(search_vector)[-1]) { #1 is NA
 }
 
 non_bio_exact_match = convert_entitymatrix_into_format(em = sub_entitymatrix, correct_ids = exact_match)
-partial_list
+# partial_list
 
 exact_df = rbind(convert_entitymatrix_into_format(bio_matches, docn = docids, correct_ids = seq_along(docids)), non_bio_exact_match)
-head(partial_list)
+# head(partial_list)
 
 out_df = lapply(partial_list, 
                 function(x) {res = data.frame(SDFB_ID = x$IDs, DocNum = x$Doc, Count = x$Count, Weight = x$wts)
@@ -252,27 +253,18 @@ out_df = lapply(partial_list,
 partial_df = do.call(rbind, out_df)
 
 ## TODO: [DOCUMENT] this data format
-save(exact_df, partial_list, partial_df, file = "data/OLD_ODNB/ODNB_new_entity_matrix_20141001.Rdata")
-
-
-
+save(exact_df, partial_list, partial_df, file = zzfile_base_entity_matrix)
 
 
 
 
 # outputting data ---------------------------------------------------------
 ## TODO: to move -- output stuff for chris. 
+source("code/ODNB/ODNB_setup.R")
+load(zzfile_base_entity_matrix)
 write.csv(exact_df, file = "exact_matches_new.csv",row.names = FALSE )
 write.csv(partial_df, file = "partial_matches_new.csv",row.names = FALSE )
 load(zzfile_textproc_post_improvedpred)
-
-templist = list()
-for(k in 1:199) {
-  print(k)
-  test = lapply(1000 * (k -1) + 1:1000, extract_doccount)
-  templist[[k]] = do.call(rbind, test)
-}
-templist[[200]] = do.call(rbind, lapply(190001:length(ODNB_improvedpred), extract_doccount))
 
 extract_doccount = function(j) {
   if (is.null(ODNB_improvedpred[[j]])) {return(NULL)}
@@ -284,6 +276,15 @@ extract_doccount = function(j) {
   colnames(res) = c("Entity", "Count", "DocNum")
   return(res)
 }
+
+templist = list()
+for(k in 1:199) {
+  print(k)
+  test = lapply(1000 * (k -1) + 1:1000, extract_doccount)
+  templist[[k]] = do.call(rbind, test)
+}
+templist[[200]] = do.call(rbind, lapply(190001:length(ODNB_improvedpred), extract_doccount))
+
 
 raw_doccount = do.call(rbind, templist)
 write.csv(raw_doccount, file = "raw_doccount.csv",row.names = FALSE )

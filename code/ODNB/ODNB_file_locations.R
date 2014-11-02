@@ -41,6 +41,7 @@ zzfile_textproc_post_entitymatrix = "data/ODNB_final/ODNB_entitymatrix20141101.R
 zzfile_curated_nodeset = "data_manual/dataset_Oct62014.csv"
 zzfile_curated_nodeset_update = "data_manual/ODNB_dataset.Rdata"
 
+zzfile_base_entity_matrix = "data/ODNB_final/ODNB_subset_entity_matrix_20141102.Rdata"
 
 
 ## Don't really need this??
