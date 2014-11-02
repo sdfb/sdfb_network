@@ -1,16 +1,14 @@
 ##@S Examine curated nodes
 source("code/ODNB/ODNB_setup.R")
 
-nodeset = read.csv("data_manual/dataset_Oct62014.csv", header = TRUE, stringsAsFactors = FALSE)
+nodeset = read.csv(zzfile_curated_nodeset, header = TRUE, stringsAsFactors = FALSE)
 load(zzfile_textproc_post_entitymatrix)
-
+load(zzfile_textproc_preproc_metadata)
 
 # Helper Functions --------------------------------------------------------
-
-
 generate_weights = function(rows) {
   ## takes rows in nodeset & generates appropriate weights
-  z = nodeset$bio_length[rows]
+  z = nodeset$ODNB_CORRECT_BIOLENGTH[rows]
   n = length(z)
   basewts = rep((1 / (n + 2)), times = n)
   if (any(is.na(z))) {
@@ -73,19 +71,60 @@ convert_entitymatrix_into_format = function(em, docn = NULL, entity = NULL, corr
 
 # Code --------------------------------------------------------------------
 
+## Fix document number identification issues. 
+# nodeset$full_name
+full_names = gsub(" +", " ", full_metadata$full_name)
+full_dates = gsub("<.+?>", "", full_metadata$Dates)
+full_dates = gsub("[()]", "", full_dates)
+full_occu = full_metadata$Occu
+nodeset_matchnames = lapply(nodeset$full_name, function(x) {which(x == full_names)})
+nodeset_matchdates = lapply(nodeset$full_date, function(x) {which(x == full_dates)})
+nodeset_matchoccu = lapply(nodeset$occupation, function(x) {which(x == full_occu)})
+
+## Persons who are matched exactly (both full name & full date)
+nodeset_matchboth = mapply(FUN = intersect, nodeset_matchnames, nodeset_matchdates)
+true_odnb_row = sapply(nodeset_matchboth, function(x) {x[1]})
+
+zeros = which(sapply(nodeset_matchboth, length) == 0)
+nodeset_matchzero = mapply(FUN = intersect, nodeset_matchoccu[zeros], nodeset_matchdates[zeros])
+true_odnb_row[zeros] = sapply(nodeset_matchzero, function(x) {x[1]})
 
 
-## Check to see for Document Number identifcation issues
-# head(nodeset)
-k = 1
-nodeset[k,]
-big_entity_matrix[which(big_entity_matrix$DocumentNum == nodeset$ODNB_ID[k] - 10000000),]
+zerolens = sapply(nodeset_matchzero, length)
+which(nodeset$ODNB_ID[zeros[which(zerolens == 0)]] < 30000000)
+cbind(which(zerolens > 1), nodeset[zeros[which(zerolens > 1)],])
+full_metadata[nodeset_matchzero[which(zerolens > 1)][[7]],]
+
+nodeset[zeros[which(nodeset$ODNB_ID[zeros[which(zerolens == 0)]] < 30000000)],]
+
+## Manual fixes. 
+true_odnb_row[1701] = 53490
+true_odnb_row[2702] = 54229
+true_odnb_row[2886] = 45905
+true_odnb_row[3203] = 56063
+true_odnb_row[9919] = 56036
+true_odnb_row[10716] = 53029
+true_odnb_row[12843] = 56041
+
+check_zeros = zeros[which(nodeset$ODNB_ID[zeros[which(zerolens == 0)]] < 30000000)]
+adj_findname = sapply(check_zeros, function(x) {intersect(grep(nodeset$first_name[x], full_names), grep(nodeset$surname[x], full_names))}) 
+
+nodeset_matchboth = mapply(FUN = intersect, adj_findname, nodeset_matchdates[check_zeros])
+true_odnb_row[check_zeros] = sapply(nodeset_matchboth, function(x) {x[1]})
+
+
+## ADJUST FINAL DATA SET
+nodeset$ODNB_CORRECT_ID = full_metadata$ID[true_odnb_row]
+nodeset$ODNB_CORRECT_BIOLENGTH = full_metadata$BioLength[true_odnb_row]
+
+save(nodeset, full_metadata, file = zzfile_curated_nodeset_update)
+  
+
+
+# Continue with processing for final matrix -------------------------------
 
 ## Examine accents in search_all
-# paste(gsub("[], --\\.'[:alpha:]]", "", nodeset$search_names_ALL), collapse = "")
 accents = which(gsub("[], --\\.'[:alpha:]]", "", nodeset$search_names_ALL) != "")
-# nodeset$first_name[], nodeset$search_names_ALL[]
-# nodeset[accents,]
 
 ## For names with accents, use firstname/surname pair as additional name to search. 
 search_names = strsplit(nodeset$search_names_ALL, ",")
@@ -97,18 +136,18 @@ for(j in seq_along(search_vector)) {
   search_idlist[[j]] = sort(unique(c(which(sapply(search_names, function(x) {any(x == search_vector[j])})),
                                      which(search_vector[[j]] == firstlast_pair)
   )))
-  print(j)
+  if (j %% 25 == 0) { print(j) }
 }
 
-## For each ODNB name, give it the most frequent name in article if it doesn't have one. 
 
-z = tapply(big_entity_matrix$ID, big_entity_matrix$DocumentNum, FUN = function(x) {any(x == 1)})
+
+# z = tapply(big_entity_matrix$ID, big_entity_matrix$DocumentNum, FUN = function(x) {any(x == 1)})
 Mode <- function(x) {
   ux <- unique(x)
   ux[which.max(tabulate(match(x, ux)))]
 }
 
-y = tapply(big_entity_matrix$ID, big_entity_matrix$DocumentNum, Mode)
+# y = tapply(big_entity_matrix$ID, big_entity_matrix$DocumentNum, Mode)
 
 # 
 # 
@@ -124,15 +163,16 @@ y = tapply(big_entity_matrix$ID, big_entity_matrix$DocumentNum, Mode)
 # 
 # 
 
+## For each ODNB name, give it the most frequent name in article if it doesn't have one. 
 ## Adjust big_entity_matrix...
 fix_entitymatrix = big_entity_matrix
 
-for(j in seq_along(nodeset$SDFB_ID)) {
+for(j in seq_along(nodeset$ODNB_CORRECT_ID)) {
   ## IF is ODNB article
-  if (is.na(nodeset$ODNB_ID[j])) {
+  if (is.na(nodeset$ODNB_CORRECT_ID[j])) {
     
-  } else if (nodeset$ODNB_ID[j] < 30000000) {
-    id = nodeset$ODNB_ID[j] %% 1000000
+  } else {
+    id = nodeset$ODNB_CORRECT_ID[j]
     rows = which(fix_entitymatrix$DocumentNum == id)
     ## If no main-author --
     if (!(any(fix_entitymatrix$ID[rows] == 1))) {
@@ -145,8 +185,13 @@ for(j in seq_along(nodeset$SDFB_ID)) {
       }
     }
   }
-  print(j)
+  if (j %% 25 == 0) {print(j)}
 }
+
+
+
+# Ran until here ------ ---------------------------------------------------
+
 
 
 
@@ -154,15 +199,13 @@ for(j in seq_along(nodeset$SDFB_ID)) {
 ## bio matches => ID = 1
 ## unique matches => ID != 1
 ## shared matches
-docids = (as.numeric(substr(nodeset$ODNB_ID, 1,1)) - 1) * 100000 + (nodeset$ODNB_ID %% 100000)
-
+docids = nodeset$ODNB_ID[!is.na(nodeset$ODNB_ID)]
 bio_matches = fix_entitymatrix[fix_entitymatrix$ID == 1, ]
 bio_matches = bio_matches[bio_matches$DocumentNum %in% docids,]
 
-convert_entitymatrix_into_format(bio_matches, docn = docids, correct_ids = seq_along(docids))
+# convert_entitymatrix_into_format(bio_matches, docn = docids, correct_ids = seq_along(docids))
 
 sub_entitymatrix = fix_entitymatrix[fix_entitymatrix$ID > 1,]
-
 fuzziness = 10 # years fuzzy on bio date extraction
 all_matches = match(sub_entitymatrix$Entity, search_vector)
 
