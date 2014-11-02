@@ -278,14 +278,18 @@ extract_doccount = function(j) {
 }
 
 templist = list()
-for(k in 1:199) {
+for(k in 1:99) {
   print(k)
   test = lapply(1000 * (k -1) + 1:1000, extract_doccount)
   templist[[k]] = do.call(rbind, test)
 }
-templist[[200]] = do.call(rbind, lapply(190001:length(ODNB_improvedpred), extract_doccount))
+templist[[100]] = do.call(rbind, lapply(99001:length(ODNB_improvedpred), extract_doccount))
 
 
 raw_doccount = do.call(rbind, templist)
 write.csv(raw_doccount, file = "raw_doccount.csv",row.names = FALSE )
 
+
+## TODO: [[ RUN THIS ]] ****************************** 11/2. 
+load(zzfile_curated_nodeset_update)
+write.csv(nodeset, file = "updated_nodeset.csv", row.names = FALSE)

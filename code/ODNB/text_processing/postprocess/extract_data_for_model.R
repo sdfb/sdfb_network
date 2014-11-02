@@ -1,8 +1,8 @@
 ## Create data matrices
 
 source("code/ODNB/ODNB_setup.R")
-load("data/OLD_ODNB/ODNB_new_entity_matrix_20141001.Rdata")
-nodeset = read.csv("data_manual/dataset_Oct62014.csv", header = TRUE, stringsAsFactors = FALSE)
+load(zzfile_base_entity_matrix)
+load(zzfile_curated_nodeset_update)
 
 ## Given information about exact data matrix (exact_df, )
 library(Matrix)
