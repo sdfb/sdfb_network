@@ -8,16 +8,20 @@ Examination of ODNB processing results
 ```{r setup, include=FALSE}
 setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
 source("code/ODNB/ODNB_setup.R")
-ODNBID = 18800
+ODNBID = 25200
+## ODNB 18800 = Milton, 25200 = Shakespeare
 ```
 
 
 ## Table of contents {#toc}
 - [Raw HTML file](#rawHtml)
 - [Processed text file (accents removed, HTML cleaned up)](#rawplain)
+- [Extracted Metadata](#metadata)
+- [NER Tagging (after some aggregation)](#imptags)
+- [Final biography matches](#finmatch)
+
 
 ## Raw HTML file (with empty lines stripped) {#rawHtml}
-
 [Return to Table of Contents](#toc)
 ```{r loadhtml, echo=FALSE}
 setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
@@ -33,37 +37,50 @@ rm(ODNB_rawHTML)
 ```{r loadplain, echo=FALSE}
 setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
 load(zzfile_textproc_preproc_splitcosub)
-if (!is.null(ODNB_cleantext[[ODNBID + 100000]])) {
-  cat("There is a cosubject listed with the same ODNBID; they were assigned an ODNB ID of", 
-      ODNBID + 100000, ".\n")
-}
-s = ODNB_cleantext[[ODNBID[1]]]
+cat("This biography is of cosubject type '", ODNB_cosubstatus[ODNBID], "'\n\n", sep = "")
+
+s = ODNB_cleantext[[ODNBID]]
 for(j in seq_along(s)) {cat("[*** Paragraph",j,"***]", s[j], "\n")}
 
-if (!is.null(ODNB_cleantext[[ODNBID + 100000]])) { 
-  cat("Their section of the biography is given next.\n")
-  ODNBID = c(ODNBID, ODNBID + 100000)
-  s = ODNB_cleantext[[ODNBID[2]]]
-  for(j in seq_along(s)) {cat("[*** Paragraph",j,"***]", s[j], "\n")}
-}
-## Do something about ODNBID + 100000. If this is the case, display & follow both users? OR do ODNBID mod 100000 in rawHTML. 
+rm(ODNB_text, ODNB_cleantext)
 ```
 
+## Metadata {#metadata}
+[Return to Table of Contents](#toc)
+```{r metadata, echo = FALSE}
+setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
+load(zzfile_textproc_preproc_metadata)
+trow = t(full_metadata[which(ODNBID == full_metadata$ID),])
+rownames(trow) = NULL
+colnames(trow) = NULL
+print(cbind(colnames(full_metadata), trow))
+```
 
+## Combined NER information {#imptags}
+[Return to Table of Contents](#toc)
+```{r imptags, echo = FALSE}
+setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
+load(zzfile_textproc_post_improvedpred)
 
-## This is the next section
+cat("All names found in biography: \n")
+print(ODNB_improvedpred[[ODNBID]][[1]])
 
+cat("All matches in biography: \n")
+print(ODNB_improvedpred[[ODNBID]][[2]])
+rm(ODNB_improvedpred)
+```
 
-
-
-## Load helper file scripts (to be replaced by SDFB library)
-source("code/ODNB/text_processing/helper/clean_HTML_functions.R")
-source("code/ODNB/text_processing/helper/NER_processing.R")
-source("code/ODNB/text_processing/helper/NER_improve.R")
-
-## Load the file location variables. 
-source("code/ODNB/ODNB_file_locations.R")
-
+## Final Matches {#finmatch}
+[Return to Table of Contents](#toc)
+```{r finmatch, echo = FALSE}
+setwd(gsub("sdfb_network.*", "sdfb_network", getwd()))
+load(zzfile_textproc_post_entitymatrix)
+keep = which(big_entity_matrix$DocumentNum == ODNBID)
+temp = big_entity_matrix[keep,]
+rownames(temp) = NULL
+temp$DocumentNum = NULL
+print(temp)
+```
 
 
 
