@@ -6,18 +6,24 @@ source("code/ODNB/ODNB_setup.R")
 
 # Other helper functions --------------------------------------------------
 
-ODNB_parse_date = function(text, end) {
-  ## Takes text, and integer for last position in name segment, and looks for next match.
-  if (is.null(text)) {return(NA)}
-  segments = gregexpr("\\(.*?\\)", text)
-  match = regmatches(text, segments)[[1]]
+ODNB_parse_date = function(bio, end) {
+  ## Takes bio, and integer for last position in name segment, and looks for next match.
+  if (is.null(bio)) {return(NA)}
+  bio = paste(bio[[1]], sep = " ")
+  segments = gregexpr("\\(.*?[0-9]+.*?\\)", bio)
+  match = regmatches(x = bio, m = segments)[[1]]
   
-  j = min(which(segments[[1]] >= end))
-  if (length(match) > 0 & (!is.na(j)) & (j > 0)) {
-    return(match[j])
-  } else {
-    return(NA)
-  }
+  if (length(match) > 0) { return(match[1]) } else { return(NA) }
+  
+  ## TODO: Old code; remove this. 
+  # match = regmatches(bio, segments)[[1]]
+#   
+#   j = min(which(segments[[1]] >= end))
+#   if (length(match) > 0 & (!is.na(j)) & (j > 0)) {
+#     return(match[j])
+#   } else {
+#     return(NA)
+#   }
 }
 
 
@@ -31,9 +37,13 @@ sum(temp)
 good_names = which(temp)
 
 ## Extract dates
-mapply(ODNB_parse_date, text = ODNB_text[good_names],
+mapply(ODNB_parse_date, bio = ODNB_text[good_names],
        end = sapply(ext_names[good_names], function(x) {x$end})) -> temp
 temp_dates = gsub("&#150;", "-", temp)
+bad_dates = which(nchar(temp_dates) == 2)
+length(bad_dates)
+tocheck = good_names[sample(bad_dates, 3)]
+ODNB_text[tocheck]
 
 ## Extract occupations
 find_occ = function(inp) {
@@ -62,7 +72,7 @@ pns = ODNB_fix_accent_html(pns)
 
 full_metadata = data.frame(ID = good_names, raw_name = sapply(ext_names[good_names], function(x) {x$text}), full_name = fns[good_names], short_name = pns[good_names], Occu = occs, Dates = temp_dates, BioLength = bio_len[good_names], stringsAsFactors = FALSE) 
 
-save(full_metadata, file = "data/ODNB_raw/ODNB_metadata20141101.Rdata")
+save(full_metadata, file = zzfile_textproc_preproc_metadata)
 
 
 ## TODO: [Clean] The remainder of the file. 
@@ -111,6 +121,28 @@ save(full_metadata, file = "data/ODNB_raw/ODNB_metadata20141101.Rdata")
 
 
 
+## Old get.dates function. Needs to be obseleted.
+## TODO: This function is obselete; need to remove all references to it. 
+get.dates <- function(text) { ## Updated 12/30/2012 3pm
+  ## Input      text = char vector (format = processed through dnb.grab.main)
+  ## Output     char singleton
+  ## 
+  ## Returns an entry containing dates for bio
+  notdone = TRUE
+  counter = 1
+  while(notdone) {
+    a = gregexpr(text = text[1], pattern = "\\(")[[1]][counter]
+    b = gregexpr(text = text[1], pattern = "\\)")[[1]][counter]
+    tx = substr(text[1], start = a+1, stop = b-1)
+    tx = gsub(pattern = "&#150;", replacement = "-",tx) 
+    if (length(grep("[[:digit:]]", tx)) == 0) {
+      counter = counter + 1
+    } else {
+      notdone = FALSE
+    }
+  }
+  return(tx)
+}
 
 
 # Code to process all dates
@@ -294,28 +326,7 @@ ODNB_parse_name = function(text) {
 
 odnb_names = t(sapply(odnb_temp_name[,1], ODNB_parse_name))
 
-## Old get.dates function. Needs to be obseleted.
-## TODO: This function is obselete; need to remove all references to it. 
-get.dates <- function(text) { ## Updated 12/30/2012 3pm
-  ## Input      text = char vector (format = processed through dnb.grab.main)
-  ## Output     char singleton
-  ## 
-  ## Returns an entry containing dates for bio
-  notdone = TRUE
-  counter = 1
-  while(notdone) {
-    a = gregexpr(text = text[1], pattern = "\\(")[[1]][counter]
-    b = gregexpr(text = text[1], pattern = "\\)")[[1]][counter]
-    tx = substr(text[1], start = a+1, stop = b-1)
-    tx = gsub(pattern = "&#150;", replacement = "-",tx) 
-    if (length(grep("[[:digit:]]", tx)) == 0) {
-      counter = counter + 1
-    } else {
-      notdone = FALSE
-    }
-  }
-  return(tx)
-}
+
 
 
 

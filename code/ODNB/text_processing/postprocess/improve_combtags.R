@@ -64,7 +64,7 @@ if (!HAVE_MANUAL_METADATA) {
   ## Rerunning, when not needing to set ID numbers. 
   
   load(zzfile_textproc_ner_combtags)
-  load("data/ODNB_raw/ODNB_metadata20141101.Rdata")
+  load(zzfile_textproc_preproc_metadata)
   
   ODNB_improvedpred = list()
   for(j in seq_along(full_metadata$ID)) {
