@@ -93,21 +93,18 @@ Read HTML files into R, store as a list
 \item This script extracts data to form the document-count matrix. This also separates the document into ~500 word sections, and keeps track of estimated mention dates for each of the names. 
 \end{enumerate}
 
-\item \filename{create\_doccount\_matrix.R}
-
+\item \filename{process\_curated\_nodes.R}
 \begin{enumerate}
-\item test
+\item This script takes the curated nodeset and looks for all entity matches to any exact names in search\_names (as well as matching in their own exact biography. 
+\item It also identifies potential partial matches (by way of looking the dates in the matches)
 \end{enumerate}
 
 
+\item \filename{extract\_data\_for\_model.R}
 
-\item \filename{create\_model\_data.R}
 \begin{enumerate}
-\item test
+\item Takes the base document-count matrix and combines it with random sampling from the partial document-count matches. 
 \end{enumerate}
-
-
-
 
 \end{enumerate}
 
@@ -164,8 +161,7 @@ Each of these contains variable \texttt{ODNB\_tokenized}, which is a list of lis
 This is a list of data frames (in \texttt{ODNB\_combtags}), each data frame having 'raw`, 'tag`, 'date`, 'paren` for the full texts. 
 \end{enumerate}
 
-
-\subsection{data/OLD\_ODNB}
+\subsection{data/ODNB\_final}
 \begin{enumerate}
 \item \filename{ODNB\_improvedpred<******>.Rdata} \\
 Contains variable \texttt{ODNB\_improvedpred} in which -- \\
@@ -177,12 +173,28 @@ For each document, there should be a list:
 \end{enumerate} 
 Also contains a copy of variable \texttt{full\_metadata}
 
-\item \filename{ODNB\_fullnamelist<******>.Rdata} \\
-Contains variable \texttt{full\_result3} which is a 73655 $\times$ 13 data frame, each row corresponds to a historical figure. The columns contain various fields for ID numbers, names, and dates. 
 
 \item \filename{ODNB\_entitymatrix<******>.Rdata} \\
 Contains variable \texttt{big\_entity\_matrix}, a $1118968 \times 7$ matrix which contains Entity, IDnum, Document Segment, Min/Max Mention Date, and Document NUmber. 
 
+\item \filename{ODNB\_subset\_entity\_matrix<******>.Rdata} \\
+Contains variables:
+\begin{itemize}
+\item \texttt{exact\_df} : Data frame with ID, DocN, Count
+\item \texttt{partial\_list} : List of lists with partial matches. Each sub-list has \$Doc, \$Count, \$IDs, \$weights. 
+\item \texttt{partial\_df} : Data frame with ID, DocN, Count, Weights
+\end{itemize} 
+All ID's here are the SDFB ID's found in Jessica's curated nodeset. 
+
+\end{enumerate}
+
+\subsection{data/OLD\_ODNB}
+This stores old versions of the various data. These will be deleted soon... 
+
+\begin{enumerate}
+
+\item \filename{ODNB\_fullnamelist<******>.Rdata} \\
+Contains variable \texttt{full\_result3} which is a 73655 $\times$ 13 data frame, each row corresponds to a historical figure. The columns contain various fields for ID numbers, names, and dates. 
 \end{enumerate}
 
 
