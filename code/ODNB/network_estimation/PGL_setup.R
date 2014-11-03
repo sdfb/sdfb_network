@@ -4,14 +4,18 @@
 # Notes: Global variables needed: DM (well, at least within each cluster)
 #         - function calls expect DM to exist; this is to improve runtime. 
 
-DM = NULL # document-appearance_count matrix
+# DM = NULL # document-appearance_count matrix
 # this should have column names as node names
 # row names are optional... could be document identifiers
+## TODO: In later iterations, this is no longer needed. 
+
 SUBSET_DM = NULL # subset of document-appearance_count matrix for current iteration. 
 # can always use this as full matrix if fit on all data is desired
+ALLOWED_INDS = NULL # This is a list of allowed possible links (based on date ranges). 
 
 # TODO: Figure out to do analysis of runtime based on lambda sequence : time AND npasses?
 # TODO: Improve/comment code
+LAMBDA_DEPTH = 3
 lambda_list = list()
 lambda_list[[1]] = unique(c(seq(from=100, to=10, by = -5),
                             seq(from=10, to=6, by = -.5),
@@ -35,15 +39,19 @@ lambda_list[[4]] = unique(c(seq(from=.001, to = .0005, by = -.00001),
 lambdas = unique(round(sort(c(lambda_list[1:LAMBDA_DEPTH], recursive = TRUE), decreasing = TRUE), 8))
 MIN_LAMBDAS = min(lambdas)
 
-sample_docs = function() {
-  # samples half of the documents 
-  # TODO: [Document] this function
-  return(sample(1:nrow(DM), size = floor(nrow(DM)/2)))
-}
+## Not needed when sampling is done in advance. 
+# sample_docs = function() {
+#   # samples half of the documents 
+#   # TODO: [Document] this function
+#   return(sample(1:nrow(DM), size = floor(nrow(DM)/2)))
+# }
+
+# New functions -----------------------------------------------------------
+load("data_manual/ODNB_dataset.Rdata")
 
 glm_x <- function(x, prog, lamb.adj = 11, run_no = 2,
-                  store_model = FALSE, is_single = FALSE, target_node = NULL,
-                  mode = c("simple", "full", "get_iters")) {
+                  store_model = FALSE, target_node = NULL,
+                  mode = "simple", fit_mode = "default") {
   #@F ----------------------------------------
   #@F Function ''
   #@F Args (Input):
@@ -79,22 +87,30 @@ glm_x <- function(x, prog, lamb.adj = 11, run_no = 2,
   ##########
   
   ## Either fit single node or multiple nodes
-  if (is_single) {
+  if (fit_mode == "single") {
     output = try(glmnet(SUBSET_DM[SAMPLES[[r]],-target_node], 
                         SUBSET_DM[SAMPLES[[r]],target_node],
                         family="poisson", lambda = new_lambda, 
                         maxit = new_maxit , thres = 10^(-6)))
-  } else {
+  } else if (fit_mode == "default") {
     output = try(glmnet(SUBSET_DM[,-x], SUBSET_DM[,x],
                         family="poisson", lambda = new_lambda, 
                         maxit = new_maxit , thres = 10^(-6)))
+  } else if (fit_mode == "date-limited") {
+    ## TODO: write this. 
+    if (sum(SUBSET_DM[,x]) == 0) { return(list(status = "Done", 
+                                               results = data.frame(nodeID = numeric(), name = character(), 
+                                                                    lambda = numeric(), finalBeta = numeric(), stringsAsFactors = FALSE))) } 
+    output = try(glmnet(x = SUBSET_DM[,ALLOWED_INDS[[x]]], y = SUBSET_DM[,x],
+                        family = "poisson", lambda = new_lambda, 
+                        maxit = new_maxit, thres = 10^(-6)))
   }
   if (mode == "simple") {
-    return(process_glm(output, cur_x = x, store_model = store_model))
+    return(process_glm(output, cur_x = x, store_model = store_model, fit_mode = fit_mode))
   } else if (mode == "full") { 
     return(output)
   } else if (mode == "get_iters") {
-    return(process_glm(output, cur_x = x, store_model = store_model, get_iters = TRUE))
+    return(process_glm(output, cur_x = x, store_model = store_model, fit_mode = fit_mode, get_iters = TRUE))
   }
 }
 
@@ -143,7 +159,7 @@ glm_x <- function(x, prog, lamb.adj = 11, run_no = 2,
 #   }
 # }
 
-process_glm = function(y, cur_x, store_model = FALSE, get_iters = FALSE) {
+process_glm = function(y, cur_x, fit_mode, store_model = FALSE, get_iters = FALSE) {
   #@F ----------------------------------------
   #@F Function ''
   #@F Args (Input):
@@ -162,7 +178,9 @@ process_glm = function(y, cur_x, store_model = FALSE, get_iters = FALSE) {
       locs = apply(y$beta, 1, function(x) { return(which(x != 0)[1]) })
       coords = which(!is.na(locs))
       adj_coords = coords
-      adj_coords[adj_coords >= cur_x] = adj_coords[adj_coords >= cur_x] + 1
+      if (fit_mode != "date-limited") {
+        adj_coords[adj_coords >= cur_x] = adj_coords[adj_coords >= cur_x] + 1
+      }
       results = data.frame(
         nodeID = adj_coords, 
         name = rownames(y$beta)[coords], 

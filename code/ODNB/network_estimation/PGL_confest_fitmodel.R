@@ -21,7 +21,8 @@ for(nn in START_TRIAL:N_TRIALS) {
   ## SUBSET_DM = sample_matrix(frac = 0.5)
   ## save(SUBSET_DM, file = paste("USED_subsetdm", nn,".Rdata", sep = ""))
 
-  load(paste("data/docu_count_matrix/subsetdm",nn,".Rdata", sep = ""))
+  load(paste("data/ODNB_newfinal/sampmatrix",nn,".Rdata", sep = ""))
+  SUBSET_DM = dcmat
   save(SUBSET_DM, file = "TEMP_SS_SUBSETDM.Rdata")
   clusterEvalQ(clust1, load("TEMP_SS_SUBSETDM.Rdata"))
   
@@ -77,13 +78,14 @@ for(nn in START_TRIAL:N_TRIALS) {
                                                              fun = glm_x, 
                                                              prog = progress, 
                                                              run_no = run,
-                                                             is_single = SINGLE_NODE,
+                                                             fit_mode = MODE,
                                                              target_node = TARGET_NODE) )) 
+        # glm_x(x = 1, prog = progress, run_no = 1, fit_mode = MODE, target_node = TARGET_NODE)
         # print(timing)
         # TODO: Store 'timing' into a variable, to be able to analyze runtime
       } else if (length(current_run) == 1) {
         results[[current_run]] = glm_x(x = current_run, prog = progress, run_no = run,
-                                       is_single = SINGLE_NODE, target_node = TARGET_NODE)
+                                       mode = MODE, target_node = TARGET_NODE)
       }
     }
     # Save if necessary. 

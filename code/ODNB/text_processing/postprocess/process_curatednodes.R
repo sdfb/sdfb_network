@@ -289,7 +289,10 @@ templist[[100]] = do.call(rbind, lapply(99001:length(ODNB_improvedpred), extract
 raw_doccount = do.call(rbind, templist)
 write.csv(raw_doccount, file = "raw_doccount.csv",row.names = FALSE )
 
-
-## TODO: [[ RUN THIS ]] ****************************** 11/2. 
 load(zzfile_curated_nodeset_update)
 write.csv(nodeset, file = "updated_nodeset.csv", row.names = FALSE)
+
+hist(table(exact_df$SDFB_ID), xlim = c(0, 100), breaks = 2500)
+nrow(nodeset)
+length(table(exact_df$SDFB_ID))
+
