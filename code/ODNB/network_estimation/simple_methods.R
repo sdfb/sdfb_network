@@ -2,8 +2,6 @@
 
 load("data_manual/ODNB_dataset.Rdata")
 
-cor(SUBSET_DM)
-
 sparse.cor3 <- function(x, thres = 0.1){
   cSums = colSums(x)
   nonzeros = which(cSums > 0)
@@ -41,10 +39,12 @@ cor_list = list()
 for(j in 1:100) {
   cat(j, '---', date(), "\n")
   load(paste("data/ODNB_newfinal/sampmatrix", j, ".Rdata", sep = ""))
-  cor_list[[j]] = sparse.cor3(SUBSET_DM)
+  cor_list[[j]] = sparse.cor3(dcmat)
 }
 
 save(cor_list, file = "data/cor_thresholded.Rdata")
+
+
 
 load("data/cor_thresholded.Rdata")
 library(Matrix)
