@@ -1,6 +1,7 @@
 ## do simple counts?
 
 load("data_manual/ODNB_dataset.Rdata")
+library(Matrix)
 
 sparse.cor3 <- function(x, thres = 0.1){
   cSums = colSums(x)
@@ -49,46 +50,52 @@ save(cor_list, file = "data/cor_thresholded.Rdata")
 load("data/cor_thresholded.Rdata")
 library(Matrix)
 
+thres_mat_01 = Matrix(0, nrow = 13309, ncol = 13309, sparse = TRUE)
 thres_mat_02 = Matrix(0, nrow = 13309, ncol = 13309, sparse = TRUE)
 thres_mat_03 = Matrix(0, nrow = 13309, ncol = 13309, sparse = TRUE)
 thres_mat_04 = Matrix(0, nrow = 13309, ncol = 13309, sparse = TRUE)
 thres_mat_05 = Matrix(0, nrow = 13309, ncol = 13309, sparse = TRUE)
 thres_mat_06 = Matrix(0, nrow = 13309, ncol = 13309, sparse = TRUE)
-
+sum_threscor = Matrix(0, nrow = 13309, ncol = 13309, sparse = TRUE)
 for(j in 1:100) {
   cat("\n Working on iteration ---- ", j, "\n")
   for(k in 1:nrow(cor_list[[j]])) {
     r = cor_list[[j]]
+    if (r$Cor[k] > 0.1) { thres_mat_01[r$I1[k],r$I2[k]] = thres_mat_01[r$I1[k],r$I2[k]] + 1 }
     if (r$Cor[k] > 0.2) { thres_mat_02[r$I1[k],r$I2[k]] = thres_mat_02[r$I1[k],r$I2[k]] + 1 }
     if (r$Cor[k] > 0.3) { thres_mat_03[r$I1[k],r$I2[k]] = thres_mat_03[r$I1[k],r$I2[k]] + 1 }
+    
     if (r$Cor[k] > 0.4) { thres_mat_04[r$I1[k],r$I2[k]] = thres_mat_04[r$I1[k],r$I2[k]] + 1 }
     if (r$Cor[k] > 0.5) { thres_mat_05[r$I1[k],r$I2[k]] = thres_mat_05[r$I1[k],r$I2[k]] + 1 }
     if (r$Cor[k] > 0.6) { thres_mat_06[r$I1[k],r$I2[k]] = thres_mat_06[r$I1[k],r$I2[k]] + 1 }
+    sum_threscor[r$I1[k],r$I2[k]] = sum_threscor[r$I1[k],r$I2[k]] + r$Cor[k]
     if (k %% 100 == 0) { cat(k, "")}
   }
 }
 
-save(thres_mat_02, thres_mat_03, thres_mat_04, thres_mat_05, thres_mat_06, file = "data/cor_thres.Rdata")
+save(thres_mat_01, thres_mat_02, thres_mat_03, thres_mat_04, thres_mat_05, thres_mat_06, file = "data/cor_thres.Rdata")
 
 
 
 # Testing -----------------------------------------------------------------
 
-
-head(nodeset)
-which(nodeset$ODNB_CORRECT_ID == 18800)
-nodeset[8309,]
-k = grep("Charles", nodeset$full_name)
-nodeset[k,]
-
-y = 11672
-z =c (which(thres_mat_02[,y] > 0), which(thres_mat_02[y,] > 0))
-nodeset[z, ]
-thres_mat_02[z,y]
-
-
-load(zzfile_base_entity_matrix)
-
-head(exact_df)
-nodeset[unique(exact_df[grep(18800, exact_df$DocNum),]$SDFB_ID),]
-nodeset[unique(exact_df[grep(25200, exact_df$DocNum),]$SDFB_ID),]
+# 
+# head(nodeset)
+# which(nodeset$ODNB_CORRECT_ID == 18800)
+# nodeset[8309,]
+# k = grep("Harrington", nodeset$full_name)
+# nodeset[k,]
+# y = 5566
+# y = 8309
+# y = 11671
+# z =c (which(thres_mat_01[,y] > 0), which(thres_mat_01[y,] > 0))
+# nodeset[z, ]
+# temp = cbind(round((thres_mat_01[z,y]+thres_mat_01[y,z]) / 26, 2), nodeset$full_name[z], nodeset$first_name[z], nodeset$surname[z])
+# temp[order(temp[,1], decreasing = TRUE),]
+# 
+# 
+# load(zzfile_base_entity_matrix)
+# 
+# head(exact_df)
+# nodeset[unique(exact_df[grep(18800, exact_df$DocNum),]$SDFB_ID),]
+# nodeset[unique(exact_df[grep(25200, exact_df$DocNum),]$SDFB_ID),]
