@@ -1,7 +1,7 @@
 #@S Script for running the the actual model fitting, assuming setup is done
 #@L Since this code is parallelized, there are some system-dependent sections of code (that should have been ran already)
-START_TRIAL = 1
-END_TRIAL = 10
+START_TRIAL = 21
+END_TRIAL = 30
 
 library(glmnet)
 

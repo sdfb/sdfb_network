@@ -49,23 +49,24 @@ extract_searchable_date = function(nodeset_row) {
   return(c(birth, death))
 }
 
-convert_entitymatrix_into_format = function(em, docn = NULL, entity = NULL, correct_ids) {
+convert_entitymatrix_into_format = function(em, correct_ids) {
+  ## dropped params  docn = NULL, entity = NULL, 
   ## either pass in true docnums or entity vector, and corresponding correct_ids, 
   docuseg = as.character(em$DocumentNum + em$Segment / 100)
-  if (!is.null(docn)) {
-    ID = correct_ids[match(em$DocumentNum, docn)]
-  } else if (!is.null(entity)) {
-    ID = correct_ids[match(em$Entity, entity)]
-  } else {
+#   if (!is.null(docn)) {
+#     ID = correct_ids[match(em$DocumentNum, docn)]
+#   } else if (!is.null(entity)) {
+#     ID = correct_ids[match(em$Entity, entity)]
+#   } else {
     ## if neither docn, entity passed in: then correct_ids is vector of appropriate SDFB_IDs. 
     ## in this case, drop rows with NAs. 
     ID = correct_ids
     res = data.frame(SDFB_ID = ID, DocNum = docuseg, Count = em$Count)
     res = res[!(is.na(ID) | ID == 0),]
     return(res)
-  }
-  res = data.frame(SDFB_ID = ID, DocNum = docuseg, Count = em$Count)
-  return(res)
+#   }
+#   res = data.frame(SDFB_ID = ID, DocNum = docuseg, Count = em$Count)
+#   return(res)
 }
 
 
@@ -203,7 +204,11 @@ for(j in seq_along(nodeset$ODNB_CORRECT_ID)) {
 docids = nodeset$ODNB_CORRECT_ID[!is.na(nodeset$ODNB_CORRECT_ID)]
 bio_matches = fix_entitymatrix[fix_entitymatrix$ID == 1, ]
 bio_matches = bio_matches[bio_matches$DocumentNum %in% docids,]
+doc_match = match(bio_matches$DocumentNum, nodeset$ODNB_CORRECT_ID)
 
+# Sanity check. 
+test = convert_entitymatrix_into_format(bio_matches,correct_ids = doc_match)
+cbind(nodeset$ODNB_CORRECT_ID[test$SDFB_ID], test)
 # convert_entitymatrix_into_format(bio_matches, docn = docids, correct_ids = seq_along(docids))
 
 sub_entitymatrix = fix_entitymatrix[fix_entitymatrix$ID > 1,]
@@ -211,7 +216,7 @@ fuzziness = 10 # years fuzzy on bio date extraction
 all_matches = match(sub_entitymatrix$Entity, search_vector)
 
 # Store results
-exact_match = rep(0, times = length(all_matches))
+exact_match = rep(NA, times = length(all_matches))
 partial_list = list()
 partcount = 0
 
@@ -244,7 +249,7 @@ for(j in seq_along(search_vector)[-1]) { #1 is NA
 non_bio_exact_match = convert_entitymatrix_into_format(em = sub_entitymatrix, correct_ids = exact_match)
 # partial_list
 
-exact_df = rbind(convert_entitymatrix_into_format(bio_matches, docn = docids, correct_ids = seq_along(docids)), non_bio_exact_match)
+exact_df = rbind(convert_entitymatrix_into_format(bio_matches,correct_ids = doc_match), non_bio_exact_match)
 # head(partial_list)
 
 out_df = lapply(partial_list, 
