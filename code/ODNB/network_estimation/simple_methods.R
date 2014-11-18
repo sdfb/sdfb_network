@@ -75,6 +75,22 @@ for(j in 1:100) {
 
 save(thres_mat_01, thres_mat_02, thres_mat_03, thres_mat_04, thres_mat_05, thres_mat_06, file = "data/cor_thres.Rdata")
 
+library(Matrix)
+load("data/cor_thres.Rdata")
+res = matrix(nrow = sum(thres_mat_01 > 0), ncol = 3)
+count = 1
+for(j in 1:13309) { 
+  print(j)
+  for(k in which(thres_mat_01[j,] > 0)) {
+    res[count,1] = j
+    res[count,2] = k
+    res[count,3] = thres_mat_01[j,k]
+    count = count + 1    
+  }
+}
+res = data.frame(Node1 = res[,1], Node2 = res[,2], Conf = res[,3])
+write.csv(res, file = "confidence_rough.csv", row.names = FALSE)
+write.table(`)
 
 
 # Testing -----------------------------------------------------------------
