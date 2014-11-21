@@ -32,6 +32,9 @@ MAX_REITERS = 100 # When rerunning the glm fits, this it the maximum times to tr
 # more than 5 reiterations (at least at the current lambda values)
 
 NODES = length(ALLOWED_INDS)
+FULLNODES = NODES
+## Uncomment for testing
+# NODES = 20
 
 
 
@@ -104,7 +107,7 @@ for(nn in START_TRIAL:END_TRIAL) {
   }
   
   cat("Extracting Lambda values... \n", file = "zGEN_PGL_confest.log", append = TRUE)
-  lambda_matrix = Matrix(0, nrow = NODES, ncol = NODES, sparse = TRUE)
+  lambda_matrix = Matrix(0, nrow = FULLNODES, ncol = FULLNODES, sparse = TRUE)
   
   # TODO: should we take first instance of positive coef? what about final positive coef, then find first positive instance? etc.
   
