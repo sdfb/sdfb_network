@@ -107,7 +107,7 @@ if ((all(c("NCORES", "TRIALS") %in% ls()) && all(TRIALS > 0))) {
       }
     }
     
-    if (error_presence) { log_result("ERROR IN TRIAL",nn,"OF",END_TRIAL,"\n") }
+    if (error_presence) { log_result("ERROR IN TRIAL",nn,"\n") }
     
     save(lambda_matrix, file = filename_save_lambdas)
     log_result("Finished Trial",nn,"-----", date(), "\n", "----------------------\n")
