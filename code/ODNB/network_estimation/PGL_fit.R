@@ -33,7 +33,7 @@ if ((all(c("NCORES", "TRIALS") %in% ls()) && all(TRIALS > 0))) {
   NODES = length(ALLOWED_INDS)
   
   for(nn in TRIALS) {
-    trial_log = paste("TEMP/trial_",nn,".log", sep = "")
+    trial_log = paste("data_manual/PGL_fit/trial_",nn,".log", sep = "")
     filename_save_lambdas = paste(FILENAME_model,nn,".Rdata", sep = "")
     
     log_result("New run of PGL, starting at: ", date(), "\n")

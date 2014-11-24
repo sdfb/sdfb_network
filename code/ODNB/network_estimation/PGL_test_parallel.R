@@ -9,6 +9,8 @@ mclapply(seq_len(4)),
 
 z = mclapply(X = 6:25, FUN = function(x) {rnorm(3) * rnorm(3)}, mc.cores = 4)
 
+
+
 cd4.rg <- function(data, mle) MASS::mvrnorm(nrow(data), mle$m, mle$v)
 > cd4.mle <- list(m = colMeans(cd4), v = var(cd4))
 > run1 <- function(...) boot(cd4, corr, R = 500, sim = "parametric",
