@@ -26,7 +26,7 @@ if ((all(c("NCORES", "TRIALS") %in% ls()) && all(TRIALS > 0))) {
   ALLOWED_INDS = date_overlap_list
   
   SAVE_RESULTS = FALSE
-  FILENAME_model = "TEMP/SS_newfit_pos_"
+  FILENAME_model = "data_manual/PGL_fit/SS_newfit_pos_"
   MODE = "date-limited"
   MAX_REITERS = 25 
   MAX_BATCHSIZE = 100
@@ -83,7 +83,7 @@ if ((all(c("NCORES", "TRIALS") %in% ls()) && all(TRIALS > 0))) {
     errors = which(sapply(results, function(y) {!is.null(y) && y$status == "Error"}))
     for (j in errors) { results[[j]]$status2 = process_error_results(j) }
     
-    cat("Extracting Lambda values... \n", file = trial_log, append = TRUE)
+    log_result("Extracting Lambda values... \n")
     lambda_matrix = Matrix(0, nrow = NODES, ncol = NODES, sparse = TRUE)
     
     error_presence = FALSE
