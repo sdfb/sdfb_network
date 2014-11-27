@@ -1,5 +1,6 @@
 files = list.files("data_manual/PGL_fit/", full.names = TRUE)
 files = files[grep(files, pattern = "SS\\_")]
+length(files)
 
 library(Matrix)
 
