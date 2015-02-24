@@ -5,7 +5,6 @@
 *.Rproj
 .Rproj.user
 /results/*
-*.csv
 *.toc
 *.aux
 *.log
@@ -17,3 +16,11 @@
 /software/lingpipe/*
 /software/stanNER/*
 *.Rd
+conf_matrix_20141129.csv
+confidence_rough.csv
+data/ODNB_vis/data/new.idnamecount.csv
+data_manual/dataset_Oct62014.csv
+exact_matches_new.csv
+partial_matches_new.csv
+raw_doccount.csv
+updated_nodeset.csv

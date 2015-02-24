@@ -1,0 +1,3 @@
+This folder contains data files that *shouldn't* really be in the repository, but are placed there as the size of the data files are relatively small, and are thus placed here for convenience. 
+
+/validation2 contains expert validations and the original method-generated top-30 list. 
