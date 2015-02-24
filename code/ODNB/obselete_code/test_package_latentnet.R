@@ -1,4 +1,4 @@
-## Code messing with latentnet package. Presumably useless at this stage, but will keep in case. 
+## Code for exploration with latentnet package. Presumably useless at this stage, but will keep in case. 
 
 ## Latentnet
 

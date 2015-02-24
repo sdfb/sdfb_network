@@ -1,4 +1,4 @@
-## This contains code for some graphviz plots. 
+## This contains code for some graphviz plots. This generates some james harrington plots. 
 
 
 
