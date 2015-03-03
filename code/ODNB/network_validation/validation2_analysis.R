@@ -1,4 +1,25 @@
+# Code that examines and plots the validation results
 
+# Load pertinent data, do light data-cleanup ------------------------------
+
+## Load Data
+jh_links = read.csv("data_vc/validation2/datajh.csv", header = TRUE, stringsAsFactors = FALSE)[,c(1,2,3)]
+jm_links = read.csv("data_vc/validation2/datajm.csv", header = TRUE, stringsAsFactors = FALSE)[,c(1,2,3,4)]
+jm_links = jm_links[which(jm_links[,1] == "John Milton"), c(2,3,4)]
+raw_ranks = read.csv("data_vc/validation2/rank_raw.csv", header = TRUE, stringsAsFactors = FALSE)
+
+colnames(jh_links) = c("Name", "ID", "Ranking")
+colnames(jm_links) = c("Name", "ID", "Ranking")
+
+
+## Re-arrange names to ensure same row identification
+jh_ranks = raw_ranks[which(raw_ranks$Main.Person == "James Harrington"), ]
+jh_ranks = jh_ranks[match(jh_links$Name, jh_ranks$Link), ]
+nrow(jh_ranks) == sum(jh_ranks$Link == jh_links$Name) # check that names match up
+
+jm_ranks = raw_ranks[which(raw_ranks$Main.Person == "John Milton"), ]
+jm_ranks = jm_ranks[match(jm_links$Name, jm_ranks$Link), ]
+nrow(jm_ranks) == sum(jm_ranks$Link == jm_links$Name) # check that names match up
 
 
 
@@ -21,6 +42,7 @@ jm = which(tosave[,2] == "John Milton")
 main.dat = tosave[jm,-1]
 main.ranks = matrix(NA, nrow = 111, ncol = 24)
 p.dat = jm.dat
+## -- re-written up to here
 
 for(r in 1:dim(main.ranks)[1]) {
   for(c in 4:27) {
@@ -31,6 +53,7 @@ for(r in 1:dim(main.ranks)[1]) {
     }
   }
 }
+
 rank(main.dat[,4], na.last = "keep", ties.method = "average")
 for(j in 4:27) {
   main.ranks[,j-3] = rank(main.dat[,j], na.last = "keep", ties.method = "average")
