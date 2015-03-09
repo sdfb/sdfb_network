@@ -1,4 +1,4 @@
-## This file contains very old code that fits all the different models needed for the validation stage. I don't plan to clean this file up... Don't want to simply delete it, but I don't think we'll need it any longer. All the network estimation algorithms had already been improved (and are many iterations away from this code). 
+## This file contains very old code that fits all the different models needed for the validation stage. I don't plan to clean this file up... Don't want to simply delete it, but I don't think we'll need it any longer. All the network estimation algorithms had already been improved (in terms of better written code that's far easier to use/re-use), and are many iterations away from this code. 
 
 
 
