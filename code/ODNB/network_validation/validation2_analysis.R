@@ -34,10 +34,12 @@ jh_links = cbind(jh_links, Ranked = rank((101 - jh_links$Ranking), na.last = "ke
 ## Compute Spearman correlations -- basically, look at how consistent two rankings are. 
 spear_cors = matrix(0, nrow = 24, ncol = 2)
  
-for(j in 4:24) { 
-  spear_cors[j,1] = cor(jm_links$Ranked, jm_ranks[,j], use = "pairwise.complete.obs", method = "spearman")
-  spear_cors[j,2] = cor(jh_links$Ranked, jh_ranks[,j], use = "pairwise.complete.obs", method = "spearman")
+for(j in 1:24) { 
+  spear_cors[j,1] = cor(jm_links$Ranked, jm_ranks[,j+3], use = "pairwise.complete.obs", method = "spearman")
+  spear_cors[j,2] = cor(jh_links$Ranked, jh_ranks[,j+3], use = "pairwise.complete.obs", method = "spearman")
 }
+rownames(spear_cors) = gsub("X", "", colnames(jm_ranks)[-1:-3])
+colnames(spear_cors) = c("Milton", "Harrington")
 
 
 # Function that returns the indices (in order) of the top k matches. (Larger = better ranked)
@@ -76,24 +78,43 @@ count_matches = function(est_ranks, orig_ranks, cuts_s = c(0, 20, 50, 80, 100), 
 # count_matches(est_ranks = jm_ranks[,6], orig_ranks = jm_links$Ranking)
 
 
-
-## TODO: Redo plot below
-
-
-
-
-plot(x = -1,y = -100, xlim = c(0,50), ylim = c(0,40), xlab = "Top x", 
-     ylab = "Number of Top x correct", main = "James Harrington")
-#|----##../ --Tue Feb 24 17:29:13 2015--
+## Combine plots
+pdf("validation2_jhjm.pdf", width = 8, height = 5)
+par(mfrow = c(1,2))
+## Plot for James Harrington
+plot(x=-9,y=-9, xlim = c(0, 50), ylim = c(0, 50), xlab = "Top [x] Ranked by Method", 
+     ylab = "NUmber of Top [x] Correct", main = "James Harrington")
+colids = c(4,10,15)
+colcolors = c(2,3,4)
 for(k in 1:3) {
-  
-  xs = rowSums(count.res.matrix[,,k])
-  ys = rowSums(count.res.matrix[,to.analyze,k, drop = FALSE])
-  points(xs, ys, type = "l", col = k)
-  
+  temp = count_matches(jh_ranks[,colids[k]], jh_links$Ranking)
+  points(rowSums(temp), rowSums(temp[,1:3]), type = "l", col = colcolors[k])
 }
-legend(x = "topleft", col = 1:3, lty = 1, 
-       legend = c("PGL full docs", "PGL split-docs", "Corr split-docs"),
-       cex = 0.7)
+
+legend(x = "topleft", col = colcolors, lty = 1, 
+       legend = c("PGL full docs", "PGL split-docs", "Correlation split-docs"))
+
+for(j in 0:5) {
+  abline(h = j*10, lty = 3, col = "grey80")
+  abline(v = j*10, lty = 3, col = "grey80")
+}
 
 
+## Plot for John Milton
+plot(x=-9,y=-9, xlim = c(0, 50), ylim = c(0, 50), xlab = "Top [x] Ranked by Method", 
+     ylab = "NUmber of Top [x] Correct", main = "John Milton")
+colids = c(4,10,15)
+colcolors = c(2,3,4)
+for(k in 1:3) {
+  temp = count_matches(jm_ranks[,colids[k]], jm_links$Ranking)
+  points(rowSums(temp), rowSums(temp[,1:3]), type = "l", col = colcolors[k])
+}
+
+legend(x = "topleft", col = colcolors, lty = 1, 
+       legend = c("PGL full docs", "PGL split-docs", "Correlation split-docs"))
+
+for(j in 0:5) {
+  abline(h = j*10, lty = 3, col = "grey80")
+  abline(v = j*10, lty = 3, col = "grey80")
+}
+dev.off()
