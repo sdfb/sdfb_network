@@ -353,12 +353,10 @@ text_remove_punct = function(vec) {
 #' @export
 #' 
 remove_badentities = function(comb.tag.mat, position.df) {
-#|******************
-#|----##replace period with _ --Mon Sep  1 16:55:56 2014--
-  # Anything with \\, /, $, +, *, =, # is not going to be an entity. 
-  # Anything with numbers is not going to be an entity
-  # Anything length 2 or shorter in total is not an entity
-  # Anything 
+  # Anything with lower-case words (except 'de' or 'of') is not an entity
+  # Anything with \\, /, $, +, *, =, # is not an entity
+  # Anything with numeric characters is not an entity
+  # Anything 2 or fewer characters is not an entity
   
   # Remove unlikely entries: 
   is.cap = function(vec) {
@@ -376,8 +374,6 @@ remove_badentities = function(comb.tag.mat, position.df) {
   if (length(bad) > 0) {
     pos = position.df[bad,2]
     comb.tag.mat[,2] = remove_entries(tags = comb.tag.mat[,2], entries = pos)
-#|                     **************
-#|----##replace period with _ --Mon Sep  1 16:56:42 2014--
     return(list(comb.tag.mat, position.df[-bad,]))
   } else {
     return(list(comb.tag.mat, position.df))
