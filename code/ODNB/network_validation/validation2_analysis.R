@@ -84,7 +84,7 @@ par(mfrow = c(1,2))
 ## Plot for James Harrington
 plot(x=-9,y=-9, xlim = c(0, 50), ylim = c(0, 50), xlab = "Top [x] Ranked by Method", 
      ylab = "NUmber of Top [x] Correct", main = "James Harrington")
-colids = c(4,10,15)
+colids = c(4,12,15)
 colcolors = c(2,3,4)
 for(k in 1:3) {
   temp = count_matches(jh_ranks[,colids[k]], jh_links$Ranking)
@@ -103,14 +103,15 @@ for(j in 0:5) {
 ## Plot for John Milton
 plot(x=-9,y=-9, xlim = c(0, 50), ylim = c(0, 50), xlab = "Top [x] Ranked by Method", 
      ylab = "NUmber of Top [x] Correct", main = "John Milton")
-colids = c(4,10,15)
-colcolors = c(2,3,4)
-for(k in 1:3) {
+colids = c(4, 12, 15)
+colcolors = c(2,3,4,5,6,7,8)
+for(k in seq_along(colids)) {
   temp = count_matches(jm_ranks[,colids[k]], jm_links$Ranking)
   points(rowSums(temp), rowSums(temp[,1:3]), type = "l", col = colcolors[k])
 }
 
 legend(x = "topleft", col = colcolors, lty = 1, 
+       # legend = colnames(jm_ranks)[colids])
        legend = c("PGL full docs", "PGL split-docs", "Correlation split-docs"))
 
 for(j in 0:5) {
