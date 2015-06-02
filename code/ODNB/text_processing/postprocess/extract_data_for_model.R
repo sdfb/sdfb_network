@@ -66,12 +66,3 @@ for(j in 1:100) {
   save(dcmat, file = filename)
 }
 
-
-## To do: Fit model
-## To do: Remove out-of-temporance links (or, at least, analyze)
-
-
-
-
-
-
