@@ -1,9 +1,8 @@
 ##@S Examine curated nodes
 source("code/ODNB/ODNB_setup.R")
 
-nodeset = read.csv(zzfile_curated_nodeset, header = TRUE, stringsAsFactors = FALSE)
 load(zzfile_textproc_post_entitymatrix)
-load(zzfile_textproc_preproc_metadata)
+load(zzfile_curated_nodeset_update)
 
 # Helper Functions --------------------------------------------------------
 generate_weights = function(rows) {
@@ -72,8 +71,6 @@ convert_entitymatrix_into_format = function(em, correct_ids) {
 
 # Code --------------------------------------------------------------------
 
-
-# Continue with processing for final matrix -------------------------------
 
 ## Examine accents in search_all
 accents = which(gsub("[], --\\.'[:alpha:]]", "", nodeset$search_names_ALL) != "")
