@@ -104,6 +104,7 @@ for(j in seq_along(search_vector)) {
   )))
   if (j %% 25 == 0) { print(j) }
 }
+rm(accents, search_names, j)
 
 ## now, the pair search_vector / search_idlist provides information -- 
 # search_vector is a vector of character strings to search
@@ -111,23 +112,18 @@ for(j in seq_along(search_vector)) {
 
 
 
-
-
-
-
-
-## For each ODNB name, give it the most frequent name in article if it doesn't have one. 
-## Adjust big_entity_matrix...
-fix_entitymatrix = big_entity_matrix
+## For each node in the provided nodeset, assign the corresponding ODNB article as their biography if it makes sense to do so (there is a very high-count named entity that is exactly the node name (or very close to the node name -- spelling issues?))
+## Store the old ID numbers (so that stuff can be referenced backwards)
+fix_entitymatrix = data.frame(big_entity_matrix, OLD_ID = big_entity_matrix$ID)
 
 for(j in seq_along(nodeset$ODNB_CORRECT_ID)) {
   ## IF is ODNB article
   if (is.na(nodeset$ODNB_CORRECT_ID[j])) {
-    
+    ## do nothing -- this node does not have an ODNB article
   } else {
     id = nodeset$ODNB_CORRECT_ID[j]
     rows = which(fix_entitymatrix$DocumentNum == id)
-    ## If no main-author --
+    ## If no main-author of the article, this might need to be fixed -- 
     if (!(any(fix_entitymatrix$ID[rows] == 1))) {
       ## If there is a close match in top 5 of count: 
       basenames = names(sort(tapply(fix_entitymatrix$Count[rows], as.character(fix_entitymatrix$Entity[rows]), sum), decreasing = TRUE))
@@ -138,8 +134,9 @@ for(j in seq_along(nodeset$ODNB_CORRECT_ID)) {
       }
     }
   }
-  if (j %% 25 == 0) {print(j)}
+  if (j %% 25 == 0) { print(j) }
 }
+rm(firstlast_pair, basenames, matches, id, rows, j)
 
 
 
@@ -210,7 +207,7 @@ partial_df = do.call(rbind, out_df)
 
 ## TODO: [DOCUMENT] this data format
 #save(exact_df, partial_list, partial_df, file = zzfile_base_entity_matrix)
-#save(search_idlist, search_vector, file = zzfile_base_entity_matrix_FULLDATA)
+#save(search_idlist, search_vector, fix_entitymatrix, file = zzfile_base_entity_matrix_FULLDATA)
 
 
 
