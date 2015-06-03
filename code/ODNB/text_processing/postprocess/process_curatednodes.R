@@ -6,15 +6,18 @@ load(zzfile_curated_nodeset_update)
 
 # Helper Functions --------------------------------------------------------
 generate_weights = function(rows) {
-  ## takes rows in nodeset & generates appropriate weights
-  z = nodeset$ODNB_CORRECT_BIOLENGTH[rows]
-  n = length(z)
+  ## Input is rows, which are the rows in 'nodeset' that can match one specific mention. 
+  
+  ## The weights here are used to determine who we think is the more likely owner of a unresolved name mention
+  ## higher weights are given to people whose biographies are longer.   
+  bio_len = nodeset$ODNB_CORRECT_BIOLENGTH[rows]
+  n = length(bio_len)
   basewts = rep((1 / (n + 2)), times = n)
-  if (any(is.na(z))) {
+  if (any(is.na(bio_len))) {
     ## weight unknown bios as length 100
-    z[is.na(z)] = 100
+    bio_len[is.na(bio_len)] = 100
   }
-  return(basewts + ((2 / (n+2)) * z / sum(z)))
+  return(basewts + ((2 / (n+2)) * bio_len / sum(bio_len)))
 }
 
 check_date_overlap = function(docdates, biodates) {
@@ -69,8 +72,19 @@ convert_entitymatrix_into_format = function(em, correct_ids) {
 }
 
 
+Mode <- function(x) {
+  ux <- unique(x)
+  ux[which.max(tabulate(match(x, ux)))]
+}
+
+
 # Code --------------------------------------------------------------------
 
+
+# Create a list of named entities to check for ----------------------------
+## Now, we are given a curated nodeset (and each possibly with alternate names -- the work of disambiguation)
+##   This step combines all of this into one list -- multiple nodes may request searching the same exact name
+##   This step produces a list where each name is identified with a number of nodes that correspond to it. 
 
 ## Examine accents in search_all
 accents = which(gsub("[], --\\.'[:alpha:]]", "", nodeset$search_names_ALL) != "")
@@ -82,6 +96,8 @@ firstlast_pair = paste(nodeset$first_name, nodeset$surname, sep = " ")
 
 search_vector = unique(c(c(search_names, recursive = TRUE), firstlast_pair))
 search_idlist = list()
+## now, check the id list against the search_names fields inside nodeset
+# might not be the most efficient direction; runs one time so whatever... 
 for(j in seq_along(search_vector)) {
   search_idlist[[j]] = sort(unique(c(which(sapply(search_names, function(x) {any(x == search_vector[j])})),
                                      which(search_vector[[j]] == firstlast_pair)
@@ -89,29 +105,16 @@ for(j in seq_along(search_vector)) {
   if (j %% 25 == 0) { print(j) }
 }
 
+## now, the pair search_vector / search_idlist provides information -- 
+# search_vector is a vector of character strings to search
+# search_idlist provides the corresponding node indices that match each character string (each actual name)
 
 
-# z = tapply(big_entity_matrix$ID, big_entity_matrix$DocumentNum, FUN = function(x) {any(x == 1)})
-Mode <- function(x) {
-  ux <- unique(x)
-  ux[which.max(tabulate(match(x, ux)))]
-}
 
-# y = tapply(big_entity_matrix$ID, big_entity_matrix$DocumentNum, Mode)
 
-# 
-# 
-# ## Look for exact matches in the ODNB, for each of search_all
-# s = as.numeric(sample(names(which(!z)), size = 30))
-# s
-# t = which((nodeset$ODNB_ID %% 100000) %in% s)
-# nodeset[t,]
-# big_entity_matrix[which(big_entity_matrix$DocumentNum %in% (nodeset$ODNB_ID[t] %% 100000)),]
-# agrep(pattern = search_names[[t[3]]], x = big_entity_matrix[which(big_entity_matrix$DocumentNum %in% (nodeset$ODNB_ID[t] %% 100000)),1], max.distance = 0.2)
-# nodeset[2800,]
-# agrep(pattern = "John A Lasco", x = big_entity_matrix$Entity[1:100], max.distance = 0.2)
-# 
-# 
+
+
+
 
 ## For each ODNB name, give it the most frequent name in article if it doesn't have one. 
 ## Adjust big_entity_matrix...
@@ -207,45 +210,7 @@ partial_df = do.call(rbind, out_df)
 
 ## TODO: [DOCUMENT] this data format
 #save(exact_df, partial_list, partial_df, file = zzfile_base_entity_matrix)
+#save(search_idlist, search_vector, )
 
 
-
-
-# outputting data ---------------------------------------------------------
-## TODO: to move -- output stuff for chris. 
-source("code/ODNB/ODNB_setup.R")
-load(zzfile_base_entity_matrix)
-write.csv(exact_df, file = "exact_matches_new.csv",row.names = FALSE )
-write.csv(partial_df, file = "partial_matches_new.csv",row.names = FALSE )
-load(zzfile_textproc_post_improvedpred)
-
-extract_doccount = function(j) {
-  if (is.null(ODNB_improvedpred[[j]])) {return(NULL)}
-  if (class(ODNB_improvedpred[[j]]) == "try-error") {return(NULL)}
-  x = ODNB_improvedpred[[j]][[2]]
-  if (nrow(x) == 0) {return(NULL)}
-  res = table(x$MatchName)
-  res = data.frame(res, j,stringsAsFactors = FALSE)
-  colnames(res) = c("Entity", "Count", "DocNum")
-  return(res)
-}
-
-templist = list()
-for(k in 1:99) {
-  print(k)
-  test = lapply(1000 * (k -1) + 1:1000, extract_doccount)
-  templist[[k]] = do.call(rbind, test)
-}
-templist[[100]] = do.call(rbind, lapply(99001:length(ODNB_improvedpred), extract_doccount))
-
-
-raw_doccount = do.call(rbind, templist)
-write.csv(raw_doccount, file = "raw_doccount.csv",row.names = FALSE )
-
-load(zzfile_curated_nodeset_update)
-write.csv(nodeset, file = "updated_nodeset.csv", row.names = FALSE)
-
-hist(table(exact_df$SDFB_ID), xlim = c(0, 100), breaks = 2500)
-nrow(nodeset)
-length(table(exact_df$SDFB_ID))
 
