@@ -42,20 +42,18 @@ zzfile_curated_nodeset = "data_manual/dataset_Oct62014.csv"
 zzfile_curated_nodeset_update = "data_manual/ODNB_dataset.Rdata"
 
 zzfile_base_entity_matrix = "data/ODNB_final/ODNB_subset_entity_matrix_20141102.Rdata"
+zzfile_base_entity_matrix_FULLDATA = "data/ODNB_final/ODNB_subset_entity_matrix_FULLDATA_20150603.Rdata"
+
+
+
+
+
+
 
 
 ## Don't really need this??
 # ../../private_data/odnb_data_proc/ODNB_fullnamelist.Rdata
 zzfile_textproc_post_fullnamelist = "data/OLD_ODNB/ODNB_fullnamelist20141101.Rdata" ## Dated 2014 4/04
-
-
-
-
-
-
-
-
-
 
 
 # 

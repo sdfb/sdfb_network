@@ -210,7 +210,7 @@ partial_df = do.call(rbind, out_df)
 
 ## TODO: [DOCUMENT] this data format
 #save(exact_df, partial_list, partial_df, file = zzfile_base_entity_matrix)
-#save(search_idlist, search_vector, )
+#save(search_idlist, search_vector, file = zzfile_base_entity_matrix_FULLDATA)
 
 
 
