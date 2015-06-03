@@ -15,7 +15,6 @@
 *.txt
 /software/lingpipe/*
 /software/stanNER/*
-*.Rd
 conf_matrix_20141129.csv
 confidence_rough.csv
 data/ODNB_vis/data/new.idnamecount.csv
