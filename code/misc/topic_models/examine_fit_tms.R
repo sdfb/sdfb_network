@@ -1,3 +1,5 @@
+## Produces tables and reports for topic models
+
 load("data/TOPIC_MODEL/tms1.Rdata")
 
 library(topicmodels)

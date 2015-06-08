@@ -1,3 +1,4 @@
+## Fits 5-topic topic models on fuller data
 
 library(topicmodels)
 library(tm)
