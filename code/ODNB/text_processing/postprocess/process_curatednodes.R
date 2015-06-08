@@ -52,8 +52,6 @@ extract_searchable_date = function(nodeset_row) {
 }
 
 convert_entitymatrix_into_format = function(em, correct_ids) {
-  ## dropped params  docn = NULL, entity = NULL, 
-  ## either pass in true docnums or entity vector, and corresponding correct_ids, 
   docuseg = as.character(em$DocumentNum + em$Segment / 100)
   ## if neither docn, entity passed in: then correct_ids is vector of appropriate SDFB_IDs. 
   ## in this case, drop rows with NAs. 
@@ -62,6 +60,8 @@ convert_entitymatrix_into_format = function(em, correct_ids) {
   res = res[!(is.na(ID) | ID == 0),]
   return(res)
 }
+
+
 
 
 Mode <- function(x) {
@@ -181,17 +181,19 @@ for(j in seq_along(search_vector)[-1]) { #1 is NA
   }
 }
 
-exact_df = rbind(convert_entitymatrix_into_format(bio_matches,correct_ids = doc_match), 
+exact_df = rbind(convert_entitymatrix_into_format(em = bio_matches, correct_ids = doc_match), 
                  convert_entitymatrix_into_format(em = sub_entitymatrix, correct_ids = exact_match))
-# head(partial_list)
 
 out_df = lapply(partial_list, 
                 function(x) {res = data.frame(SDFB_ID = x$IDs, DocNum = x$Doc, Count = x$Count, Weight = x$wts)
                              return(res)})
 partial_df = do.call(rbind, out_df)
 
-## TODO: [DOCUMENT] this data format
-#save(exact_df, partial_list, partial_df, file = zzfile_base_entity_matrix)
+## set SDFB matches in fix_entitymatrix (only for unambiguous matches)
+fix_entitymatrix$SDFB_NODE_MATCH[bio_matches$INDEX] = doc_match
+fix_entitymatrix$SDFB_NODE_MATCH[sub_entitymatrix$INDEX[!is.na(exact_match)]] = exact_match[!is.na(exact_match)]
+
+save(exact_df, partial_list, partial_df, file = zzfile_base_entity_matrix)
 save(search_idlist, search_vector, fix_entitymatrix, file = zzfile_base_entity_matrix_FULLDATA)
 
 
