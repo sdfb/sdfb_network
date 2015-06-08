@@ -39,9 +39,6 @@ save(bios, file = "gen.bios.Rdata")
 load("gen.bios.Rdata")
 
 
-# cleaned until here ------------------------------------------------------
-
-
 
 
 library(tm)
@@ -56,7 +53,6 @@ corpus = tm_map(corpus, removePunctuation)
 corpus = tm_map(corpus, tolower)
 corpus = tm_map(corpus, removeNumbers)
 
-# cleaned until here ------------------------------------------------------
 
 dt.matrix = DocumentTermMatrix(corpus)
 
@@ -121,6 +117,9 @@ save(topicmod, file = "topicmodel.fit.Rdata")
 load("topicmodel.fit.Rdata")
 
 
+
+
+# ignore above ------------------------------------------------------------
 
 
 

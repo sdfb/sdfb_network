@@ -16,18 +16,22 @@ for(j in seq_len(13309)) {
 inds = 1:13309
 inds = inds[-which(nchar(bios) < 100)]
 sub_bios = bios[-which(nchar(bios) < 100)]
-
-id_table = data.frame(SDFB_ID = 1:13309, INDEX = match(1:13309, inds))
+large_inds = inds[-which(nchar(bios) < 2500)]
+large_bios = bios[-which(nchar(bios) < 2500)]
+id_table = data.frame(SDFB_ID = 1:13309, INDEX = match(1:13309, inds), LARGE_INDEX = match(1:13309, large_inds))
 
 ## use package 'tm' to clean up the bags of words
+clean_bags = function(corpus) {
+  corpus = tm_map(corpus, removePunctuation)
+  corpus = tm_map(corpus, tolower)
+  corpus = tm_map(corpus, removeNumbers)
+  corpus = tm_map(corpus, removeWords, stopwords(kind = 'en'))
+  corpus = tm_map(corpus, stripWhitespace)
+  corpus = tm_map(corpus, PlainTextDocument)
+  return(corpus)
+}
 bios_src = VectorSource(sub_bios)
-corpus = VCorpus(bios_src)
-corpus = tm_map(corpus, removePunctuation)
-corpus = tm_map(corpus, tolower)
-corpus = tm_map(corpus, removeNumbers)
-corpus = tm_map(corpus, removeWords, stopwords(kind = 'en'))
-corpus = tm_map(corpus, stripWhitespace)
-corpus = tm_map(corpus, PlainTextDocument)
+corpus = clean_bags(VCorpus(bios_src))
 
 library(SnowballC)
 stem_corpus = tm_map(corpus, stemDocument)
@@ -37,7 +41,19 @@ to.rm.list = c("age", "april", "brother", "cousin", "date", "daughter", "day", "
                "octob", "septemb", "six", "third", "fifth", "nephew", "seven", "sir")
 stem_corpus = tm_map(stem_corpus, removeWords, to.rm.list)
 
-dtm = DocumentTermMatrix(x = corpus, control = list(global = c(10, Inf), minWordLength = 3))
-stem_dtm = DocumentTermMatrix(x = stem_corpus, control = list(global = c(10, Inf), minWordLength = 3))
+dtm = DocumentTermMatrix(x = corpus, control = list(bounds = list(global = c(20, 8000)), minWordLength = 3))
+stem_dtm = DocumentTermMatrix(x = stem_corpus, control = list(bounds = list(global = c(20, 8000)), minWordLength = 3))
 
-save(id_table, corpus, stem_corpus, dtm, stem_dtm, file = "data/TOPIC_MODEL/clean_corpus_20150608.Rdata")
+largebios_src = VectorSource(large_bios)
+corpus_large = clean_bags(VCorpus(largebios_src))
+library(SnowballC)
+stem_corpus_large = tm_map(corpus_large, stemDocument)
+to.rm.list = c("age", "april", "brother", "cousin", "date", "daughter", "day", "death",
+               "decemb", "die", "earlier", "father", "februari", "five", "fourth", "friend",
+               "husband", "januari", "juli", "june", "march", "month", "mother", "novemb",
+               "octob", "septemb", "six", "third", "fifth", "nephew", "seven", "sir")
+stem_corpus_large = tm_map(stem_corpus_large, removeWords, to.rm.list)
+
+sl_dtm = DocumentTermMatrix(stem_corpus_large, control = list(bounds = list(global = c(20, 4000)), minWordLength = 3))
+dim(sl_dtm)
+save(id_table, corpus, stem_corpus, corpus_large, stem_corpus_large, dtm, stem_dtm, sl_dtm, file = "data/TOPIC_MODEL/clean_corpus_20150608.Rdata")
