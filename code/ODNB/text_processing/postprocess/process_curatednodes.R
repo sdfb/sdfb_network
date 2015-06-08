@@ -55,20 +55,12 @@ convert_entitymatrix_into_format = function(em, correct_ids) {
   ## dropped params  docn = NULL, entity = NULL, 
   ## either pass in true docnums or entity vector, and corresponding correct_ids, 
   docuseg = as.character(em$DocumentNum + em$Segment / 100)
-#   if (!is.null(docn)) {
-#     ID = correct_ids[match(em$DocumentNum, docn)]
-#   } else if (!is.null(entity)) {
-#     ID = correct_ids[match(em$Entity, entity)]
-#   } else {
-    ## if neither docn, entity passed in: then correct_ids is vector of appropriate SDFB_IDs. 
-    ## in this case, drop rows with NAs. 
-    ID = correct_ids
-    res = data.frame(SDFB_ID = ID, DocNum = docuseg, Count = em$Count)
-    res = res[!(is.na(ID) | ID == 0),]
-    return(res)
-#   }
-#   res = data.frame(SDFB_ID = ID, DocNum = docuseg, Count = em$Count)
-#   return(res)
+  ## if neither docn, entity passed in: then correct_ids is vector of appropriate SDFB_IDs. 
+  ## in this case, drop rows with NAs. 
+  ID = correct_ids
+  res = data.frame(SDFB_ID = ID, DocNum = docuseg, Count = em$Count)
+  res = res[!(is.na(ID) | ID == 0),]
+  return(res)
 }
 
 
@@ -95,6 +87,7 @@ search_names = lapply(strsplit(nodeset$search_names_ALL, ","), function(x) {gsub
 firstlast_pair = paste(nodeset$first_name, nodeset$surname, sep = " ")
 
 search_vector = unique(c(c(search_names, recursive = TRUE), firstlast_pair))
+search_vector = search_vector[!is.na(search_vector)]
 search_idlist = list()
 ## now, check the id list against the search_names fields inside nodeset
 # might not be the most efficient direction; runs one time so whatever... 
@@ -102,7 +95,7 @@ for(j in seq_along(search_vector)) {
   search_idlist[[j]] = sort(unique(c(which(sapply(search_names, function(x) {any(x == search_vector[j])})),
                                      which(search_vector[[j]] == firstlast_pair)
   )))
-  if (j %% 25 == 0) { print(j) }
+  if (j %% 100 == 0) { cat(j, " ") }
 }
 rm(accents, search_names, j)
 
@@ -111,10 +104,13 @@ rm(accents, search_names, j)
 # search_idlist provides the corresponding node indices that match each character string (each actual name)
 
 
-
-## For each node in the provided nodeset, assign the corresponding ODNB article as their biography if it makes sense to do so (there is a very high-count named entity that is exactly the node name (or very close to the node name -- spelling issues?))
-## Store the old ID numbers (so that stuff can be referenced backwards)
-fix_entitymatrix = data.frame(big_entity_matrix, OLD_ID = big_entity_matrix$ID)
+## Noticed that a number of biographies were not correctly ID'ed (possibly related to an ODNB_ID assignment issue earlier), so many biographies did not have their subject identified. (ie in each section of big_entity_matrix, their ID should be 1 (this ID number is reserved for the subject of biographies).) 
+## Thus: 
+## For each node in the provided nodeset, assign the corresponding ODNB article as their biography if it makes sense to do so (ie. if it seemed to be incorrect)
+## Also: store the old ID numbers (so that stuff can be referenced backwards)
+## INDEX will just store the index (so can be referenced to a row of big_entity_matrix when necessary)
+## SDFB_NODE_MATCH gives the SDFB_ID that corresponds to this person (will be assigned on match later)
+fix_entitymatrix = data.frame(big_entity_matrix, OLD_ID = big_entity_matrix$ID, INDEX = seq_len(nrow(big_entity_matrix)), SDFB_NODE_MATCH = 0)
 
 for(j in seq_along(nodeset$ODNB_CORRECT_ID)) {
   ## IF is ODNB article
@@ -134,30 +130,21 @@ for(j in seq_along(nodeset$ODNB_CORRECT_ID)) {
       }
     }
   }
-  if (j %% 25 == 0) { print(j) }
+  if (j %% 100 == 0) { cat(j, " ") }
 }
 rm(firstlast_pair, basenames, matches, id, rows, j)
 
 
+## Now, need to look for every entry in the list, and find the appropriate matches. 
+## There are three types of matches: biography matches (ie. when ID == 1: this means the biography is identified)
 
-# Ran until here ------ ---------------------------------------------------
-
-
-
-
-## Three types of matches
-## bio matches => ID = 1
-## unique matches => ID != 1
-## shared matches
-docids = nodeset$ODNB_CORRECT_ID[!is.na(nodeset$ODNB_CORRECT_ID)]
-bio_matches = fix_entitymatrix[fix_entitymatrix$ID == 1, ]
+##### For biography matches: 
+docids = nodeset$ODNB_CORRECT_ID[!is.na(nodeset$ODNB_CORRECT_ID)] ## ODNB IDs in nodeset
+bio_matches = fix_entitymatrix[fix_entitymatrix$ID == 1, ] ## Take appropriate subset of fix_entitymatrix to simplify searching
 bio_matches = bio_matches[bio_matches$DocumentNum %in% docids,]
-doc_match = match(bio_matches$DocumentNum, nodeset$ODNB_CORRECT_ID)
+doc_match = match(bio_matches$DocumentNum, nodeset$ODNB_CORRECT_ID) ## identify which person each found match belongs to. 
 
-# Sanity check. 
-test = convert_entitymatrix_into_format(bio_matches,correct_ids = doc_match)
-cbind(nodeset$ODNB_CORRECT_ID[test$SDFB_ID], test)
-# convert_entitymatrix_into_format(bio_matches, docn = docids, correct_ids = seq_along(docids))
+##### For unique matches that are not biography matches (ID != 1), and shared matches: 
 
 sub_entitymatrix = fix_entitymatrix[fix_entitymatrix$ID > 1,]
 fuzziness = 10 # years fuzzy on bio date extraction
@@ -169,7 +156,7 @@ partial_list = list()
 partcount = 0
 
 for(j in seq_along(search_vector)[-1]) { #1 is NA
-  print(j)
+  if (j %% 10 == 0) { cat(j, " ") }
   matches = which(all_matches == j)
   if (length(matches) > 0) {
     docdates = cbind(sub_entitymatrix$MinDate[matches] - fuzziness, sub_entitymatrix$MaxDate[matches] + 10)
@@ -194,10 +181,8 @@ for(j in seq_along(search_vector)[-1]) { #1 is NA
   }
 }
 
-non_bio_exact_match = convert_entitymatrix_into_format(em = sub_entitymatrix, correct_ids = exact_match)
-# partial_list
-
-exact_df = rbind(convert_entitymatrix_into_format(bio_matches,correct_ids = doc_match), non_bio_exact_match)
+exact_df = rbind(convert_entitymatrix_into_format(bio_matches,correct_ids = doc_match), 
+                 convert_entitymatrix_into_format(em = sub_entitymatrix, correct_ids = exact_match))
 # head(partial_list)
 
 out_df = lapply(partial_list, 
@@ -207,7 +192,7 @@ partial_df = do.call(rbind, out_df)
 
 ## TODO: [DOCUMENT] this data format
 #save(exact_df, partial_list, partial_df, file = zzfile_base_entity_matrix)
-#save(search_idlist, search_vector, fix_entitymatrix, file = zzfile_base_entity_matrix_FULLDATA)
+save(search_idlist, search_vector, fix_entitymatrix, file = zzfile_base_entity_matrix_FULLDATA)
 
 
 
