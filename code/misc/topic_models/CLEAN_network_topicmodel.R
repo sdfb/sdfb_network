@@ -37,6 +37,13 @@ for(person in 1:length(dm.names)) {
 save(bios, file = "gen.bios.Rdata")
 
 load("gen.bios.Rdata")
+
+
+# cleaned until here ------------------------------------------------------
+
+
+
+
 library(tm)
 library(topicmodels)
 load("final.dmnames.Rdata")
@@ -48,6 +55,9 @@ corpus = VCorpus(bios.src)
 corpus = tm_map(corpus, removePunctuation)
 corpus = tm_map(corpus, tolower)
 corpus = tm_map(corpus, removeNumbers)
+
+# cleaned until here ------------------------------------------------------
+
 dt.matrix = DocumentTermMatrix(corpus)
 
 save(dt.matrix, file = "dt.matrix.bios.Rdata")
@@ -71,7 +81,7 @@ corpus = tm_map(corpus, stemDocument)
 to.rm.list = c("age", "april", "brother", "cousin", "date", "daughter", "day", "death",
                "decemb", "die", "earlier", "father", "februari", "five", "fourth", "friend",
                "husband", "januari", "juli", "june", "march", "month", "mother", "novemb",
-               "octob", "septemb", "six", "third", "fifth", "nephew", "seven")
+               "octob", "septemb", "six", "third", "fifth", "nephew", "seven", "sir")
 
 corpus = tm_map(corpus, removeWords, to.rm.list)
 
