@@ -21,3 +21,4 @@ print("Working on stem 10")
 tm_stem_20 = LDA(x = sl_dtm, k = 20)
 save(tm_stem_5, tm_stem_10, tm_stem_20, file = "data/TOPIC_MODEL/tms2.Rdata")
 
+
