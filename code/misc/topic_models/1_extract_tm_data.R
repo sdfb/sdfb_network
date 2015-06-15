@@ -26,9 +26,6 @@ find_matches_in_bounds = function(ID, matchdf, bounds) {
   return(matchdf$Position[matches])
 }
 
-## Source
-
-
 # Find the positions where the entties are mentioned in each docum --------
 
 ## Figure out which named entites need to be resolved

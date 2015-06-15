@@ -1,0 +1,45 @@
+The topic modeling process is described below: 
+
+-------------------------------------------------------------------------------------------
+In file *** 1_extract_tm_data.R ***: 
+-------------------------------------------------------------------------------------------
+
+Generally: Takes the document data and extracts a raw bag of words for each actor in our nodeset. 
+
+1. Look in documents for named entity matches. Create a bag of words for each actor by taking for each actor the previous 15 words and the next 25 words and aggregating over all mentions. 
+2. Drop all mentions of any other detected named entities (even named entities that do not match some actor in our set of actors) that appear in these ~40 words. 
+3. Store a list of these bags of words. 
+
+-------------------------------------------------------------------------------------------
+In file *** 2_process_tm_bags.R ***: 
+-------------------------------------------------------------------------------------------
+
+Generally: Apply cleanup to the bags of words and convert into a document-term matrix
+
+1. Drop very very small bags of words (ie if the total number of characters (NOT WORDS) is less than 100... )
+2. Clean up the bags of words -- remove all puncutuation, remove all numbers, remove standard set of English stopwords, lower-case everything
+3. Optionally -- apply stemming to the words to reduce the vocabulary size
+4. Optionally -- reduce the number of total actors by removing more small bags of words
+5. Convert into a document-term matrix
+
+-------------------------------------------------------------------------------------------
+In file *** 3_fit_tm.R ***: 
+-------------------------------------------------------------------------------------------
+
+This is a script that fits topic models with different parameters. (5, 10, 20 topics)
+
+-------------------------------------------------------------------------------------------
+In file *** 4_process_tm_results.R ***
+-------------------------------------------------------------------------------------------
+
+This file generates the various tables and statistics that we desire from the topic models. 
+
+1. Extracts counts of between/within cluster links (based on estimated network)
+2. Extracts top terms for each topic, and best topic for each actor
+3. Extracts more detailed probabiltiies for topics/terms (ie posterior probabilities of actors in each topic, and of terms in each topic)
+
+
+-------------------------------------------------------------------------------------------
+Documentation of final output: 
+-------------------------------------------------------------------------------------------
+
