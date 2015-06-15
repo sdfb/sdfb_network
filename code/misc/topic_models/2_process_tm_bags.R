@@ -11,6 +11,7 @@ for(j in seq_len(13309)) {
   }
   cat(j, " ")
 }
+names(bios) = 1:13309
 
 ## drop small/empty bags
 inds = 1:13309
@@ -38,11 +39,17 @@ stem_corpus = tm_map(corpus, stemDocument)
 to.rm.list = c("age", "april", "brother", "cousin", "date", "daughter", "day", "death",
                "decemb", "die", "earlier", "father", "februari", "five", "fourth", "friend",
                "husband", "januari", "juli", "june", "march", "month", "mother", "novemb",
-               "octob", "septemb", "six", "third", "fifth", "nephew", "seven", "sir")
+               "octob", "septemb", "six", "third", "fifth", "nephew", "seven", "sir", "one", 
+               "first", "also", "may", "two", "time", "wife", "marri", "becam", "new", "made", "howev",
+               "august", "three", "born", "took", "mani", "well", "known", "great", "much", "now",
+               "like", "though", "children", "person")
 stem_corpus = tm_map(stem_corpus, removeWords, to.rm.list)
 
 dtm = DocumentTermMatrix(x = corpus, control = list(bounds = list(global = c(20, 8000)), minWordLength = 3))
 stem_dtm = DocumentTermMatrix(x = stem_corpus, control = list(bounds = list(global = c(20, 8000)), minWordLength = 3))
+
+
+
 
 largebios_src = VectorSource(large_bios)
 corpus_large = clean_bags(VCorpus(largebios_src))

@@ -34,9 +34,10 @@ In file *** 4_process_tm_results.R ***
 
 This file generates the various tables and statistics that we desire from the topic models. 
 
-1. Extracts counts of between/within cluster links (based on estimated network)
-2. Extracts top terms for each topic, and best topic for each actor
-3. Extracts more detailed probabiltiies for topics/terms (ie posterior probabilities of actors in each topic, and of terms in each topic)
+1. Extracts top terms for each topic, and best topic for each actor
+2. Extracts more detailed probabiltiies for topics/terms (ie posterior probabilities of actors in each topic, and of terms in each topic)
+3a. Extracts counts of between/within cluster links (based on estimated network)
+3b. Table of between/within cluster link probabilities
 
 
 -------------------------------------------------------------------------------------------
