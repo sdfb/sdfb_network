@@ -5,8 +5,8 @@ library(topicmodels)
 source("code/ODNB/ODNB_setup.R")
 load(zzfile_curated_nodeset_update)
 
-load("data/TOPIC_MODEL/tms3.Rdata")
-load("data/TOPIC_MODEL/clean_corpus_20150608.Rdata")
+load("data/TOPIC_MODEL/fitted_topic_models_20150614.Rdata")
+load("data/TOPIC_MODEL/clean_corpus_20150610.Rdata")
 
 conftable = read.csv("conf_matrix_20141129.csv")
 
@@ -66,8 +66,8 @@ extract_network_topic_table = function(ids, topics, confs, thres = c(.90, .75, .
 
 process_array = function(a, dim, finaldim) {
   ## computes the between/within values, for a given array 'a', dimension 'dim', and total dimension 'finaldim'
-  between = sum(diag(a[,,dim]))/sum(diag(a[,,finaldim]))
-  within = sum(a[,,dim][lower.tri(a[,,dim])]) / sum(a[,,finaldim][lower.tri(a[,,dim])])
+  within = sum(diag(a[,,dim]))/sum(diag(a[,,finaldim]))
+  between = sum(a[,,dim][lower.tri(a[,,dim])]) / sum(a[,,finaldim][lower.tri(a[,,dim])])
   return(c(between, within))
 }
 
@@ -82,55 +82,40 @@ SDFB_DATES = nodeset$full_date[SDFB_IDS]
 ## Output best topic for each actor
 
 script_extract_tables = function(input_tm, out_prefix = "test") {
-  out1 = data.frame(SDFB_ID = SDFB_IDS, Name = SDFB_NAMES, Dates = SDFB_Dates, Class = input_tm)
-  write.csv(out1, file = paste(out_prefix, "_most_likely_cluster.csv", sep = ""))
+  out1 = data.frame(SDFB_ID = SDFB_IDS, Name = SDFB_NAMES, Dates = SDFB_DATES, Class = as.numeric(topics(input_tm)))
+  write.csv(out1, row.names = FALSE, file = paste("data/TOPIC_MODEL/results/", out_prefix, "_most_likely_cluster.csv", sep = ""))
   
   out2 = terms(input_tm, 500)
-  write.csv(out2, file = paste(out_prefix, "_top500_cluster_terms.csv"))
-            
+  write.csv(out2, file = paste("data/TOPIC_MODEL/results/", out_prefix, "_top500_cluster_terms.csv", sep = ""))
+
+  post = posterior(input_tm)
+  
+  df1 = post$topics
+  colnames(df1) = paste("Topic", 1:ncol(df1), sep = "_")
+  df1 = cbind(data.frame(SDFB_ID = SDFB_IDS, Name = SDFB_NAMES, Dates = SDFB_DATES), df1)
+  write.csv(df1, row.names = FALSE, file = paste("data/TOPIC_MODEL/results/", out_prefix, "_posteriorprob_topics.csv", sep = ""))
+  
+  df2 = t(post$terms)
+  colnames(df2) = paste("Topic", 1:ncol(df2), sep = "_")
+  df2 = cbind(data.frame(Terms=rownames(df2)), df2)
+  write.csv(df2, row.names = FALSE, file = paste("data/TOPIC_MODEL/results/", out_prefix, "_posteriorprob_terms.csv", sep = ""))
+  
+  tab = extract_network_topic_table(ids = SDFB_IDS, topics = as.numeric(topics(input_tm)), confs = conftable)
+  restable = matrix(0, nrow = 4, ncol = 2)
+  largetable = NULL
+  for(j in 1:4) { 
+    restable[j,] = process_array(tab, j, 5)
+    largetable = rbind(largetable, tab[,,j]/tab[,,5], t(rep(NA, times = dim(tab)[1])))
+  }
+  restable = data.frame(cbind(paste("Links: Confidence >= ", c(.90, .75, .50, .30)), restable))
+  colnames(restable) = c("Conf_Threshold", "Between", "Within")
+  write.csv(restable, row.names = FALSE, file = paste("data/TOPIC_MODEL/results/", out_prefix, "_result_table.csv", sep = ""))
+  write.csv(largetable, row.names = FALSE, file = paste("data/TOPIC_MODEL/results/", out_prefix, "_detailed_result_table.csv", sep = ""))
+  
   return("Done!")
 }
 
+script_extract_tables(tm_stem_5, out_prefix = "TM5")
+script_extract_tables(tm_stem_10, out_prefix = "TM10")
+script_extract_tables(tm_stem_20, out_prefix = "TM20")
 
-
-
-head(conftable)
-
-
-
-
-
-conftable[which(conftable$ID1 == 1715),]
-main_topics = topics(tm_stem_5)
-
-ids = SDFB_IDS
-confs = conftable
-topics = as.numeric(main_topics)
-
-
-tops_thres = threshold_topics(tm_stem_5)
-
-test = extract_network_topic_table(SDFB_IDS, as.numeric(topics(tm_stem_5)), conftable)
-test2 = extract_network_topic_table(SDFB_IDS, tops_thres, conftable)
-
-process_array(test2, 4, 5)
-
-
-
-
-
-
-
-load("")
-
-
-terms(tm_stem_5, 25)
-
-??topicmodels
-
-
-## for each -- table of top terms
-dim(posterior(tm_stem_5)[[1]])
-dim(posterior(tm_stem_5)[[2]])
-
-tm_stem_5

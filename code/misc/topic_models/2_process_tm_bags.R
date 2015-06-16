@@ -63,4 +63,4 @@ stem_corpus_large = tm_map(stem_corpus_large, removeWords, to.rm.list)
 
 sl_dtm = DocumentTermMatrix(stem_corpus_large, control = list(bounds = list(global = c(20, 4000)), minWordLength = 3))
 dim(sl_dtm)
-save(id_table, corpus, stem_corpus, corpus_large, stem_corpus_large, dtm, stem_dtm, sl_dtm, file = "data/TOPIC_MODEL/clean_corpus_20150608.Rdata")
+save(id_table, corpus, stem_corpus, corpus_large, stem_corpus_large, dtm, stem_dtm, sl_dtm, file = "data/TOPIC_MODEL/clean_corpus_20150610.Rdata")
