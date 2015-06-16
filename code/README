@@ -1,6 +1,6 @@
 This folder contains all code (mostly in R, some shell scripts...)
 
-experimental/           -- code that is unsorted (work in progress)
+experimental/           -- code that is unsorted (works in progress)
 misc/                   -- code for trying different ideas, not necessarily ODNB stuff
 network_visualization/  -- code that produces static visualizations of networks
 ODNB/                   -- code that processes the ODNB code & the model fitting => confidence matrix
