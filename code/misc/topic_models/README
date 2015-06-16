@@ -18,8 +18,8 @@ Generally: Apply cleanup to the bags of words and convert into a document-term m
 
 1. Drop very very small bags of words (ie if the total number of characters (NOT WORDS) is less than 100... )
 2. Clean up the bags of words -- remove all puncutuation, remove all numbers, remove standard set of English stopwords, lower-case everything
-3. Optionally -- apply stemming to the words to reduce the vocabulary size
-4. Optionally -- reduce the number of total actors by removing more small bags of words
+3. Apply stemming to the words to reduce the vocabulary size
+4. Remove a manually curated set of frequently occurring words (mostly related to months, numbers), and also remove any words appearing in fewer than 20 bags of words AND any words appearing in more than 8000 bags of words. (Remove words that have very little signal in both directions)
 5. Convert into a document-term matrix
 
 -------------------------------------------------------------------------------------------
@@ -28,6 +28,7 @@ In file *** 3_fit_tm.R ***:
 
 This is a script that fits topic models with different parameters. (5, 10, 20 topics)
 
+
 -------------------------------------------------------------------------------------------
 In file *** 4_process_tm_results.R ***
 -------------------------------------------------------------------------------------------
@@ -35,7 +36,7 @@ In file *** 4_process_tm_results.R ***
 This file generates the various tables and statistics that we desire from the topic models. 
 
 1. Extracts top terms for each topic, and best topic for each actor
-2. Extracts more detailed probabiltiies for topics/terms (ie posterior probabilities of actors in each topic, and of terms in each topic)
+2. Extracts more detailed probabiltiies for topics/terms (ie. posterior probabilities of actors in each topic, and of terms in each topic)
 3a. Extracts counts of between/within cluster links (based on estimated network)
 3b. Table of between/within cluster link probabilities
 
@@ -43,4 +44,21 @@ This file generates the various tables and statistics that we desire from the to
 -------------------------------------------------------------------------------------------
 Documentation of final output: 
 -------------------------------------------------------------------------------------------
+
+**_most_likely_cluster.csv: Table with SDFB_ID, Name, Date, and most likely cluster from topic model
+
+**_top500_cluster_terms.csv: Table with top terms for each topic (cluster)
+
+**_posteriorprob_terms.csv: Detailed list of posterior probabilities for each term/topic
+**_posteriorprob_topics.csv: Detailed posterior probabilities for each actor/topic
+
+**_result_table.csv: Small table counting proportion of existing links in network at different confidence thresholds for links between and within clusters. 
+
+**_detailed_result_table.csv: A number of tables (at confidences 0.9, 0.75, 0.5, 0.3 respectively) telling proportion of existing edges within/between each topic/cluster. 
+
+
+
+
+
+
 

@@ -3,7 +3,7 @@ This folder contains data files that have been written or processed by a human. 
 Contents of folder
 ==================
 
-nodeset_20140923.csv -- This is the set of nodes that should be in the fitted model. [TODO: Add more documentation for the exact file contents where it may not be clear]
+dataset_Oct62014.csv -- This is the set of nodes that should be in the fitted model. [TODO: Add more documentation for the exact file contents where it may not be clear]
 
 [ Documentation from Email (Jessica) ] 
 I've made fields for search names (first name surname, as well as alternate names). There's a column with all the search names separated by commas and I've also split the search names into multiple columns so that each one has its own field - I wasn't sure which would be more convenient for you.  It probably doesn't matter for the purposes of your algorithm, but for the birth/death dates, AF/BF/CA/IN stand for after, before, circa, and in.  A few of the cells have multiple values (i.e. BF/IN = before or in).
