@@ -21,6 +21,41 @@ threshold_topics = function(tm, thres = 0.6) {
   return(tops)
 }
 
+extract_avg_confs = function(ids, topics, confs) {
+  ## ids -- give SDFB id's
+  ## topics -- cluster for topic model
+  ## confs -- data frame: ID1, ID2, ConfEst
+  ## thres -- different vaues to threshold the confidence estimates
+  
+  ## link_array -- dim 1,2: cluster assignments; dim 3: amount that passes threshold
+  nc = length(unique(topics[!is.na(topics)]))
+  confs$T1 = topics[match(confs$ID1, ids)]
+  confs$T2 = topics[match(confs$ID2, ids)]
+  
+  anyna = is.na(confs$T1) | is.na(confs$T2)
+  confs = confs[!anyna,]
+  topiccounts = as.numeric(table(topics))
+  
+  b_sum = 0
+  w_sum = 0
+  for(j in 1:nrow(confs)) {
+    if (confs$T1[j] == confs$T2[j]) {
+      w_sum = w_sum + confs$ConfEst[j]
+    } else {
+      b_sum = b_sum + confs$ConfEst[j]
+    }
+  }
+  
+  t_count = length(topics) * (length(topics)-1) / 2
+  tt = table(topics)
+  w_count = sum(tt * (tt -1) / 2)
+  between = b_sum/(t_count - w_count)
+  within = w_sum/w_count
+  
+  return(c(between, within))
+}
+
+
 extract_network_topic_table = function(ids, topics, confs, thres = c(.90, .75, .50, .30)) {
   ## ids -- give SDFB id's
   ## topics -- cluster for topic model
@@ -118,4 +153,10 @@ script_extract_tables = function(input_tm, out_prefix = "test") {
 script_extract_tables(tm_stem_5, out_prefix = "TM5")
 script_extract_tables(tm_stem_10, out_prefix = "TM10")
 script_extract_tables(tm_stem_20, out_prefix = "TM20")
+
+extract_avg_confs(ids = SDFB_IDS, topics = as.numeric(topics(tm_stem_5)), confs = conftable)
+extract_avg_confs(ids = SDFB_IDS, topics = as.numeric(topics(tm_stem_10)), confs = conftable)
+extract_avg_confs(ids = SDFB_IDS, topics = as.numeric(topics(tm_stem_20)), confs = conftable)
+
+
 
