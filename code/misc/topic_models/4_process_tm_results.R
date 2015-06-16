@@ -5,7 +5,7 @@ library(topicmodels)
 source("code/ODNB/ODNB_setup.R")
 load(zzfile_curated_nodeset_update)
 
-load("data/TOPIC_MODEL/tms2.Rdata")
+load("data/TOPIC_MODEL/tms3.Rdata")
 load("data/TOPIC_MODEL/clean_corpus_20150608.Rdata")
 
 conftable = read.csv("conf_matrix_20141129.csv")
@@ -75,7 +75,7 @@ process_array = function(a, dim, finaldim) {
 # Script ------------------------------------------------------------------
 
 ## Extract nodeset information
-SDFB_IDS = match(1:max(id_table$LARGE_INDEX, na.rm = TRUE), id_table$LARGE_INDEX)
+SDFB_IDS = match(1:max(id_table$INDEX, na.rm = TRUE), id_table$INDEX)
 SDFB_NAMES = paste(nodeset$first_name[SDFB_IDS], nodeset$surname[SDFB_IDS], sep = " ")
 SDFB_DATES = nodeset$full_date[SDFB_IDS]
 
@@ -110,7 +110,7 @@ topics = as.numeric(main_topics)
 
 tops_thres = threshold_topics(tm_stem_5)
 
-test = extract_network_topic_table(SDFB_IDS, as.numeric(topics(tm_stem_10)), conftable)
+test = extract_network_topic_table(SDFB_IDS, as.numeric(topics(tm_stem_5)), conftable)
 test2 = extract_network_topic_table(SDFB_IDS, tops_thres, conftable)
 
 process_array(test2, 4, 5)
