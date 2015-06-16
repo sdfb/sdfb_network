@@ -23,3 +23,4 @@ exact_matches_new.csv
 partial_matches_new.csv
 raw_doccount.csv
 updated_nodeset.csv
+/data/TOPIC_MODEL/results/*
