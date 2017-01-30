@@ -28,10 +28,10 @@ network_visualization: added code.
 Getting Started
 ===============
 
-The primary end-to-end flow of this code to is as follows.
+The primary end-to-end flow of this code to is as follows.  Further details are available in the README files for each sub-directory
 
 # ODNB
 #1 Prepare ODNB data (code/ODNB/text_processing)
-#1.1 
-#1.2
 #2 Perform network estimation
+#3 Validate network estimation
+#4 Prepare network estimation
