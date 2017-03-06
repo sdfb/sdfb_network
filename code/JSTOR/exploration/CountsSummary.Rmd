@@ -1,0 +1,51 @@
+---
+title: "CountsSummary"
+author: "David Walling"
+date: "January 23, 2017"
+output: pdf_document
+---
+
+Provides simple summary on number of regular expression matches found in data.  The counts used "names_scott_version.csv" for the regular expressions.
+
+```{r}
+library(data.table)
+matching <- fread("/home/walling/dev/git/sdfb_network/code/JSTOR/exploration/matching_names.txt", sep = "\n")
+colnames(matching) <- c("name")
+library(sqldf)
+
+counts <- sqldf("select name, count(*) as cnt from matching group by 1 order by 2 desc;")
+```
+
+# Total Lines of Text Search
+
+16,435,460 lines of text accross 451,665 files.
+
+Note there are now 'file counts' for each name.  Due to the amount of data, I had to combine all files content into a single file, which I could then grep in parallel.
+
+# Total Matches
+
+```{r}
+sum(counts$cnt)
+```
+
+# Top 100
+
+```{r}
+knitr::kable(counts[1:100,])
+```
+
+# Summary of Counts Dist
+
+```{r}
+summary(counts$cnt)
+```
+
+# Distribution
+
+Just to give a bit more insight into the skewness.
+
+```{r}
+d <- density(counts$cnt[counts$cnt < 100])
+plot(d, type="b", main="Distribution Count < 100")
+```
+

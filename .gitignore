@@ -24,3 +24,5 @@ partial_matches_new.csv
 raw_doccount.csv
 updated_nodeset.csv
 /data/TOPIC_MODEL/results/*
+.RDataTmp
+anRpackage
