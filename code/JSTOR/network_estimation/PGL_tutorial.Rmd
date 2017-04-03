@@ -1,0 +1,154 @@
+---
+title: "PGL Overview"
+author: "David Walling"
+date: "April 2, 2017"
+output: pdf_document
+---
+
+Here we provide a simplified overview of how the Poisson Graphical Lasso (PGL) model works with document count style matricies.
+
+# GLMNET Overview
+
+GLMNET fits models using 'cyclical coordinate descent' techniques, which depend on having a penalization term for guiding the algorithm.  The 3 primary options are Ridge, Lasso and Elasticnet.  The parameter 'alpha' controls which penalty is used, with alpha=0 giving Ridge and alpha=1 giving Lasso.
+
+* Ridge uses the L2 penalty term, which tends to shrink the coefficients of correlated predictors (other people counts) towards each other.
+
+* Lasso uses the L1 penalty term, which tends to choose 1 of a group of correlated predictors and discard the others.
+
+* Elasticnet uses a mixture of Ridge and Lasso
+
+The parameter lambda controls the overal penalty, with larger lambdas forcing more predictors to a 0 coefficient. The package will automatically select the optimal lambda by starting with the minimum value which forces all coefficients to 0, and then gradually relaxing (reducing) the lambda value until ???
+
+In practice, it is recommended to always provide your own sequence of lambda values, because???
+
+The result coefficients can be either zero, positive or negative.  We care only for positive non-zero coefficients, which in our model indicates 2 people are likely related.
+
+The heavy lifting of GLMNET happens in optimized Fortran code.
+
+# GLMNET & SDFB + ODNB
+
+When fitting the models for the ODNB dataset, full Lasso (alpha=1) penalization was used.  Additionally, a reduced 'threshold' was used, 1e-6 vs the default of 1e-7.  A specific sequence of possible lambda values was supplied, no cross-validation appears to have been used.
+
+# Simple Data
+
+```{r}
+library(stringr)
+persons = c('Homer', 'Marge', 'Bart', 'Lisa', 'Maggie', 'Mr. Burns', 'Barney', 'Moe')
+documents = list('Homer is married to Marge. Homer is the father of Maggie.', 
+                 'Homer is the father of Bart and Lisa and Maggie.  Marge is the mother of Bart and Lisa and Maggie.', 
+                 'Homer works for Mr. Burns.  Mr. Burns is not very nice to Homer.', 
+                 'Mr. Burns and Homer work at the nuclear plant.',
+                 'Maggie is the child of Marge.',  
+                 'Bart is the brother to Lisa.  Bart and Maggie are siblings.',
+                 'Lisa is smarter than Bart. Bart is cooler than Lisa.',
+                 'Barney loves to drink at the bar owned by Moe.')
+
+doc_counts = sapply(persons, function(p) {
+  str_count(documents, p)
+})
+```
+
+# Model
+
+Now we fit a PGL using glmnet for Homer.  We'll set a few default parameters for the model, such as:
+
+* threshold = 10^(-6) -> default = 10^(-7)  Decreasing this value
+
+```{r, message=F}
+library(glmnet)
+homer_counts = doc_counts[,1]
+other_counts = doc_counts[,-1]
+other_people = persons[-1]
+
+fit = glmnet(other_counts, homer_counts, family='poisson')
+```
+
+# Analysis
+
+Plotting the fit shows how predictors are added to the model (non-zero coefficent) at the penalty term is relaxed.
+
+```{r}
+plot(fit, label=TRUE)
+```
+
+We can look at the beta estimates (0 = no relationship) for varying values of lambda.
+
+```{r}
+coef(fit,s=c(0.3, 0.2, 0.1, 0.05, 0.025, 0.0125))
+```
+
+# Cross Validation - Homer
+
+CV can be used to choose the most appropriate value of lambda.
+
+For the purpose of cross validation, we duplicate the documents data to ensure enough data for the 'leave data out' nature of the algorithm.
+
+```{r}
+
+doc_counts_cv = rbind(doc_counts, doc_counts, doc_counts, doc_counts, doc_counts)
+
+homer_counts_cv = doc_counts_cv[,1]
+other_counts_cv = doc_counts_cv[,-1]
+
+fit.cv = cv.glmnet(other_counts_cv, homer_counts_cv, family='poisson')
+
+coef(fit.cv, s="lambda.min")
+
+plot(fit.cv)
+```
+
+# Cross Validation - All
+
+Run CV glmnet for each person.  
+
+Things, we'd expect to see:
+
+* Mr. Burns would be most related to Homer.
+* Bart/Lisa should be most related to Lisa/Bart.
+* Moe and Barney should be related to each other, but to nobody else.
+
+
+```{r}
+fit_cv <- function(person_counts, other_counts) {
+  fit.cv = cv.glmnet(other_counts, person_counts, family='poisson' )
+  return(fit.cv)
+}
+
+results = lapply(1:length(persons), function(i) {
+  y = doc_counts_cv[,i]
+  X = doc_counts_cv[,-i]
+  result = fit_cv(y, X)
+  return(result)
+})
+
+```
+
+# Network 
+
+The above results can be used to show the resulting network.  Each person is a node (V), and an edge (E) exists if there is a non-zero coefficient for the relationship between person A and B in either the model for A or the model for B.  The arrow in the network indicates that the model for node A found a relationship *to* node B, i.e. A->B
+
+```{r, message=F}
+library(igraph)
+library(data.table)
+# Need to reformat results into node and links data structures as expected by igraph
+nodes = as.data.frame(persons)
+links = lapply(1:length(results), function(i) {
+  result = results[i][[1]] # Unlist it
+  node = persons[i]
+  coefs = coef(result, s = "lambda.min")
+  coefs = coefs[-1] # Remove intercept
+  relationships_idx = which(coefs > 0)
+  relationships = persons[-i][relationships_idx] # Need to first remove the 'target' from the list so that the other idxs line up
+  relationship_weights = coefs[relationships_idx]
+  result.df = data.frame(a=node, b=relationships, w=relationship_weights)
+  return(result.df)
+})
+links.df = rbindlist(links)
+  
+net <- graph_from_data_frame(d=links.df, vertices=nodes, directed=T) 
+
+# Clean up net and plot
+net.simple = simplify(net, remove.multiple = F, remove.loops = T) 
+plot(net.simple, edge.width=E(net)$w)
+```
+
