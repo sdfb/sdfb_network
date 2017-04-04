@@ -15,7 +15,7 @@ Workflow
 
 * Step 2: Extract Data --> Store in .Rdata file
   * Summary: Simply readlines from each HTML file into an R list data structure
-  * Code: extract_store_data.R
+* Code: extract_store_data.R
   * Input: data/ODNB_raw/HTML/*.html
   * Output: data/ODNB_raw/ODNB_rawHTML_20141029.Rdata
     * ODNB_rawHTML -> an R list of each html file contents

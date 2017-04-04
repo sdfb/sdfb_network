@@ -24,7 +24,7 @@ Step 3:
   * Input: 
     * zzfile_curated_nodeset = "data_manual/dataset_Oct62014.csv" -> Manually created somewhere?
     * zzfile_textproc_post_entitymatrix = "data/ODNB_final/ODNB_entitymatrix20141101.Rdata"
-    * zzfile_textproc_preproc_metadata = ""
+    * zzfile_textproc_preproc_metadata = "data/ODNB_raw/ODNB_metadata20141101.Rdata"
   * Output: zzfile_curated_nodeset_update = "data_manual/ODNB_dataset.Rdata"
 
 Step 4: 
@@ -32,7 +32,9 @@ Step 4:
   * Input: 
     * zzfile_curated_nodeset_update = "data_manual/ODNB_dataset.Rdata"
     * zzfile_textproc_post_entitymatrix = "data/ODNB_final/ODNB_entitymatrix20141101.Rdata"
-  * Output: None???
+  * Output: 
+    * zzfile_base_entity_matrix = "data/ODNB_final/ODNB_subset_entity_matrix_20141102.Rdata"
+    * zzfile_base_entity_matrix_FULLDATA = "data/ODNB_final/ODNB_subset_entity_matrix_FULLDATA_20150603.Rdata"
 
 Step 5: 
   * Code: extract_data_for_model.R -

@@ -33,7 +33,7 @@ When fitting the models for the ODNB dataset, full Lasso (alpha=1) penalization 
 
 ```{r}
 library(stringr)
-persons = c('Homer', 'Marge', 'Bart', 'Lisa', 'Maggie', 'Mr. Burns', 'Barney', 'Moe')
+persons = c('Homer', 'Marge', 'Bart', 'Lisa', 'Maggie', 'Mr. Burns', 'Barney', 'Moe', 'Milhouse')
 documents = list('Homer is married to Marge. Homer is the father of Maggie.', 
                  'Homer is the father of Bart and Lisa and Maggie.  Marge is the mother of Bart and Lisa and Maggie.', 
                  'Homer works for Mr. Burns.  Mr. Burns is not very nice to Homer.', 
@@ -41,7 +41,8 @@ documents = list('Homer is married to Marge. Homer is the father of Maggie.',
                  'Maggie is the child of Marge.',  
                  'Bart is the brother to Lisa.  Bart and Maggie are siblings.',
                  'Lisa is smarter than Bart. Bart is cooler than Lisa.',
-                 'Barney loves to drink at the bar owned by Moe.')
+                 'Barney loves to drink at the bar owned by Moe.',
+                 'Milhouse is a loser.')
 
 doc_counts = sapply(persons, function(p) {
   str_count(documents, p)
@@ -106,6 +107,7 @@ Things, we'd expect to see:
 * Mr. Burns would be most related to Homer.
 * Bart/Lisa should be most related to Lisa/Bart.
 * Moe and Barney should be related to each other, but to nobody else.
+* Milhouse should have no relationships
 
 
 ```{r}
@@ -145,7 +147,7 @@ links = lapply(1:length(results), function(i) {
 })
 links.df = rbindlist(links)
   
-net <- graph_from_data_frame(d=links.df, vertices=nodes, directed=T) 
+net <- graph_from_data_frame(d=links.df, vertices=nodes, directed=F) 
 
 # Clean up net and plot
 net.simple = simplify(net, remove.multiple = F, remove.loops = T) 

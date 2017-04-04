@@ -15,12 +15,13 @@ CONTENT_OUTPUT=/data/JSTOR/content.txt
 
 # First use parallel grep to find all files matching at least 1 of the names.
 echo "grepping $NAMES_FILE at $JSTOR_PATH"
-cat $NAMES_FILE | parallel -n4 --pipe grep -l -f - $JSTOR_PATH/* | tee $MATCHING_FILES
+# Output the filename and matched regex name as: /path/to/filename.txt:regex_name
+cat $NAMES_FILE | parallel -n4 --pipe grep -o -f - $JSTOR_PATH/* | tee $MATCHING_FILES
 
 # Results are not unique, make them so
-echo "unique $MATCHING_FILES to $UNIQUE_MATCHING_FILES"
-cat $MATCHING_FILES | sort | uniq > $UNIQUE_MATCHING_FILES
+#echo "unique $MATCHING_FILES to $UNIQUE_MATCHING_FILES"
+#cat $MATCHING_FILES | sort | uniq > $UNIQUE_MATCHING_FILES
 
 # Now save contents of all matching files into single file
-echo catting
-cat $UNIQUE_MATCHING_FILES | xargs cat > $CONTENT_OUTPUT
+#echo catting
+#cat $UNIQUE_MATCHING_FILES | xargs cat > $CONTENT_OUTPUT
