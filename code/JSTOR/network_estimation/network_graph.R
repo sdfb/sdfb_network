@@ -2,13 +2,14 @@ load("jstor_PGLFit.Rdata")
 
 library(igraph)
 library(data.table)
+
 # Need to reformat results into node and links data structures as expected by igraph
 nodes = as.data.frame(persons)
 links = lapply(1:length(results), function(i) {
   cat(i)
   result = results[i][[1]] # Unlist it
   node = persons[i]
-  coefs = coef(result, s = min(result$lambda))
+  coefs = coef(result, s = max(result$lambda))
   coefs = coefs[-1] # Remove intercept
   relationships_idx = which(coefs > 0)
   relationships = persons[-i][relationships_idx] # Need to first remove the 'target' from the list so that the other idxs line up
