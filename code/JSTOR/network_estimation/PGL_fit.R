@@ -2,9 +2,8 @@ library(glmnet)
 #library(biglasso)
 library(parallel)
 library(data.table)
-library(sqldf)
 
-load("jstor_docCount.Rdata")
+load("/home/00157/walling/sixdegs/JSTOR/text_processing/jstor_docCount.Rdata")
 
 # BigLasso/Memory Matrix
 #data.BM <- as.big.matrix(data.mat)
@@ -43,12 +42,6 @@ fit_pgl_func <- function(y, X) {
   return(fit)
 }
 
-fit_biglasso_func <- function(y, X) {
-  fit = biglasso(X, y,
-                 family="poisson", # Poisson not supported !!!!
-                 alpha = 1) # Lasso
-  return(fit)
-}
 
 # Runs a PGL fit for each person in the doc matrix (i.e. columns)
 person_fits_func <- function(doc_matrix, bootstrap_id=0) {
@@ -154,10 +147,10 @@ system.time((person_results_pgl = person_fits_func(data)))
 
 #system.time((person_results_biglasso = person_fits_func(data)))
 
-system.time((boot_results = bootstrap_fits_func(data, B=3)))
+system.time((boot_results = bootstrap_fits_func(data, B=10)))
 
-system.time((extract_results = extract_links_func(boot_results)))
+#system.time((extract_results = extract_links_func(boot_results)))
 
-save(list=ls(), file="jstor_PGLFit-15119.Rdata")
+save(list=ls(), file="jstor_PGLFit-rscript.Rdata")
 
-load(file="jstor_PGLFit-15119.Rdata")
+#load(file="jstor_PGLFit-15119.Rdata")

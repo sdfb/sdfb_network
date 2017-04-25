@@ -1,28 +1,12 @@
-load("jstor_PGLFit.Rdata")
+load("/work/00157/walling/wrangler/sixdegs/sdfb_network/code/JSTOR/text_processing/jstor_PGLFit-full-2.Rdata")
 
 library(igraph)
 library(data.table)
 
 # Need to reformat results into node and links data structures as expected by igraph
+links.df = bootstrap_combined
 nodes = as.data.frame(persons)
-links = lapply(1:length(results), function(i) {
-  cat(i)
-  result = results[i][[1]] # Unlist it
-  node = persons[i]
-  coefs = coef(result, s = max(result$lambda))
-  coefs = coefs[-1] # Remove intercept
-  relationships_idx = which(coefs > 0)
-  relationships = persons[-i][relationships_idx] # Need to first remove the 'target' from the list so that the other idxs line up
-  relationship_weights = coefs[relationships_idx]
-  if(length(relationships>0)) {
-    result.df = data.frame(a=node, b=relationships, w=relationship_weights)
-    return(result.df)
-  }
-  else {
-    return(NA)
-  }  
-})
-links.df = rbindlist(links[!is.na(links)])
+
 
 # igraph Graph
 net <- graph_from_data_frame(d=links.df, vertices=nodes, directed=F)
