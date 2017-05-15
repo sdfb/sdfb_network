@@ -1,3 +1,5 @@
+library(stringr)
+
 setwd("/home/walling/dev/git/sdfb_network/code/JSTOR/text_processing")
 options(mc.cores=4)
 
@@ -26,11 +28,11 @@ library(data.table)
 data.mat = dcast(data.agg, doc ~ name)
 
 #Dcaast puts the doc name in column 1, remove and then for all the other values to numeric
-rownames(data.mat) = data.mat[,1]
+#rownames(data.mat) = data.mat[,1]
 data.mat = data.mat[,-1]
 #data.mat = apply(data.mat, 1, as.numeric) 
 data.mat[is.na(data.mat)] <- 0
-data.mat = as.matrix(data.mat)
+data.mat2 = as.matrix(data.mat)
 
 save(data.mat, file="jstor_docCount.Rdata")
 
