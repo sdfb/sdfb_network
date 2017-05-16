@@ -16,6 +16,4 @@ echo "grepping $NAMES_FILE at $JSTOR_PATH"
 
 # Output the filename and matched regex name as: /path/to/filename.txt:regex_name
 
-#cat $NAMES_FILE | parallel -X -j 48 --block 1000 --pipe grep -o -f - $JSTOR_PATH/* | tee $MATCHING_FILES
-#ls $JSTOR_PATH/* | parallel -X -j 48 --block 1000 --pipe grep -f $NAMES_FILE | tee $MATCHING_FILES
 ls $JSTOR_PATH/* | parallel grep -o -F -H -f $NAMES_FILE | tee $MATCHING_FILES
