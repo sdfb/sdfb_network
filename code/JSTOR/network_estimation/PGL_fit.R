@@ -3,8 +3,7 @@ library(glmnet)
 library(parallel)
 library(data.table)
 
-loadData <- function() {
-  load("/data/ODNB-NEW-DATASETS/dataset5_docCount.Rdata")
+  load("/pylon2/hm4s82p/walling/count_data/dataset5_docCount.Rdata")
   
   # BigLasso/Memory Matrix
   #data.BM <- as.big.matrix(data.mat)
@@ -30,8 +29,6 @@ loadData <- function() {
   # These are reused throughout
   persons = colnames(data)
   docs = rownames(data)
-
-}
 
 # Fits a single PGL model for a given person y's counts the the counts X of everyone else
 # Length, height of y, X = num docs
@@ -83,7 +80,7 @@ person_fits_func <- function(doc_matrix, bootstrap_id=0) {
     gc()
     
     return(result)
-  }, mc.cores=48)
+  }, mc.cores=27)
   
   return(results)
 }
