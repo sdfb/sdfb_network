@@ -3,32 +3,35 @@ library(glmnet)
 library(parallel)
 library(data.table)
 
-load("/home/00157/walling/sixdegs/JSTOR/text_processing/jstor_docCount.Rdata")
+loadData <- function() {
+  load("/data/ODNB-NEW-DATASETS/dataset5_docCount.Rdata")
+  
+  # BigLasso/Memory Matrix
+  #data.BM <- as.big.matrix(data.mat)
+  #rm(data.mat)
+  
+  # Using random samples for psuedo bootstrapping so set seed
+  set.seed(1)
+  
+  # Test
+  #sample_idx = sample(1:nrow(data.mat), size=1000, replace=F)
+  #data.mat = data.mat[sample_idx, ]
+  
+  #data.BM = data.BM[sample_idx, ]
+  
+  
+  data.sparse = Matrix(data.mat, sparse=TRUE)
+  
+  data = data.sparse
+  
+  # Clean Up
+  rm(list=c('data.mat', 'data.BM', 'doc_matrix', 'data.sparse', 'X', 'y'))
+  
+  # These are reused throughout
+  persons = colnames(data)
+  docs = rownames(data)
 
-# BigLasso/Memory Matrix
-#data.BM <- as.big.matrix(data.mat)
-#rm(data.mat)
-
-# Using random samples for psuedo bootstrapping so set seed
-set.seed(1)
-
-# Test
-#sample_idx = sample(1:nrow(data.mat), size=1000, replace=F)
-#data.mat = data.mat[sample_idx, ]
-
-#data.BM = data.BM[sample_idx, ]
-
-
-data.sparse = Matrix(data.mat, sparse=TRUE)
-
-data = data.sparse
-
-# Clean Up
-rm(list=c('data.mat', 'data.BM', 'doc_matrix', 'data.sparse', 'X', 'y'))
-
-# These are reused throughout
-persons = colnames(data)
-docs = rownames(data)
+}
 
 # Fits a single PGL model for a given person y's counts the the counts X of everyone else
 # Length, height of y, X = num docs
@@ -74,7 +77,7 @@ person_fits_func <- function(doc_matrix, bootstrap_id=0) {
     #relationship_weights = coefs[relationships_idx]
     
     # Will combine all data.frames into single summing up the simple_counts
-    result = data.table(bootstrap_id=bootstrap_id, a=node, b=relationships, w=1)
+    result = data.table(bootstrap_id=bootstrap_id, a=node, lambda=fit_lambda, b=relationships, w=1)
     
     rm(list=c('fit', 'node', 'fit_lambda', 'coefs', 'relationships_idx', 'relationships', 'y', 'X'))
     gc()
@@ -143,14 +146,16 @@ extract_links_func <- function(boot_results) {
     return(bootstrap_combined)
 }
 
-system.time((person_results_pgl = person_fits_func(data)))
-
-#system.time((person_results_biglasso = person_fits_func(data)))
-
-system.time((boot_results = bootstrap_fits_func(data, B=10)))
-
-#system.time((extract_results = extract_links_func(boot_results)))
-
-save(list=ls(), file="jstor_PGLFit-rscript.Rdata")
-
-#load(file="jstor_PGLFit-15119.Rdata")
+dev = function() {
+  system.time((person_results_pgl = person_fits_func(data)))
+  
+  #system.time((person_results_biglasso = person_fits_func(data)))
+  
+  system.time((boot_results = bootstrap_fits_func(data, B=10)))
+  
+  #system.time((extract_results = extract_links_func(boot_results)))
+  
+  save(list=ls(), file="jstor_PGLFit-rscript.Rdata")
+  
+  #load(file="jstor_PGLFit-15119.Rdata")
+}

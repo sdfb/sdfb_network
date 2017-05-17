@@ -1,9 +1,10 @@
 library(stringr)
+library(data.table)
 
 setwd("/home/walling/dev/git/sdfb_network/code/JSTOR/text_processing")
 options(mc.cores=4)
 
-counts_data = readLines("/data/00157/walling/sixdegs/matching_files.txt")
+counts_data = readLines("/data/ODNB-NEW-DATASETS/dataset5-matchnames.txt")
 
 #Example: 
 #/data/JSTOR/test/10.2307_1763376:William Walter
@@ -12,7 +13,7 @@ counts_data = readLines("/data/00157/walling/sixdegs/matching_files.txt")
 # Split into doc, "10.2307_196432", and name, "William Watson"
 
 parts = str_split(counts_data, ":", simplify=T)
-docs = str_split(parts[,1], "/", simplify=T)[,7]
+docs = str_split(parts[,1], "/", simplify=T)[,5]
 names = parts[,2]
 
 data = data.table(doc=docs, name=names)
@@ -21,22 +22,17 @@ data = data.table(doc=docs, name=names)
 data.agg = data[, 'cnt':=.N, by=c('doc', 'name')]
 
 # Reshape to names as columns, docs as rows and counts as the values
-data.mat = dcast(data.agg2, doc ~ name)
+data.mat = dcast(data.agg, doc ~ name)
 
 #Dcaast puts the doc name in column 1, remove and then for all the other values to numeric
-
-#rownames(data.mat) = data.mat[,1]
-
 docs = data.mat[,1]
 
 data.mat = data.mat[,-1]
 data.mat[is.na(data.mat)] <- 0
 
-data.mat2 = as.matrix(data.mat)
-
 data.mat = as.matrix(data.mat)
-rownames(data.mat) = docs
+rownames(data.mat) = docs$doc
 
 
-save(data.mat, file="jstor_docCount.Rdata")
+save(data.mat, file="/data/ODNB-NEW-DATASETS/dataset5_docCount.Rdata")
 
