@@ -6,10 +6,10 @@
 
 # Input
 JSTOR_PATH=/home/00157/walling/work/sixdegs/data/JSTOR/docs
-NAMES_FILE=/home/00157/walling/work/sixdegs/jstor/text_processing/dataset3.csv
+NAMES_FILE=/home/00157/walling/work/sixdegs/jstor/text_processing/name_lists/NamesToSearch-6bacon4.11.17-cleansed.csv
 
 # Temp and Output
-MATCHING_FILES=/home/00157/walling/work/sixdegs/data/JSTOR/matching_files-dataset3.txt
+MATCHING_FILES=/home/00157/walling/work/sixdegs/data/JSTOR/matching_files-jstor-split.txt
 
 # First use parallel grep to find all files matching at least 1 of the names.
 echo "grepping $NAMES_FILE at $JSTOR_PATH"

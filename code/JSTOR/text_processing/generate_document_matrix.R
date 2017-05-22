@@ -1,10 +1,10 @@
 library(stringr)
 library(data.table)
 
-setwd("/home/walling/dev/git/sdfb_network/code/JSTOR/text_processing")
-options(mc.cores=4)
+#setwd("/home/walling/dev/git/sdfb_network/code/JSTOR/text_processing")
+options(mc.cores=24)
 
-counts_data = readLines("/data/ODNB-NEW-DATASETS/dataset5-matchnames.txt")
+counts_data = readLines("/gpfs/flash/users/walling/sixdegs/data/JSTOR/matching_files-jstor-split.txt")
 
 #Example: 
 #/data/JSTOR/test/10.2307_1763376:William Walter
@@ -13,8 +13,10 @@ counts_data = readLines("/data/ODNB-NEW-DATASETS/dataset5-matchnames.txt")
 # Split into doc, "10.2307_196432", and name, "William Watson"
 
 parts = str_split(counts_data, ":", simplify=T)
-docs = str_split(parts[,1], "/", simplify=T)[,5]
+dirs = str_split(parts[,1], "/", simplify=T)
+docs = dirs[,ncol(dirs)]
 names = parts[,2]
+
 
 data = data.table(doc=docs, name=names)
 
@@ -34,5 +36,5 @@ data.mat = as.matrix(data.mat)
 rownames(data.mat) = docs$doc
 
 
-save(data.mat, file="/data/ODNB-NEW-DATASETS/dataset5_docCount.Rdata")
+save(data.mat, file="/gpfs/flash/users/walling/sixdegs/data/JSTOR/jostr-split-docCount.Rdata")
 
