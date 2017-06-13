@@ -3,7 +3,7 @@ library(glmnet)
 library(parallel)
 library(data.table)
 
-  load("/pylon2/hm4s82p/walling/count_data/dataset5_docCount.Rdata")
+  #load("/data/00157/walling/sixdegs/ODNB/nameslist4-split-docCount.Rdata")
   
   # BigLasso/Memory Matrix
   #data.BM <- as.big.matrix(data.mat)
@@ -19,12 +19,13 @@ library(data.table)
   #data.BM = data.BM[sample_idx, ]
   
   
-  data.sparse = Matrix(data.mat, sparse=TRUE)
+  #data.sparse = Matrix(data.mat, sparse=TRUE)
   
   data = data.sparse
   
   # Clean Up
   rm(list=c('data.mat', 'data.BM', 'doc_matrix', 'data.sparse', 'X', 'y'))
+  gc()
   
   # These are reused throughout
   persons = colnames(data)
@@ -80,7 +81,7 @@ person_fits_func <- function(doc_matrix, bootstrap_id=0) {
     gc()
     
     return(result)
-  }, mc.cores=27)
+  }, mc.cores=23)
   
   return(results)
 }
@@ -143,16 +144,18 @@ extract_links_func <- function(boot_results) {
     return(bootstrap_combined)
 }
 
-dev = function() {
-  system.time((person_results_pgl = person_fits_func(data)))
+#main = function() {
+  #system.time((person_results_pgl = person_fits_func(data)))
   
   #system.time((person_results_biglasso = person_fits_func(data)))
   
-  system.time((boot_results = bootstrap_fits_func(data, B=10)))
+  system.time((boot_results = bootstrap_fits_func(data, B=100)))
   
-  #system.time((extract_results = extract_links_func(boot_results)))
+  system.time((bootstrap_combined = extract_links_func(boot_results)))
   
-  save(list=ls(), file="jstor_PGLFit-rscript.Rdata")
+  save(list=ls(), file="/data/00157/walling/sixdegs/JSTOR/jstor_PGLFit-results.Rdata")
   
   #load(file="jstor_PGLFit-15119.Rdata")
-}
+#}
+
+#main()
