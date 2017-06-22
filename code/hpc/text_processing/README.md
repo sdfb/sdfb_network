@@ -6,20 +6,32 @@ output:
 
 # Overview
 
-Contains code for processing the raw JSTOR data into a document count matrix
+Contains code for processing the raw txt documents and creating a document count matrix
 
-# names_scott_version.cvs
+### count_names.sh
 
-The master list of names we want to search for.  Essentially includes all names detected in the ODNB processing.  We are skipping the NER steps for the JSTOR dataset, using this file and grep instead.
+A bash script that takes a name list and folder containing documents and performs a parallized count of each name in each document.  The results are saved as a text file.
 
-# search_products-data.sh
+### count_names.slurm
 
-Takes a single file with all the JSTOR documents concatted together to produce list of all unique names from an input list found in any of the documents.
+A slurm schduler submission template for running counts_names.sh in batch mode on an hpc system.
 
-# search_products-files.sh
+### CountsSummary.Rmd
 
-Takes the names input list and searches for all files containing least one hit for any name, saving the list of matching files.  Used to filter out documents that are not of interest.
+A Rmarkdown document for summarize the results of count_name.sh
 
-# generate_document_matrix.R
+### generate_document_matrix.R
 
 Takes the uniq_matching_files list and creates a document matrix where each row is a document, each column a name and provides the count of a given name in a given document.
+
+### name_lists
+
+For with example names lists used for generating document:name mappings with counts_names.sh.
+
+### split_documents.R
+
+Code for splitting an text document into a folder > 999 words into sub documents with a minimum size of 500 words.
+
+
+
+
