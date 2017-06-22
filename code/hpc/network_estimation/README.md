@@ -1,9 +1,3 @@
----
-  output: 
-  html_document: 
-  self_contained: no
----
-
 # Contents
 
 ### PGL_fit.R

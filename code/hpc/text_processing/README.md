@@ -1,9 +1,3 @@
----
-output: 
-  html_document: 
-    self_contained: no
----
-
 # Overview
 
 Contains code for processing the raw txt documents and creating a document count matrix
