@@ -1,9 +1,3 @@
----
-output: 
-  html_document: 
-    self_contained: no
----
-
 # Overview
 
 This directory contains refactored code that attempts to replicate the ODNC processing for new datasets.  Its goal is to make the code for flexible as well as parallelize sections of the code such that is can take advantage of all available resources on a given system.  It was specifically developed using resources available through XSEDE, including Wrangler and Bridges.
