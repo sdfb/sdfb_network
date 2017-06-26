@@ -36,6 +36,8 @@ The workflow from rawdata to end results is as follows.
 6. Extract the resulting network from the results. (network_estimation/network_graph.R)
 4. Export network to additional formats such as .gefx. (network_estimation/export_graph.R)
 
+Generally, each R script loads a file as input and saves a file as output, which controlls which datasets are processed.  Most can be run simply with $ Rscript file.R
+
 # Additional Details
 
 Details for each file can be found in the sub-foldersing 'text_processing' and 'network_estimation'.
