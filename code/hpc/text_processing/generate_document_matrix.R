@@ -7,6 +7,7 @@ library(data.table)
 
 counts_data = readLines("/pylon2/hm4s82p/walling/data/odnb_modern/matching_files_dataset5_test.txt")
 
+
 #counts_data = readLines("/data/00157/walling/sixdegs/JSTOR/matching_files-jstor-split.txt")
 
 #Example: 
@@ -31,7 +32,7 @@ data.agg = data[, 'cnt':=.N, by=c('doc', 'name')]
 ####
 
 # There is a bug in data.table dealing with no support for large vectors in dcast
-# So we have to split shit up into batches.  Computers f***ing suck sometimes.
+# So we have to split up into batches.
 n = nrow(data.agg)
 num.batches = 8
 batch.size = n%/%num.batches
@@ -67,7 +68,7 @@ f_dowle3 = function(DT) {
   
   # by name :
   #for (j in names(DT))
-  #  set(DT,which(is.na(DT[[j]])),j,0)
+    #set(DT,which(is.na(DT[[j]])),j,0)
   
   # or by number (slightly faster than by name) :
   for (j in seq_len(ncol(DT)))
