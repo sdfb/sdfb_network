@@ -1,10 +1,8 @@
 library(stringr)
 library(data.table)
 
-#setwd("/home/walling/dev/git/sdfb_network/code/JSTOR/text_processing")
-options(mc.cores=24)
 
-counts_data = readLines("/data/00157/walling/sixdegs/ODNB/matching_files-odnb_modern-splits-dataset5.txt")
+counts_data = readLines("/data/00157/walling/sixdegs/ODNB/matching_files-odnb-splits-dataset3.txt")
 
 #counts_data = readLines("/data/00157/walling/sixdegs/JSTOR/matching_files-jstor-split.txt")
 
@@ -30,7 +28,7 @@ data.agg = data[, 'cnt':=.N, by=c('doc', 'name')]
 ####
 
 # There is a bug in data.table dealing with no support for large vectors in dcast
-# So we have to split shit up into batches.  Computers f***ing suck sometimes.
+# So we have to split up into batches.
 n = nrow(data.agg)
 num.batches = 8
 batch.size = n%/%num.batches
@@ -65,8 +63,8 @@ f_dowle3 = function(DT) {
   # either of the following for loops
   
   # by name :
-  for (j in names(DT))
-    set(DT,which(is.na(DT[[j]])),j,0)
+  #for (j in names(DT))
+    #set(DT,which(is.na(DT[[j]])),j,0)
   
   # or by number (slightly faster than by name) :
   for (j in seq_len(ncol(DT)))
@@ -114,5 +112,5 @@ rm(list=c("data", "data.agg", "dirs", "parts", "data.mat.list"))
 gc()
 
 
-save(data.sparse, file="/data/00157/walling/sixdegs/ODNB/nameslist5-split-docCount.Rdata")
+save(data.sparse, file="/data/00157/walling/sixdegs/ODNB/nameslist3-split-docCount.Rdata")
 

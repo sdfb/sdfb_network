@@ -2,25 +2,21 @@ library(methods) # Bug with glmnet loading this package with Rscript
 library(glmnet) # Enables poisson modeling
 library(parallel) # Enables parallel methods
 library(snow) # Allows use of getMPIcluster required for ibrun with slurm
+library(Rhpc) # Better version of multinode parallelization
 library(data.table) # For fast table aggregation
 
 # Load data.mat created in text_processing
-load("/data/00157/walling/sixdegs/ODNB/nameslist4-split-docCount.Rdata")
+load("/data/00157/walling/sixdegs/ODNB/nameslist3-split-docCount.Rdata")
   
+data = data.sparse
+
 # Using random samples for psuedo bootstrapping so set seed
 set.seed(1)
 
 # Test/Dev Subsampling
-#sample_row_idx = sample(1:nrow(data.mat), size=3000, replace=F)
-#sample_col_idx = sample(1:ncol(data.mat), size=3000, replace=F)
-#data.mat = data.mat[sample_row_idx, sample_col_idx]
-
-
-data = data.mat
-
-# Clean Up
-#rm(list=c('data.mat', 'data.BM', 'doc_matrix', 'data.sparse', 'X', 'y'))
-#gc()
+#sample_row_idx = sample(1:nrow(data), size=2000, replace=F)
+#sample_col_idx = sample(1:ncol(data), size=2000, replace=F)
+#data = data[sample_row_idx, sample_col_idx]
 
 # These are reused throughout
 persons = colnames(data)
@@ -112,6 +108,24 @@ parallel_person_fits_snow <- function(cluster, doc_matrix, bootstrap_id=0) {
   return(results)
 }
 
+parallel_person_fits_rhpc <- function(cluster, doc_matrix, bootstrap_id=0) {
+  
+  #print(environment())
+  
+  # These variables are updated for each bootstrap sample, so must be reexported
+  Rhpc_Export(cluster, c('doc_matrix', 'bootstrap_id'), envir=environment())
+  
+  # PARALLEL: Run the fits for each person in parallel
+  results = Rhpc_lapply(cluster, 1:length(persons), function(i) {
+    
+    result = person_fit_func(bootstrap_id, doc_matrix, persons, i)
+    
+    return(result)
+  })
+  
+  return(results)
+}
+
 # if(T) {
 #   
 #   print('Using Multicore')
@@ -157,7 +171,7 @@ bootstrap_fits_func <- function(doc_matrix, B=100) {
       time = system.time((sample_results = parallel_person_fits_mc(sample_doc_matrix, bootstrap_id=idx)))
       print(time)
     
-    } else {
+    } else if(TRUE) {
       
       print('Using SNOW')
       
@@ -171,6 +185,26 @@ bootstrap_fits_func <- function(doc_matrix, B=100) {
       # Keep track of time for each iteration
       time = system.time((sample_results = parallel_person_fits_snow(cluster, sample_doc_matrix, bootstrap_id=idx)))
       print(time)
+    } else {
+     
+      print('Using Rhpc')
+ 
+      Rhpc_initialize()
+      
+      cluster <-Rhpc_getHandle()
+      
+      # Rhpc set to options
+      opstr=list("Rhpc.mpi.rank","Rhpc.mpi.procs","Rhpc.mpi.c.comm","Rhpc.mpi.f.comm")
+      do.call("options",opstr)
+      Rhpc_worker_call(cluster, "do.call","options", opstr)
+      Rhpc_worker_call(cluster, function() {library(glmnet); library(data.table)})
+      Rhpc_Export(cluster, c('person_fit_func', 'fit_pgl_func', 'persons'), envir=.GlobalEnv)
+      
+      # Now run the person fits in parallel across the cluster
+      # Keep track of time for each iteration
+      time = system.time((sample_results = parallel_person_fits_rhpc(cluster, sample_doc_matrix, bootstrap_id=idx)))
+      print(time)
+      
     }
     
     return(sample_results)
@@ -221,15 +255,15 @@ extract_links_func <- function(boot_results) {
   
   #system.time((person_fits_mc = parallel_person_fits_mc(data)))
   
-  system.time((boot_results = bootstrap_fits_func(data, B=3)))
+  system.time((boot_results = bootstrap_fits_func(data, B=100)))
   
-  str(boot_results[[1]][20])
+  #str(boot_results[[1]][20])
   
   system.time((bootstrap_combined = extract_links_func(boot_results)))
   
-  str(bootstrap_combined)
+  #str(bootstrap_combined)
   
-  save(list=ls(), file="/data/00157/walling/sixdegs/test_PGLFit-mc.Rdata")
+  save(list=ls(), file="/data/00157/walling/sixdegs/test_PGLFit-snow-odnb-nameslist3-full-2.Rdata")
   
 #}
 
