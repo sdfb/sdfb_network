@@ -1,4 +1,4 @@
-load("/data/00157/walling/sixdegs/test_PGLFit-snow-odnb-nameslist3-full-2.Rdata")
+load("/pylon2/hm4s82p/walling/data/odnb_modern/dataset5_test_PGLFit-mc.Rdata")
 
 library(igraph)
 library(data.table)
@@ -15,9 +15,9 @@ net <- graph_from_data_frame(d=links.df, vertices=nodes, directed=F)
 # Export
 ######
 
-source("./export_graph.R")
+source("/home/walling/sdfb_network/code/hpc/network_estimation/export_graph.R")
 
-saveAsGEXF(net, file="/data/00157/walling/sixdegs/dataset5-splits.gexf")
+saveAsGEXF(net, file="/home/walling/dataset5-test.gexf")
 
 
 #######
