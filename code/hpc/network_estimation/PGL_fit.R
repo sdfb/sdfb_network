@@ -5,7 +5,7 @@ library(snow) # Allows use of getMPIcluster required for ibrun with slurm
 library(data.table) # For fast table aggregation
 
 # Load data.mat created in text_processing
-load("/data/00157/walling/sixdegs/ODNB/nameslist4-split-docCount.Rdata")
+load("/pylon2/hm4s82p/walling/data/odnb_modern/dataset5_test.Rdata")
   
 # Using random samples for psuedo bootstrapping so set seed
 set.seed(1)
@@ -16,7 +16,7 @@ set.seed(1)
 #data.mat = data.mat[sample_row_idx, sample_col_idx]
 
 
-data = data.mat
+data = data.sparse
 
 # Clean Up
 #rm(list=c('data.mat', 'data.BM', 'doc_matrix', 'data.sparse', 'X', 'y'))
@@ -149,7 +149,7 @@ bootstrap_fits_func <- function(doc_matrix, B=100) {
     sample_doc_matrix = doc_matrix[boot_sample_idx,]
     
     # PARALLEL: Here you can swap out the mc vs snow version of the parallel fits
-    if(FALSE) {
+    if(TRUE) {
       
       print('Using Multicore')
       
@@ -223,13 +223,13 @@ extract_links_func <- function(boot_results) {
   
   system.time((boot_results = bootstrap_fits_func(data, B=3)))
   
-  str(boot_results[[1]][20])
+  #str(boot_results[[1]][20])
   
   system.time((bootstrap_combined = extract_links_func(boot_results)))
   
-  str(bootstrap_combined)
+  #str(bootstrap_combined)
   
-  save(list=ls(), file="/data/00157/walling/sixdegs/test_PGLFit-mc.Rdata")
+  save(list=ls(), file="/pylon2/hm4s82p/walling/data/odnb_modern/dataset5_test_PGLFit-mc.Rdata")
   
 #}
 
