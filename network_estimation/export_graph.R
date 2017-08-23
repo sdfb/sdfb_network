@@ -1,7 +1,5 @@
 # Contains code for exporting igraph graphs to other formats, like Gephi
 
-load("")
-
 # To GEPHI
 # Ref: http://gopalakrishna.palem.in/iGraphExport.html#GexfExport
 saveAsGEXF = function(g, filepath="converted_graph.gexf")
@@ -42,5 +40,3 @@ saveAsGEXF = function(g, filepath="converted_graph.gexf")
   
   print(output, filepath, replace=T)
 }
-
-saveAsGEXF(net)

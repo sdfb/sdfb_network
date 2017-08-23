@@ -8,7 +8,12 @@ split_odnb_docs <- function(input_folder="/data/ODNB/ODNB-1450-1700", output_fol
   
 
   files = list.files(path=input_folder, full.names=T, recursive=FALSE)
-  mclapply(files, function(file) {
+
+  # set results to temp to suppress output of empty list
+  temp = mclapply(files, function(file) {
+
+    cat("file = ", file, fill=T)
+
     lines = readLines(file) # The ODNB docs are only ever 1 line
     
     words = unlist(strsplit(lines, " "))
@@ -42,9 +47,12 @@ split_jstor_docs <- function(input_folder="/data/JSTOR/bundle", output_folder="/
   
   
   files = list.files(path=input_folder, full.names=T, recursive=FALSE)
-  
+
   # set results to temp to suppress output of empty list
   temp = mclapply(files, function(file) {
+
+    cat("file = ", file, fill=T)
+ 
     lines = readLines(file) # The ODNB docs are only ever 1 line
     
     # Get only the content in the <pages> section
@@ -77,4 +85,4 @@ split_jstor_docs <- function(input_folder="/data/JSTOR/bundle", output_folder="/
   })  
 }
 
-split_odnb_docs()
+split_odnb_docs(input_folder="/pylon2/hm4s82p/walling/data/odnb_modern/docs", output_folder="/pylon2/hm4s82p/walling/data/odnb_modern/splits/")

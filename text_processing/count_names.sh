@@ -5,15 +5,18 @@
 ###########
 
 # Input
-DOCS_PATH=/home/00157/walling/work/sixdegs/data/ODNB/odnb_modern/splits
-NAMES_FILE=/home/00157/walling/work/sixdegs/jstor/text_processing/name_lists/dataset5.csv
+DOCS_PATH=/pylon2/hm4s82p/walling/data/odnb_modern/splits
+NAMES_FILE=/home/walling/sdfb_network/code/hpc/text_processing/name_lists/dataset5-test.csv
 
 # Temp and Output
-MATCHING_FILES=/home/00157/walling/work/sixdegs/data/ODNB/matching_files-odnb_modern-splits-dataset5.txt
+MATCHING_FILES=/pylon2/hm4s82p/walling/data/odnb_modern/matching_files_dataset5_test.txt
 
 # First use parallel grep to find all files matching at least 1 of the names.
 echo "grepping $NAMES_FILE at $DOCS_PATH"
 
 # Output the filename and matched regex name as: /path/to/filename.txt:regex_name
+
+# NOTE: Requires updated 'parallel' program (developed w/ version 20161222) 
+source ~/software/sourceme.sh # Update PATH to use specific parallel version
 
 ls $DOCS_PATH/* | parallel grep -o -F -H -f $NAMES_FILE | tee $MATCHING_FILES
