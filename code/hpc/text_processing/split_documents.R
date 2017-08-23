@@ -34,14 +34,17 @@ split_odnb_docs <- function(input_folder="/data/ODNB/ODNB-1450-1700", output_fol
       writeLines(text = words, con=paste0(output_folder, name), sep=" ")
     }
     
-  })  
+  })
+  return(NA) # Otherwise, tries to retun the above list
 }
 
 split_jstor_docs <- function(input_folder="/data/JSTOR/bundle", output_folder="/data/JSTOR/splits/") {
   
   
   files = list.files(path=input_folder, full.names=T, recursive=FALSE)
-  mclapply(files, function(file) {
+  
+  # set results to temp to suppress output of empty list
+  temp = mclapply(files, function(file) {
     lines = readLines(file) # The ODNB docs are only ever 1 line
     
     # Get only the content in the <pages> section
