@@ -10,10 +10,10 @@ json.data = read_json("data/dataset2.json")
 # Each entry in the json represents a document
 # Each document contains a list of entities in that document
 doc.ids = names(json.data)
-data.tables.list <- mclapply(1:length(json.data), function(idx) {
+data.tables.list <- mclapply(1:10, function(idx) {
   doc = doc.ids[[idx]]
   persons = json.data[[idx]]
-  data = cbindlist(persons)
+  data = data.table(do.call(cbind, persons))
   row.names(data) = doc
   return(data)
 })
