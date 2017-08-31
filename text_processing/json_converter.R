@@ -1,6 +1,5 @@
 # Convert json version of document counts to a matrix that can be used by network estimation code
 library(jsonlite)
-library(Laurae)
 library(data.table)
 library(parallel)
 
